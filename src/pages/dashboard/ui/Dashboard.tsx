@@ -3,6 +3,7 @@ import { CircleDashed, Settings2 } from 'lucide-react'
 import type { Incident } from '../../../entities/incident'
 import type { InternetStatus } from '../../../entities/internet'
 import type { Monitor } from '../../../entities/monitor'
+import { t } from '../../../shared/lib/i18n'
 import { formatPercent, formatRelativeFromNow } from '../../../shared/lib/time'
 import { Button } from '../../../shared/ui/Button'
 import { IconButton } from '../../../shared/ui/IconButton'
@@ -18,19 +19,19 @@ function getSubtitle(monitor: Monitor, incidents: Incident[]): string {
     )
 
     return activeIncident
-      ? `Down - ${formatRelativeFromNow(activeIncident.startTime)}`
-      : 'Down - waiting for recovery'
+      ? t('dashboard_status_down_relative', formatRelativeFromNow(activeIncident.startTime))
+      : t('dashboard_status_down_waiting')
   }
 
   if (monitor.status === 'paused') {
-    return 'Paused'
+    return t('dashboard_status_paused')
   }
 
   if (monitor.status === 'pending') {
-    return 'Checking first response'
+    return t('dashboard_status_pending')
   }
 
-  return `${formatPercent(monitor.uptimePercent)} uptime`
+  return t('dashboard_status_uptime', formatPercent(monitor.uptimePercent))
 }
 
 function sortMonitors(monitors: Monitor[]): Monitor[] {
@@ -77,9 +78,9 @@ export function DashboardPage({
   return (
     <div className={styles.page}>
       <PageHeader
-        title="Uptime Monitor"
+        title={t('ext_name')}
         trailing={
-          <IconButton aria-label="Open settings" onClick={onOpenSettings}>
+          <IconButton aria-label={t('dashboard_open_settings_aria')} onClick={onOpenSettings}>
             <Settings2 size={16} strokeWidth={2} />
           </IconButton>
         }
@@ -92,12 +93,10 @@ export function DashboardPage({
           <div className={styles.emptyIcon}>
             <CircleDashed size={30} strokeWidth={1.8} />
           </div>
-          <div className={styles.emptyTitle}>No monitors yet</div>
-          <div className={styles.emptySubtitle}>
-            Add a URL to start tracking uptime
-          </div>
+          <div className={styles.emptyTitle}>{t('dashboard_empty_title')}</div>
+          <div className={styles.emptySubtitle}>{t('dashboard_empty_subtitle')}</div>
           <Button fullWidth onClick={onAddMonitor}>
-            + Add your first monitor
+            {t('dashboard_add_first_monitor')}
           </Button>
         </div>
       ) : (

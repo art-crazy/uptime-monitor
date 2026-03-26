@@ -1,4 +1,6 @@
 import { getChartHistory, type HistoryEntry } from '../../../entities/monitor'
+import { t } from '../../../shared/lib/i18n'
+import { formatResponseTime } from '../../../shared/lib/time'
 import { getResponseTone } from '../../../shared/lib/response'
 import styles from './ResponseChart.module.css'
 
@@ -23,7 +25,7 @@ export function ResponseChart({ history }: ResponseChartProps) {
 
   return (
     <section className={styles.section}>
-      <div className={styles.label}>Response time - last 24h</div>
+      <div className={styles.label}>{t('chart_title')}</div>
       <div className={styles.bars}>
         {entries.map((entry, index) => {
           const tone = entry === null ? 'empty' : getResponseTone(entry.responseTime)
@@ -36,18 +38,18 @@ export function ResponseChart({ history }: ResponseChartProps) {
               title={
                 entry
                   ? entry.responseTime === null
-                    ? 'Down'
-                    : `${entry.responseTime}ms`
-                  : 'No samples'
+                    ? t('chart_bar_down')
+                    : formatResponseTime(entry.responseTime)
+                  : t('chart_bar_no_samples')
               }
             />
           )
         })}
       </div>
       <div className={styles.legend}>
-        <span className={styles.good}>good</span>
-        <span className={styles.slow}>slow</span>
-        <span className={styles.down}>down</span>
+        <span className={styles.good}>{t('chart_legend_good')}</span>
+        <span className={styles.slow}>{t('chart_legend_slow')}</span>
+        <span className={styles.down}>{t('chart_legend_down')}</span>
       </div>
     </section>
   )

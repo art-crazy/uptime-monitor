@@ -1,4 +1,4 @@
-import { startTransition, useMemo, useState } from 'react'
+import { startTransition, useEffect, useMemo, useState } from 'react'
 
 import { useIncidents } from '../entities/incident'
 import { useInternetStatus } from '../entities/internet'
@@ -8,6 +8,7 @@ import { AddMonitorPage } from '../pages/add-monitor'
 import { DashboardPage } from '../pages/dashboard'
 import { MonitorDetailsPage } from '../pages/monitor-details'
 import { SettingsPage } from '../pages/settings'
+import { t } from '../shared/lib/i18n'
 import { PageHeader } from '../shared/ui/PageHeader'
 import styles from './App.module.css'
 
@@ -54,13 +55,17 @@ export function App() {
       ? { key: 'dashboard' as const }
       : screen
 
+  useEffect(() => {
+    document.title = t('ext_name')
+  }, [])
+
   if (!isHydrated) {
     return (
       <div className={styles.page}>
-        <PageHeader title="Uptime Monitor" />
+        <PageHeader title={t('ext_name')} />
         <div className={styles.loadingState}>
-          <div className={styles.loadingTitle}>Loading monitors</div>
-          <div className={styles.loadingSubtitle}>Syncing local data...</div>
+          <div className={styles.loadingTitle}>{t('app_loading_title')}</div>
+          <div className={styles.loadingSubtitle}>{t('app_loading_subtitle')}</div>
         </div>
       </div>
     )

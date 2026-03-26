@@ -2,19 +2,15 @@ import { useMemo, useState } from 'react'
 
 import { type CheckInterval } from '../../../entities/monitor'
 import { CHECK_INTERVAL_OPTIONS } from '../../../shared/constants'
+import { t } from '../../../shared/lib/i18n'
 import { saveMonitorDraft } from '../../../shared/lib/runtime'
+import { formatCheckInterval } from '../../../shared/lib/time'
 import { Button } from '../../../shared/ui/Button'
 import { Toggle } from '../../../shared/ui/Toggle'
 import styles from './AddMonitorForm.module.css'
 import { getInitialMonitorFormState } from '../model/defaults'
 import type { MonitorFormDraft } from '../model/types'
 import { validateMonitorInput } from '../model/validation'
-
-const TYPE_OPTIONS = [
-  { label: 'Website', value: 'website' },
-  { label: 'API', value: 'api' },
-  { label: 'Host / IP', value: 'host' },
-] as const
 
 interface AddMonitorFormProps {
   defaultInterval: CheckInterval
@@ -36,14 +32,34 @@ export function AddMonitorForm({
   const [interval, setInterval] = useState(initialState.interval)
   const [error, setError] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const typeOptions = useMemo(
+    () =>
+      [
+        { label: t('add_monitor_type_website'), value: 'website' },
+        { label: t('add_monitor_type_api'), value: 'api' },
+        { label: t('add_monitor_type_host'), value: 'host' },
+      ] as const,
+    [],
+  )
+  const intervalOptions = useMemo(
+    () =>
+      CHECK_INTERVAL_OPTIONS.map((option) => ({
+        label: formatCheckInterval(option.value),
+        value: option.value,
+      })),
+    [],
+  )
   const isUrlEmpty = url.trim().length === 0
-  const fieldLabel = type === 'host' ? 'Host' : 'URL'
+  const fieldLabel =
+    type === 'host' ? t('add_monitor_field_host') : t('add_monitor_field_url')
   const placeholder =
-    type === 'host' ? 'example.com or 192.168.0.10' : 'https://example.com'
+    type === 'host'
+      ? t('add_monitor_placeholder_host')
+      : t('add_monitor_placeholder_url')
   const hint =
     type === 'host'
-      ? 'Checks HTTP/HTTPS availability for this host'
-      : 'Name will be set automatically from domain'
+      ? t('add_monitor_hint_host')
+      : t('add_monitor_hint_url')
 
   const handleSave = async () => {
     if (isSaving) {
@@ -53,7 +69,7 @@ export function AddMonitorForm({
     const result = validateMonitorInput(url, type)
 
     if (!result.normalized) {
-      setError(result.error)
+      setError(result.errorKey ? t(result.errorKey) : t('add_monitor_error_unable_to_save'))
       return
     }
 
@@ -72,9 +88,8 @@ export function AddMonitorForm({
 
       onSaved(response.monitorId)
     } catch (saveError) {
-      setError(
-        saveError instanceof Error ? saveError.message : 'Unable to save monitor',
-      )
+      console.error('[popup] saveMonitorDraft', saveError)
+      setError(t('add_monitor_error_unable_to_save'))
     } finally {
       setIsSaving(false)
     }
@@ -83,14 +98,14 @@ export function AddMonitorForm({
   return (
     <div className={styles.form}>
       <div className={styles.field}>
-        <div className={styles.label}>Type</div>
+        <div className={styles.label}>{t('add_monitor_field_type')}</div>
         <Toggle
           disabled={isSaving}
           onChange={(value) => {
             setError(null)
             setType(value)
           }}
-          options={TYPE_OPTIONS}
+          options={typeOptions}
           value={type}
         />
       </div>
@@ -126,14 +141,14 @@ export function AddMonitorForm({
       </div>
 
       <div className={styles.field}>
-        <div className={styles.label}>Check every</div>
+        <div className={styles.label}>{t('add_monitor_field_interval')}</div>
         <Toggle
           disabled={isSaving}
           onChange={(value) => {
             setError(null)
             setInterval(value as CheckInterval)
           }}
-          options={CHECK_INTERVAL_OPTIONS}
+          options={intervalOptions}
           value={interval}
         />
       </div>
@@ -145,7 +160,11 @@ export function AddMonitorForm({
         type="button"
         variant="primary"
       >
-        {isSaving ? 'Saving...' : monitor ? 'Save changes' : 'Save monitor'}
+        {isSaving
+          ? t('add_monitor_button_saving')
+          : monitor
+            ? t('add_monitor_button_save_changes')
+            : t('add_monitor_button_save')}
       </Button>
     </div>
   )

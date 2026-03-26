@@ -4,14 +4,14 @@ import { defineConfig } from 'vite'
 
 const manifest = defineManifest({
   manifest_version: 3,
-  name: 'Uptime Monitor',
-  short_name: 'Uptime Monitor',
-  description:
-    'Track uptime for websites, APIs, and servers with local checks and browser alerts.',
+  default_locale: 'en',
+  name: '__MSG_ext_name__',
+  short_name: '__MSG_ext_short_name__',
+  description: '__MSG_ext_description__',
   version: '1.0.0',
   minimum_chrome_version: '120',
   action: {
-    default_title: 'Uptime Monitor',
+    default_title: '__MSG_ext_action_title__',
     default_popup: 'index.html',
     default_icon: {
       '16': 'icons/icon16.png',

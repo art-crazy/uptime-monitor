@@ -1,3 +1,4 @@
+import { t } from '../../../shared/lib/i18n'
 import { formatDuration, formatIncidentTimestamp } from '../../../shared/lib/time'
 
 import type { Incident } from '../model/types'
@@ -9,13 +10,13 @@ interface IncidentRowProps {
 
 export function IncidentRow({ incident }: IncidentRowProps) {
   const isOngoing = incident.endTime === null
-  const label = isOngoing ? 'Down' : 'Up'
+  const label = isOngoing ? t('incident_label_down') : t('incident_label_up')
   const resolvedEndTime = incident.endTime ?? incident.startTime
   const timestamp = isOngoing
     ? formatIncidentTimestamp(incident.startTime)
     : formatIncidentTimestamp(resolvedEndTime)
   const duration = isOngoing
-    ? 'ongoing'
+    ? t('incident_duration_ongoing')
     : formatDuration(resolvedEndTime - incident.startTime)
 
   return (
@@ -24,7 +25,7 @@ export function IncidentRow({ incident }: IncidentRowProps) {
         {label}
       </span>
       <span className={styles.meta}>
-        {timestamp} · {duration}
+        {timestamp} {' · '} {duration}
       </span>
     </div>
   )

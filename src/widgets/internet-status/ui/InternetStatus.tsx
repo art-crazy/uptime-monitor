@@ -1,4 +1,6 @@
 import type { InternetStatus } from '../../../entities/internet'
+import { t } from '../../../shared/lib/i18n'
+import { formatResponseTime } from '../../../shared/lib/time'
 import styles from './InternetStatus.module.css'
 
 interface InternetStatusProps {
@@ -21,13 +23,16 @@ export function InternetStatusWidget({ status }: InternetStatusProps) {
     <section className={classes}>
       <span className={dotClasses} />
       <div className={styles.copy}>
-        <div className={styles.title}>Internet connection</div>
+        <div className={styles.title}>{t('internet_title')}</div>
         <div className={styles.subtitle}>
           {hasResult
             ? isOnline
-              ? `Online - ${status.pingMs ?? '--'}ms response`
-              : 'Offline - no response'
-            : 'Checking...'}
+              ? t(
+                  'internet_status_online',
+                  status.pingMs === null ? '--' : formatResponseTime(status.pingMs),
+                )
+              : t('internet_status_offline')
+            : t('internet_status_checking')}
         </div>
       </div>
     </section>

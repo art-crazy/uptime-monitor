@@ -1,0 +1,121 @@
+{
+  "ext": {
+    "name": "Uptime Monitor",
+    "short_name": "Uptime Monitor",
+    "description": "Отслеживайте доступность сайтов, API и хостов с локальными проверками и уведомлениями браузера.",
+    "action_title": "Uptime Monitor"
+  },
+  "app": {
+    "loading_title": "Загружаем мониторы",
+    "loading_subtitle": "Синхронизируем локальные данные..."
+  },
+  "common": {
+    "go_back_aria": "Назад",
+    "edit": "Изменить",
+    "delete": "Удалить"
+  },
+  "dashboard": {
+    "open_settings_aria": "Открыть настройки",
+    "empty_title": "Мониторов пока нет",
+    "empty_subtitle": "Добавьте URL, чтобы начать отслеживание доступности",
+    "add_first_monitor": "+ Добавить первый монитор",
+    "add_monitor": "+ Добавить монитор",
+    "status_down_relative": "Недоступен - $1",
+    "status_down_waiting": "Недоступен - ждем восстановления",
+    "status_paused": "На паузе",
+    "status_pending": "Проверяем первый ответ",
+    "status_uptime": "Доступность $1"
+  },
+  "add_monitor": {
+    "title": "Добавить монитор",
+    "edit_title": "Изменить монитор",
+    "field_type": "Тип",
+    "type_website": "Сайт",
+    "type_api": "API",
+    "type_host": "Хост / IP",
+    "field_host": "Хост",
+    "field_url": "URL",
+    "placeholder_host": "example.com или 192.168.0.10",
+    "placeholder_url": "https://example.com",
+    "hint_host": "Проверяет доступность этого хоста по HTTP/HTTPS",
+    "hint_url": "Имя будет определено по домену автоматически",
+    "field_interval": "Проверять каждые",
+    "button_saving": "Сохраняем...",
+    "button_save": "Сохранить монитор",
+    "button_save_changes": "Сохранить изменения",
+    "error_invalid_host": "Введите корректный хост, IP или HTTP/HTTPS URL",
+    "error_invalid_url": "Введите корректный URL с http или https",
+    "error_unable_to_save": "Не удалось сохранить монитор"
+  },
+  "settings": {
+    "title": "Настройки",
+    "section_notifications": "Уведомления",
+    "browser_notifications": "Уведомления браузера",
+    "section_default_interval": "Интервал проверки по умолчанию",
+    "section_advanced": "Дополнительно",
+    "connectivity_target": "Цель проверки сети",
+    "connectivity_hint": "В Chromium используется HTTP/HTTPS-проверка. Измените значение, если Google DNS заблокирован",
+    "section_danger": "Опасная зона",
+    "button_working": "Выполняем...",
+    "button_clear_all": "Очистить все мониторы",
+    "confirm_clear_all": "Очистить все мониторы и инциденты?",
+    "error_invalid_ping_target": "Введите корректный хост, IP или HTTP/HTTPS URL",
+    "error_unable_to_save_ping_target": "Сейчас не удалось сохранить цель проверки",
+    "error_unable_to_clear": "Сейчас не удалось очистить мониторы",
+    "error_unable_to_update_notifications": "Сейчас не удалось обновить уведомления",
+    "error_unable_to_update_interval": "Сейчас не удалось обновить интервал по умолчанию"
+  },
+  "monitor": {
+    "badge_up": "UP",
+    "badge_down": "DOWN",
+    "badge_paused": "ПАУЗА",
+    "badge_checking": "ПРОВЕРКА",
+    "error_check_failed": "Не удалось завершить последнюю проверку",
+    "error_check_interrupted": "Последняя проверка была прервана"
+  },
+  "monitor_details": {
+    "stat_uptime": "Доступность",
+    "stat_avg_response": "Средний отклик",
+    "stat_incidents": "Инциденты",
+    "section_incidents": "Инциденты",
+    "empty_incidents": "Инцидентов пока нет",
+    "button_checking": "Проверяем...",
+    "button_check_now": "Проверить сейчас",
+    "button_resume": "Продолжить",
+    "button_pause": "Пауза",
+    "more_actions_aria": "Дополнительные действия",
+    "confirm_delete": "Удалить монитор \"$1\"?",
+    "error_check_now": "Сейчас не удалось запустить ручную проверку",
+    "error_toggle": "Сейчас не удалось обновить этот монитор",
+    "error_delete": "Сейчас не удалось удалить этот монитор"
+  },
+  "internet": {
+    "title": "Интернет-соединение",
+    "status_online": "Онлайн - отклик $1",
+    "status_offline": "Офлайн - нет ответа",
+    "status_checking": "Проверяем..."
+  },
+  "chart": {
+    "title": "Время ответа - последние 24 ч",
+    "bar_down": "Недоступен",
+    "bar_no_samples": "Нет данных",
+    "legend_good": "хорошо",
+    "legend_slow": "медленно",
+    "legend_down": "недоступно"
+  },
+  "incident": {
+    "label_down": "Сбой",
+    "label_up": "Восстановлен",
+    "duration_ongoing": "идет сейчас"
+  },
+  "notification": {
+    "down_title": "$1 недоступен",
+    "up_title": "$1 снова доступен",
+    "down_message": "Последняя проверка доступности для $1 завершилась ошибкой.",
+    "up_message": "Последнее время ответа: $1."
+  },
+  "time": {
+    "today_at": "сегодня $1",
+    "yesterday_at": "вчера $1"
+  }
+}

@@ -90,11 +90,11 @@ function matchesMonitorSnapshot(
 }
 
 function getMonitorCheckErrorMessage(): string {
-  return 'Unable to complete the latest check'
+  return 'monitor_error_check_failed'
 }
 
 function getInterruptedCheckMessage(): string {
-  return 'Last check was interrupted'
+  return 'monitor_error_check_interrupted'
 }
 
 function scheduleMonitorCheck(

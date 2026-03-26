@@ -4,6 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "i18n:generate": "node scripts/generate-locales.mjs",
+    "predev": "npm run i18n:generate",
+    "prebuild": "npm run i18n:generate",
+    "prelint": "npm run i18n:generate",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

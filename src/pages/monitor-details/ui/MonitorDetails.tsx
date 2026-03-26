@@ -10,6 +10,8 @@ import {
 import { checkNow } from '../../../features/check-monitor'
 import { deleteMonitor } from '../../../features/delete-monitor'
 import { toggleMonitor } from '../../../features/toggle-monitor'
+import { t, translateDynamicKey } from '../../../shared/lib/i18n'
+import { formatPercent } from '../../../shared/lib/time'
 import { Badge } from '../../../shared/ui/Badge'
 import { Button } from '../../../shared/ui/Button'
 import { IconButton } from '../../../shared/ui/IconButton'
@@ -19,14 +21,18 @@ import styles from './MonitorDetails.module.css'
 
 function getStatusBadge(monitor: Monitor) {
   if (monitor.status === 'online') {
-    return <Badge tone="success">UP</Badge>
+    return <Badge tone="success">{t('monitor_badge_up')}</Badge>
   }
 
   if (monitor.status === 'down') {
-    return <Badge tone="danger">DOWN</Badge>
+    return <Badge tone="danger">{t('monitor_badge_down')}</Badge>
   }
 
-  return <Badge tone="muted">{monitor.status.toUpperCase()}</Badge>
+  return (
+    <Badge tone="muted">
+      {monitor.status === 'paused' ? t('monitor_badge_paused') : t('monitor_badge_checking')}
+    </Badge>
+  )
 }
 
 interface MonitorDetailsPageProps {
@@ -50,7 +56,9 @@ export function MonitorDetailsPage({
   const menuRef = useRef<HTMLDivElement | null>(null)
   const avgResponse = calculateAverageResponseTime(monitor.history)
   const isCheckPending = monitor.checkState === 'running'
-  const feedbackMessage = actionError ?? monitor.lastCheckError
+  const feedbackMessage =
+    actionError ??
+    (monitor.lastCheckError ? translateDynamicKey(monitor.lastCheckError) : null)
   const sortedIncidents = [...incidents]
     .filter((incident) => incident.monitorId === monitor.id)
     .sort((left, right) => right.startTime - left.startTime)
@@ -66,7 +74,7 @@ export function MonitorDetailsPage({
     try {
       await checkNow(monitor.id)
     } catch {
-      setActionError('Unable to run a manual check right now')
+      setActionError(t('monitor_details_error_check_now'))
     } finally {
       setIsBusy(false)
     }
@@ -83,7 +91,7 @@ export function MonitorDetailsPage({
     try {
       await toggleMonitor(monitor.id)
     } catch {
-      setActionError('Unable to update this monitor right now')
+      setActionError(t('monitor_details_error_toggle'))
     } finally {
       setIsBusy(false)
     }
@@ -95,7 +103,7 @@ export function MonitorDetailsPage({
     }
 
     setIsMenuOpen(false)
-    const confirmed = window.confirm(`Delete monitor "${monitor.name}"?`)
+    const confirmed = window.confirm(t('monitor_details_confirm_delete', monitor.name))
 
     if (!confirmed) {
       return
@@ -108,7 +116,7 @@ export function MonitorDetailsPage({
       await deleteMonitor(monitor.id)
       onDeleted()
     } catch {
-      setActionError('Unable to delete this monitor right now')
+      setActionError(t('monitor_details_error_delete'))
     } finally {
       setIsBusy(false)
     }
@@ -150,7 +158,7 @@ export function MonitorDetailsPage({
     <div className={styles.page}>
       <PageHeader
         leading={
-          <IconButton aria-label="Go back" onClick={onBack}>
+          <IconButton aria-label={t('common_go_back_aria')} onClick={onBack}>
             <ArrowLeft size={16} strokeWidth={2} />
           </IconButton>
         }
@@ -160,17 +168,17 @@ export function MonitorDetailsPage({
 
       <section className={styles.stats}>
         <div className={styles.card}>
-          <div className={styles.cardLabel}>Uptime</div>
-          <div className={styles.cardValue}>{monitor.uptimePercent.toFixed(1)}%</div>
+          <div className={styles.cardLabel}>{t('monitor_details_stat_uptime')}</div>
+          <div className={styles.cardValue}>{formatPercent(monitor.uptimePercent)}</div>
         </div>
         <div className={styles.card}>
-          <div className={styles.cardLabel}>Avg resp</div>
+          <div className={styles.cardLabel}>{t('monitor_details_stat_avg_response')}</div>
           <div className={styles.cardValue}>
             <ResponseTime responseTime={avgResponse} />
           </div>
         </div>
         <div className={styles.card}>
-          <div className={styles.cardLabel}>Incidents</div>
+          <div className={styles.cardLabel}>{t('monitor_details_stat_incidents')}</div>
           <div className={styles.cardValue}>{sortedIncidents.length}</div>
         </div>
       </section>
@@ -178,7 +186,7 @@ export function MonitorDetailsPage({
       <ResponseChart history={monitor.history} />
 
       <section className={styles.incidents}>
-        <div className={styles.sectionLabel}>Incidents</div>
+        <div className={styles.sectionLabel}>{t('monitor_details_section_incidents')}</div>
         {sortedIncidents.length > 0 ? (
           <div className={styles.incidentList}>
             {sortedIncidents.map((incident) => (
@@ -186,20 +194,22 @@ export function MonitorDetailsPage({
             ))}
           </div>
         ) : (
-          <div className={styles.empty}>No incidents recorded yet</div>
+          <div className={styles.empty}>{t('monitor_details_empty_incidents')}</div>
         )}
       </section>
 
       <div className={styles.actions}>
         <Button disabled={isBusy || isCheckPending} fullWidth onClick={handleCheckNow}>
-          {isCheckPending ? 'Checking...' : 'Check now'}
+          {isCheckPending ? t('monitor_details_button_checking') : t('monitor_details_button_check_now')}
         </Button>
         <Button disabled={isBusy} onClick={handleTogglePause} variant="secondary">
-          {monitor.status === 'paused' ? 'Resume' : 'Pause'}
+          {monitor.status === 'paused'
+            ? t('monitor_details_button_resume')
+            : t('monitor_details_button_pause')}
         </Button>
         <div className={styles.menuWrap} ref={menuRef}>
           <Button
-            aria-label="More actions"
+            aria-label={t('monitor_details_more_actions_aria')}
             disabled={isBusy}
             onClick={() => {
               if (!isBusy) {
@@ -220,14 +230,14 @@ export function MonitorDetailsPage({
                 }}
                 type="button"
               >
-                Edit
+                {t('common_edit')}
               </button>
               <button
                 className={[styles.menuItem, styles.menuDanger].join(' ')}
                 onClick={handleDelete}
                 type="button"
               >
-                Delete
+                {t('common_delete')}
               </button>
             </div>
           ) : null}

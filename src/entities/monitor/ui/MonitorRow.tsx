@@ -1,4 +1,5 @@
 import { Badge } from '../../../shared/ui/Badge'
+import { t } from '../../../shared/lib/i18n'
 
 import type { Monitor } from '../model/types'
 import { ResponseTime } from './ResponseTime'
@@ -16,11 +17,11 @@ export function MonitorRow({ monitor, onClick, subtitle }: MonitorRowProps) {
   const isPending = monitor.status === 'pending'
   const badge =
     monitor.status === 'down' ? (
-      <Badge tone="danger">DOWN</Badge>
+      <Badge tone="danger">{t('monitor_badge_down')}</Badge>
     ) : monitor.status === 'paused' ? (
-      <Badge tone="muted">PAUSED</Badge>
+      <Badge tone="muted">{t('monitor_badge_paused')}</Badge>
     ) : monitor.status === 'pending' ? (
-      <Badge tone="muted">CHECKING</Badge>
+      <Badge tone="muted">{t('monitor_badge_checking')}</Badge>
     ) : (
       <ResponseTime responseTime={monitor.responseTime} />
     )

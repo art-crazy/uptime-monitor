@@ -43,6 +43,7 @@ Notes:
 - `host` means a browser-reachable host or IP target checked over HTTP/HTTPS.
 - Legacy stored values with `type: 'ip'` are migrated to `host` during background initialization.
 - `checkState`, `lastCheckError`, and `checkVersion` are runtime-safety fields used by the background worker.
+- `lastCheckError` stores an i18n message key, not a translated user-facing sentence.
 
 ## Incident
 

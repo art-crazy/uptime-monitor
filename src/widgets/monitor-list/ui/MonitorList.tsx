@@ -1,4 +1,5 @@
 import { MonitorRow, type Monitor } from '../../../entities/monitor'
+import { t } from '../../../shared/lib/i18n'
 import { Button } from '../../../shared/ui/Button'
 import styles from './MonitorList.module.css'
 
@@ -27,7 +28,7 @@ export function MonitorList({ items, onAdd, onSelect }: MonitorListProps) {
         ))}
       </div>
       <Button fullWidth onClick={onAdd} variant="dashed">
-        + Add monitor
+        {t('dashboard_add_monitor')}
       </Button>
     </div>
   )

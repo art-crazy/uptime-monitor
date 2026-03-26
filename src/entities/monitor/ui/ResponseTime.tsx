@@ -1,4 +1,5 @@
 import { getResponseTone } from '../../../shared/lib/response'
+import { formatResponseTime } from '../../../shared/lib/time'
 
 import styles from './ResponseTime.module.css'
 
@@ -13,5 +14,5 @@ export function ResponseTime({ responseTime }: ResponseTimeProps) {
 
   const tone = getResponseTone(responseTime)
 
-  return <span className={styles[tone]}>{responseTime}ms</span>
+  return <span className={styles[tone]}>{formatResponseTime(responseTime)}</span>
 }

@@ -6,10 +6,10 @@ export const STORAGE_KEYS = {
 } as const
 
 export const CHECK_INTERVAL_OPTIONS = [
-  { label: '30s', value: 30, minutes: 0.5 },
-  { label: '1 min', value: 60, minutes: 1 },
-  { label: '5 min', value: 300, minutes: 5 },
-  { label: '15 min', value: 900, minutes: 15 },
+  { value: 30, minutes: 0.5 },
+  { value: 60, minutes: 1 },
+  { value: 300, minutes: 5 },
+  { value: 900, minutes: 15 },
 ] as const
 
 export const RESPONSE_THRESHOLDS = {

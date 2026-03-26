@@ -63,12 +63,19 @@ src/
     state.ts
 
 public/
+  _locales/
   icons/
 
 docs/
   architecture.md
   entities.md
   mockups/
+
+i18n/
+  source/
+
+scripts/
+  generate-locales.mjs
 
 vite.config.ts
 ```
@@ -94,7 +101,7 @@ The manifest is declared in `vite.config.ts` with `defineManifest(...)` from `@c
 Important consequences:
 
 - There is no `public/manifest.json` source file.
-- `public/` contains only static assets, currently icons.
+- `public/` contains static assets plus generated `_locales/` catalogs.
 - The plugin generates `dist/manifest.json`, popup assets, and the service worker loader.
 
 Typical build output:
@@ -218,6 +225,13 @@ Notes:
 - Default target remains `8.8.8.8` at the settings level
 - Background normalizes that into browser-safe HTTP(S) candidates in `ping.ts`
 - UI uses wording such as `response` and `connectivity target` instead of claiming ICMP ping
+
+## Localization
+
+- Runtime strings use `chrome.i18n` through `src/shared/lib/i18n.ts`.
+- Source catalogs live in `i18n/source/*.json`.
+- `scripts/generate-locales.mjs` validates locale key parity, generates `public/_locales/*/messages.json`, and emits `src/shared/lib/i18n.generated.ts` for typed fallback access in non-extension contexts.
+- Dates, durations, percentages, intervals, and response times are formatted with `Intl`, not hardcoded language strings.
 
 ## Monitor types
 

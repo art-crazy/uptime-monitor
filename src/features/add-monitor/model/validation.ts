@@ -1,21 +1,33 @@
 import type { MonitorType } from '../../../entities/monitor'
 import { normalizeMonitorTarget } from '../../../entities/monitor'
 
-export function validateMonitorInput(value: string, type: MonitorType) {
+type MonitorValidationErrorKey =
+  | 'add_monitor_error_invalid_host'
+  | 'add_monitor_error_invalid_url'
+
+interface MonitorValidationResult {
+  errorKey: MonitorValidationErrorKey | null
+  normalized: string | null
+}
+
+export function validateMonitorInput(
+  value: string,
+  type: MonitorType,
+): MonitorValidationResult {
   const normalized = normalizeMonitorTarget(value, type)
 
   if (!normalized) {
     return {
-      error:
+      errorKey:
         type === 'host'
-          ? 'Enter a valid host, IP, or HTTP/HTTPS URL'
-          : 'Enter a valid http or https URL',
+          ? 'add_monitor_error_invalid_host'
+          : 'add_monitor_error_invalid_url',
       normalized: null,
     }
   }
 
   return {
-    error: null,
+    errorKey: null,
     normalized,
   }
 }

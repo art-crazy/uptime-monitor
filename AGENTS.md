@@ -12,11 +12,16 @@ src/
   shared/       <- Constants, runtime helpers, UI primitives, shared React hooks
   background/   <- Service worker only, not part of FSD, separate entry point
 public/
+  _locales/     <- generated Chrome i18n catalogs
   icons/        <- icon16.png, icon32.png, icon48.png, icon128.png
 docs/
   architecture.md
   entities.md
   mockups/
+i18n/
+  source/       <- source translation catalogs, generated into public/_locales
+scripts/
+  generate-locales.mjs
 vite.config.ts  <- MV3 manifest source via @crxjs/vite-plugin
 ```
 
@@ -60,8 +65,10 @@ Never import from internal paths like `entities/monitor/model/types` - use `enti
 ### Manifest and build
 
 - The MV3 manifest is declared in `vite.config.ts` with `defineManifest(...)`.
-- `public/` stores only static assets such as icons.
+- `public/` stores static assets plus generated `_locales/` catalogs.
 - `@crxjs/vite-plugin` generates the final `dist/manifest.json` and bundles popup/background entries.
+- Runtime UI strings use `chrome.i18n` through the shared `t(...)` helper.
+- Source translations live in `i18n/source/*.json` and are converted to `_locales/*/messages.json` by `scripts/generate-locales.mjs`.
 
 ### Communication pattern
 

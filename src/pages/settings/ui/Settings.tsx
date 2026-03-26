@@ -1,5 +1,5 @@
 import { ArrowLeft } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import type { Settings } from '../../../entities/settings'
 import { clearAllMonitoringData } from '../../../features/clear-monitoring-data'
@@ -9,6 +9,8 @@ import {
   setPingUrl,
 } from '../../../features/update-settings'
 import { CHECK_INTERVAL_OPTIONS } from '../../../shared/constants'
+import { t } from '../../../shared/lib/i18n'
+import { formatCheckInterval } from '../../../shared/lib/time'
 import { IconButton } from '../../../shared/ui/IconButton'
 import { PageHeader } from '../../../shared/ui/PageHeader'
 import { Toggle } from '../../../shared/ui/Toggle'
@@ -23,6 +25,14 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
   const [actionError, setActionError] = useState<string | null>(null)
   const [isBusy, setIsBusy] = useState(false)
   const [pingError, setPingError] = useState<string | null>(null)
+  const intervalOptions = useMemo(
+    () =>
+      CHECK_INTERVAL_OPTIONS.map((option) => ({
+        label: formatCheckInterval(option.value),
+        value: option.value,
+      })),
+    [],
+  )
 
   const commitPingUrl = async (value: string, input: HTMLInputElement) => {
     if (isBusy) {
@@ -44,7 +54,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
       const result = await setPingUrl(nextPingUrl)
 
       if (result === 'invalid') {
-        setPingError('Enter a valid host, IP, or HTTP/HTTPS URL')
+        setPingError(t('settings_error_invalid_ping_target'))
         input.value = settings.pingUrl
         return
       }
@@ -52,7 +62,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
       setPingError(null)
       input.value = nextPingUrl
     } catch {
-      setPingError('Unable to save ping URL right now')
+      setPingError(t('settings_error_unable_to_save_ping_target'))
       input.value = settings.pingUrl
     } finally {
       setIsBusy(false)
@@ -64,7 +74,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
       return
     }
 
-    const confirmed = window.confirm('Clear all monitors and incidents?')
+    const confirmed = window.confirm(t('settings_confirm_clear_all'))
 
     if (!confirmed) {
       return
@@ -76,7 +86,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
     try {
       await clearAllMonitoringData()
     } catch {
-      setActionError('Unable to clear monitors right now')
+      setActionError(t('settings_error_unable_to_clear'))
     } finally {
       setIsBusy(false)
     }
@@ -86,17 +96,17 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
     <div className={styles.page}>
       <PageHeader
         leading={
-          <IconButton aria-label="Go back" onClick={onBack}>
+          <IconButton aria-label={t('common_go_back_aria')} onClick={onBack}>
             <ArrowLeft size={16} strokeWidth={2} />
           </IconButton>
         }
-        title="Settings"
+        title={t('settings_title')}
       />
 
       <section className={styles.section}>
-        <div className={styles.sectionTitle}>Notifications</div>
+        <div className={styles.sectionTitle}>{t('settings_section_notifications')}</div>
         <div className={styles.row}>
-          <span className={styles.label}>Browser notifications</span>
+          <span className={styles.label}>{t('settings_browser_notifications')}</span>
           <button
             aria-pressed={settings.notificationsEnabled}
             className={[
@@ -111,7 +121,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
               try {
                 await setNotificationsEnabled(!settings.notificationsEnabled)
               } catch {
-                setActionError('Unable to update notifications right now')
+                setActionError(t('settings_error_unable_to_update_notifications'))
               } finally {
                 setIsBusy(false)
               }
@@ -124,7 +134,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
       </section>
 
       <section className={styles.section}>
-        <div className={styles.sectionTitle}>Default check interval</div>
+        <div className={styles.sectionTitle}>{t('settings_section_default_interval')}</div>
         <Toggle
           disabled={isBusy}
           onChange={async (value) => {
@@ -134,20 +144,20 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
             try {
               await setDefaultCheckInterval(value as Settings['defaultInterval'])
             } catch {
-              setActionError('Unable to update the default interval right now')
+              setActionError(t('settings_error_unable_to_update_interval'))
             } finally {
               setIsBusy(false)
             }
           }}
-          options={CHECK_INTERVAL_OPTIONS}
+          options={intervalOptions}
           value={settings.defaultInterval}
         />
       </section>
 
       <section className={styles.section}>
-        <div className={styles.sectionTitle}>Advanced</div>
+        <div className={styles.sectionTitle}>{t('settings_section_advanced')}</div>
         <label className={styles.fieldLabel} htmlFor="ping-url">
-          Connectivity target
+          {t('settings_connectivity_target')}
         </label>
         <input
           aria-invalid={pingError !== null}
@@ -178,20 +188,19 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
           type="text"
         />
         <div className={styles.hint}>
-          {pingError ??
-            'Uses an HTTP/HTTPS check in Chromium. Change if Google DNS is blocked'}
+          {pingError ?? t('settings_connectivity_hint')}
         </div>
       </section>
 
       <section className={styles.section}>
-        <div className={styles.sectionTitle}>Danger</div>
+        <div className={styles.sectionTitle}>{t('settings_section_danger')}</div>
         <button
           className={styles.clearButton}
           disabled={isBusy}
           onClick={handleClearAll}
           type="button"
         >
-          {isBusy ? 'Working...' : 'Clear all monitors'}
+          {isBusy ? t('settings_button_working') : t('settings_button_clear_all')}
         </button>
       </section>
 

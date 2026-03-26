@@ -1,5 +1,7 @@
 import type { Monitor } from '../entities/monitor'
 import type { Settings } from '../entities/settings'
+import { t } from '../shared/lib/i18n'
+import { formatResponseTime } from '../shared/lib/time'
 
 export async function notifyMonitorStatusChange(
   previous: Monitor,
@@ -12,13 +14,16 @@ export async function notifyMonitorStatusChange(
 
   const title =
     next.status === 'down'
-      ? `${next.name} is down`
-      : `${next.name} is back up`
+      ? t('notification_down_title', next.name)
+      : t('notification_up_title', next.name)
 
   const message =
     next.status === 'down'
-      ? `The latest uptime check failed for ${next.url}.`
-      : `Latest response time: ${next.responseTime ?? '--'}ms.`
+      ? t('notification_down_message', next.url)
+      : t(
+          'notification_up_message',
+          next.responseTime === null ? '--' : formatResponseTime(next.responseTime),
+        )
 
   await chrome.notifications.create(`monitor-${next.id}-${Date.now()}`, {
     type: 'basic',
