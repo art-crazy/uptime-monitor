@@ -1,170 +1,275 @@
 # Architecture
 
-## Full directory tree (skeleton)
+## Overview
+
+`Uptime Monitor` is a Chromium MV3 extension with two runtime contexts:
+
+- Popup UI: React SPA rendered from `src/app/main.tsx`
+- Background worker: service worker entry at `src/background/service-worker.ts`
+
+The popup never writes directly to `chrome.storage.local`. User actions are sent to the background as runtime commands, and UI state is synchronized back through storage subscriptions.
+
+## Source layout
 
 ```
 src/
   app/
+    App.tsx
+    App.module.css
+    main.tsx
     styles/
       global.css
-    main.tsx                        ← ReactDOM.createRoot → <App />
-    App.tsx                         ← screen router (local state, no library)
 
   pages/
-    dashboard/
-      index.ts
-      ui/
-        Dashboard.tsx
     add-monitor/
-      index.ts
-      ui/
-        AddMonitor.tsx
+    dashboard/
     monitor-details/
-      index.ts
-      ui/
-        MonitorDetails.tsx
     settings/
-      index.ts
-      ui/
-        Settings.tsx
 
   widgets/
-    monitor-list/
-      index.ts
-      ui/
-        MonitorList.tsx             ← renders list of MonitorRow entities
     internet-status/
-      index.ts
-      ui/
-        InternetStatus.tsx          ← green/red banner with ping ms
+    monitor-list/
     response-chart/
-      index.ts
-      ui/
-        ResponseChart.tsx           ← 24h bar chart (custom SVG)
 
   features/
     add-monitor/
-      index.ts
-      model/
-        validation.ts               ← URL/hostname validation
-        defaults.ts                 ← name auto-detection from domain
-      ui/
-        AddMonitorForm.tsx
-    toggle-monitor/
-      index.ts
-      toggleMonitor.ts              ← pause / resume
     check-monitor/
-      index.ts
-      checkNow.ts                   ← sends CHECK_NOW message to background
+    clear-monitoring-data/
     delete-monitor/
-      index.ts
-      deleteMonitor.ts
+    toggle-monitor/
+    update-settings/
 
   entities/
-    monitor/
-      index.ts
-      model/
-        types.ts                    ← Monitor, MonitorType, MonitorStatus, CheckInterval
-        storage.ts                  ← CRUD via chrome.storage.local
-        selectors.ts                ← uptimePercent, avgResponse helpers
-      ui/
-        MonitorRow.tsx              ← single row in the list
-        StatusDot.tsx
-        ResponseTime.tsx            ← colored ms value
     incident/
-      index.ts
-      model/
-        types.ts                    ← Incident
-        storage.ts
-      ui/
-        IncidentRow.tsx
-    settings/
-      index.ts
-      model/
-        types.ts                    ← Settings
-        storage.ts
-        defaults.ts
     internet/
-      index.ts
-      model/
-        types.ts                    ← InternetStatus
-        storage.ts
+    monitor/
+    settings/
 
   shared/
-    lib/
-      storage.ts                    ← typed chrome.storage.local get/set wrappers
-      notifications.ts              ← chrome.notifications.create helpers
     constants/
-      index.ts                      ← RESPONSE_THRESHOLDS, DEFAULT_PING_URL, HISTORY_MAX_ENTRIES
+    hooks/
+    lib/
     ui/
-      Button.tsx
-      Toggle.tsx                    ← single-select pill group (30s/1min/5min/15min)
-      Badge.tsx                     ← UP / DOWN / PAUSED labels
 
   background/
-    service-worker.ts               ← entry: registers alarms, listens to messages
-    ping.ts                         ← fetch with timeout → { ok, responseTime }
-    alarms.ts                       ← create/remove/sync alarms per monitor
-    icon.ts                         ← setIcon gray/green + setBadgeText red N
-    notifications.ts                ← down/up notification helpers
+    alarms.ts
+    checks.ts
+    commands.ts
+    icon.ts
+    notifications.ts
+    ping.ts
+    queue.ts
+    service-worker.ts
+    state.ts
 
 public/
-  manifest.json
+  icons/
+
+docs/
+  architecture.md
+  entities.md
+  mockups/
+
+vite.config.ts
+```
+
+## FSD boundaries
+
+Popup code follows strict downward imports:
+
+```
+app -> pages -> widgets -> features -> entities -> shared
+```
+
+Rules:
+
+- Same-layer slices do not import each other.
+- Public imports go only through slice `index.ts`.
+- `background/` is outside FSD and acts as the extension command/runtime layer.
+
+## Build pipeline
+
+The manifest is declared in `vite.config.ts` with `defineManifest(...)` from `@crxjs/vite-plugin`.
+
+Important consequences:
+
+- There is no `public/manifest.json` source file.
+- `public/` contains only static assets, currently icons.
+- The plugin generates `dist/manifest.json`, popup assets, and the service worker loader.
+
+Typical build output:
+
+```
+dist/
+  assets/
+    index-*.css
+    index.html-*.js
+    service-worker.ts-*.js
+    settings-*.css
+    settings-*.js
   icons/
     icon16.png
     icon32.png
     icon48.png
     icon128.png
-```
-
-## Build output (dist/)
-
-```
-dist/
-  index.html          ← popup
-  popup.js            ← React bundle
-  background.js       ← service worker (separate rollup entry)
+  index.html
   manifest.json
-  icons/
+  service-worker-loader.js
 ```
 
-Vite is configured with two rollup entry points: `index.html` (popup) and
-`src/background/service-worker.ts`. Output filenames are deterministic (no hash)
-so `manifest.json` can reference them by name.
+## Runtime contexts
 
-## Response time thresholds
+### Popup
 
-| Range         | Color  | Meaning |
-|---------------|--------|---------|
-| < 300 ms      | green  | Good    |
-| 300–1000 ms   | orange | Slow    |
-| > 1000 ms     | red    | Bad     |
-| no response   | red    | Down    |
+Responsibilities:
 
-## Extension icon states
+- Render dashboard, add/edit form, details page, and settings page
+- Read synchronized state from `chrome.storage.local` through entity hooks
+- Send user commands to the background through `chrome.runtime.sendMessage`
 
-| State                   | Icon color | Badge        |
-|-------------------------|------------|--------------|
-| No monitors             | gray       | —            |
-| All online              | green      | —            |
-| N monitors down         | red        | N (red bg)   |
+Key files:
 
-## Data flow: periodic check
+- `src/app/App.tsx`
+- `src/entities/*/model/hooks.ts`
+- `src/shared/hooks/useStorageValue.ts`
+- `src/shared/lib/runtime.ts`
 
+### Background
+
+Responsibilities:
+
+- Validate and execute popup commands
+- Schedule periodic checks with `chrome.alarms`
+- Persist normalized state to `chrome.storage.local`
+- Send browser notifications on monitor state transitions
+- Update extension icon and badge
+
+Key files:
+
+- `src/background/service-worker.ts`
+- `src/background/commands.ts`
+- `src/background/checks.ts`
+- `src/background/alarms.ts`
+- `src/background/icon.ts`
+
+## Data model
+
+Core persisted entities:
+
+- `monitors`
+- `incidents`
+- `settings`
+- `internetStatus`
+
+Storage keys live in `src/shared/constants/index.ts`.
+
+Background writes related state in batches through `src/background/state.ts`, which uses typed storage helpers from `src/shared/lib/storage.ts`.
+
+## Popup -> background command flow
+
+Example:
+
+```ts
+chrome.runtime.sendMessage({
+  type: 'SAVE_MONITOR',
+  monitorDraft: { id, url, type, interval },
+})
 ```
-chrome.alarms → service-worker.ts
-  → ping.ts (fetch with timeout)
-  → update monitor in chrome.storage.local
-  → if status changed → notifications.ts (browser notification)
-  → icon.ts (recount down monitors → update badge)
-  → popup reacts via chrome.storage.onChanged
-```
 
-## Data flow: user adds monitor
+Flow:
 
-```
-AddMonitorForm (feature) → storage.ts (entity)
-  → chrome.storage.local.set
-  → background: storage.onChanged → alarms.ts → create alarm for new monitor
-  → popup: storage.onChanged → re-render MonitorList
-```
+1. Popup feature sends a typed command through `src/shared/lib/runtime.ts`
+2. `service-worker.ts` validates initialization and forwards to `handleRuntimeMessage(...)`
+3. `commands.ts` validates payloads with `zod`
+4. Background mutates storage through `state.ts`
+5. Popup re-renders from `chrome.storage.onChanged` through entity hooks
+
+This keeps the background as the single writer for extension state.
+
+## Periodic monitor checks
+
+Alarm naming:
+
+- `monitor:<id>`
+- `internet-ping`
+
+Monitor flow:
+
+1. `chrome.alarms` fires in `service-worker.ts`
+2. `runMonitorCheck(...)` in `checks.ts` schedules or coalesces the request
+3. `pingMonitorTarget(...)` in `ping.ts` performs the HTTP(S) availability check
+4. Background updates monitor status, history, incidents, notifications, and icon state
+5. Popup receives the new state from storage subscriptions
+
+The monitor lifecycle includes transient fields such as:
+
+- `checkState`
+- `lastCheckError`
+- `checkVersion`
+
+These fields prevent stale writes and allow the popup to render real check progress without guessing from timestamps.
+
+## Internet connectivity checks
+
+The extension cannot perform real ICMP ping from MV3. Internet status is therefore modeled as an HTTP(S) connectivity probe.
+
+Notes:
+
+- Default target remains `8.8.8.8` at the settings level
+- Background normalizes that into browser-safe HTTP(S) candidates in `ping.ts`
+- UI uses wording such as `response` and `connectivity target` instead of claiming ICMP ping
+
+## Monitor types
+
+Supported monitor types:
+
+- `website`
+- `api`
+- `host`
+
+`host` means an HTTP(S)-reachable host or IP target within browser limits. It is not a raw TCP or ICMP server ping.
+
+## Notifications and icon state
+
+Notifications:
+
+- Generated in `src/background/notifications.ts`
+- Triggered only when a monitor changes between `online` and `down`
+
+Icon state:
+
+- Gray: no monitors
+- Green: monitors exist and none are down
+- Red badge: one or more monitors are down
+
+Icon logic is implemented in `src/background/icon.ts`.
+
+## Hydration and popup routing
+
+Routing is local state in `src/app/App.tsx`.
+
+Route keys:
+
+- `dashboard`
+- `add`
+- `details`
+- `settings`
+
+Before rendering the main screens, the popup waits for all entity hooks to finish initial hydration:
+
+- `useMonitors()`
+- `useIncidents()`
+- `useSettings()`
+- `useInternetStatus()`
+
+This avoids rendering incorrect defaults before storage has loaded.
+
+## Failure handling
+
+Background initialization is idempotent:
+
+- storage defaults are ensured
+- stranded `checkState: 'running'` values are reconciled on worker startup
+- alarms and icon state are resynced from storage
+
+This is necessary because MV3 service workers can be suspended and restarted at any time.

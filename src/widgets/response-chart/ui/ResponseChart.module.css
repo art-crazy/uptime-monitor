@@ -1,0 +1,49 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(24, 22, 19, 0.08);
+}
+
+.label {
+  color: var(--color-muted);
+  font-size: 11px;
+}
+
+.bars {
+  display: flex;
+  gap: 3px;
+  align-items: end;
+  height: 86px;
+}
+
+.bar {
+  flex: 1;
+  border-radius: 4px 4px 0 0;
+}
+
+.good {
+  background: #8fc058;
+  color: var(--color-green);
+}
+
+.slow {
+  background: #ebb561;
+  color: var(--color-orange);
+}
+
+.down {
+  background: #d96a67;
+  color: var(--color-red);
+}
+
+.empty {
+  background: rgba(24, 22, 19, 0.08);
+}
+
+.legend {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+}

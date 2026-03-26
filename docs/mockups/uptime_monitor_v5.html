@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uptime Monitor — UI Mockups v5</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f5f5f0; font-family: system-ui, sans-serif; padding: 32px; }
+  h1 { font-size: 18px; font-weight: 500; color: #1a1a1a; margin-bottom: 24px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 800px; }
+  .screen-label { font-size: 12px; color: #888; margin-bottom: 8px; text-align: center; }
+  .popup { background: #fff; border: 0.5px solid rgba(0,0,0,0.12); border-radius: 12px; overflow: hidden; width: 300px; margin: 0 auto; }
+  .header { background: #f5f5f0; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 0.5px solid rgba(0,0,0,0.08); }
+  .header-title { font-size: 13px; font-weight: 500; color: #1a1a1a; }
+  .header-icons { display: flex; gap: 10px; font-size: 13px; color: #888; cursor: pointer; }
+  .connection-block { margin: 12px 14px; background: #EAF3DE; border: 0.5px solid #C0DD97; border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #639922; flex-shrink: 0; }
+  .dot.red { background: #E24B4A; }
+  .connection-title { font-size: 12px; font-weight: 500; color: #3B6D11; }
+  .connection-sub { font-size: 11px; color: #3B6D11; }
+  .empty-state { padding: 24px 14px; text-align: center; }
+  .empty-circle { font-size: 32px; margin-bottom: 8px; opacity: 0.2; }
+  .empty-title { font-size: 13px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px; }
+  .empty-sub { font-size: 11px; color: #888; margin-bottom: 16px; }
+  .btn-primary { width: 100%; padding: 9px; font-size: 13px; font-weight: 500; background: #1a1a1a; color: white; border: none; border-radius: 8px; cursor: pointer; }
+  .monitor-list { padding: 0 14px; display: flex; flex-direction: column; gap: 6px; }
+  .monitor-row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 0.5px solid rgba(0,0,0,0.1); border-radius: 8px; cursor: pointer; }
+  .monitor-row.down { border-color: #F7C1C1; background: #FCEBEB; }
+  .monitor-dot { width: 8px; height: 8px; border-radius: 50%; background: #639922; flex-shrink: 0; }
+  .monitor-dot.red { background: #E24B4A; }
+  .monitor-info { flex: 1; min-width: 0; }
+  .monitor-name { font-size: 12px; font-weight: 500; color: #1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .monitor-meta { font-size: 10px; color: #888; }
+  .monitor-meta.red { color: #A32D2D; }
+  .monitor-right { display: flex; align-items: center; gap: 6px; }
+  .badge-down { font-size: 11px; background: #E24B4A; color: white; padding: 1px 6px; border-radius: 4px; }
+  .arrow { font-size: 12px; color: #888; }
+  .resp-green { font-size: 11px; color: #3B6D11; font-weight: 500; }
+  .resp-orange { font-size: 11px; color: #EF9F27; font-weight: 500; }
+  .resp-red { font-size: 11px; color: #A32D2D; font-weight: 500; }
+  .add-btn { width: calc(100% - 28px); margin: 10px 14px 12px; padding: 8px; font-size: 12px; color: #888; border: 0.5px dashed rgba(0,0,0,0.2); border-radius: 8px; background: transparent; cursor: pointer; }
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 10px 14px; border-bottom: 0.5px solid rgba(0,0,0,0.08); }
+  .stat-card { background: #f5f5f0; border-radius: 8px; padding: 8px; text-align: center; }
+  .stat-label { font-size: 10px; color: #888; }
+  .stat-value { font-size: 15px; font-weight: 500; color: #1a1a1a; }
+  .stat-value.orange { color: #EF9F27; }
+  .chart-section { padding: 10px 14px; border-bottom: 0.5px solid rgba(0,0,0,0.08); }
+  .chart-label { font-size: 11px; color: #888; margin-bottom: 6px; }
+  .chart-bars { display: flex; gap: 2px; align-items: flex-end; height: 36px; }
+  .bar { flex: 1; border-radius: 2px 2px 0 0; }
+  .chart-legend { display: flex; justify-content: space-between; margin-top: 4px; }
+  .legend-item { font-size: 9px; }
+  .incidents-section { padding: 10px 14px; border-bottom: 0.5px solid rgba(0,0,0,0.08); }
+  .incidents-label { font-size: 11px; color: #888; margin-bottom: 6px; }
+  .incident-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; }
+  .incident-status { color: #A32D2D; font-weight: 500; }
+  .incident-time { color: #888; }
+  .action-row { padding: 10px 14px; display: flex; gap: 8px; }
+  .btn-action { flex: 1; padding: 7px; font-size: 12px; background: transparent; border: 0.5px solid rgba(0,0,0,0.15); border-radius: 8px; cursor: pointer; }
+  .btn-action.primary { flex: 2; font-weight: 500; }
+  .settings-section { padding: 12px 14px; border-bottom: 0.5px solid rgba(0,0,0,0.08); }
+  .settings-title { font-size: 12px; font-weight: 500; color: #1a1a1a; margin-bottom: 8px; }
+  .toggle-row { display: flex; justify-content: space-between; align-items: center; }
+  .toggle-label { font-size: 12px; color: #1a1a1a; }
+  .toggle { width: 32px; height: 18px; background: #1D9E75; border-radius: 9px; position: relative; }
+  .toggle-thumb { position: absolute; right: 2px; top: 2px; width: 14px; height: 14px; background: white; border-radius: 50%; }
+  .interval-row { display: flex; gap: 6px; }
+  .interval-btn { flex: 1; text-align: center; padding: 6px; border: 0.5px solid rgba(0,0,0,0.1); border-radius: 8px; font-size: 11px; color: #888; }
+  .interval-btn.active { border-color: #185FA5; color: #185FA5; background: #E6F1FB; font-weight: 500; }
+  .form-section { padding: 12px 14px; display: flex; flex-direction: column; gap: 12px; }
+  .field-label { font-size: 11px; color: #888; margin-bottom: 4px; }
+  .field-hint { font-size: 10px; color: #888; margin-top: 3px; }
+  .type-row { display: flex; gap: 6px; }
+  .type-btn { flex: 1; text-align: center; padding: 6px; border: 0.5px solid rgba(0,0,0,0.1); border-radius: 8px; font-size: 11px; color: #888; }
+  .type-btn.active { border-color: #185FA5; color: #185FA5; background: #E6F1FB; font-weight: 500; }
+  input[type=text] { width: 100%; padding: 8px 10px; font-size: 12px; border: 0.5px solid rgba(0,0,0,0.15); border-radius: 8px; outline: none; font-family: system-ui, sans-serif; }
+  .ping-section { padding: 12px 14px; border-bottom: 0.5px solid rgba(0,0,0,0.08); }
+  .danger-section { padding: 12px 14px; }
+  .danger-row { display: flex; justify-content: space-between; align-items: center; }
+  .danger-label { font-size: 12px; color: #A32D2D; cursor: pointer; }
+  .icon-badge { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .ext-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; position: relative; border: 2px solid; }
+  .ext-icon.green { background: #EAF3DE; border-color: #639922; }
+  .ext-icon.red { background: #FCEBEB; border-color: #E24B4A; }
+  .ext-icon.gray { background: #f5f5f0; border-color: #ccc; }
+  .ext-icon-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid; }
+  .ext-icon.green .ext-icon-dot { border-color: #639922; }
+  .ext-icon.red .ext-icon-dot { border-color: #E24B4A; }
+  .ext-icon.gray .ext-icon-dot { border-color: #ccc; }
+  .ext-badge { position: absolute; top: -6px; right: -6px; width: 16px; height: 16px; background: #E24B4A; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; color: white; font-weight: 500; }
+  .icon-label { font-size: 10px; color: #888; }
+  .icons-row { display: flex; gap: 24px; justify-content: center; padding: 16px; background: #f5f5f0; border: 0.5px solid rgba(0,0,0,0.1); border-radius: 12px; }
+</style>
+</head>
+<body>
+<h1>Uptime Monitor — UI Mockups v5</h1>
+<div class="grid">
+
+  <div>
+    <div class="screen-label">Browser icon states</div>
+    <div class="icons-row">
+      <div class="icon-badge">
+        <div class="ext-icon green"><div class="ext-icon-dot"></div></div>
+        <div class="icon-label">All online</div>
+      </div>
+      <div class="icon-badge">
+        <div class="ext-icon red" style="position:relative;">
+          <div class="ext-icon-dot"></div>
+          <div class="ext-badge">1</div>
+        </div>
+        <div class="icon-label">1 down</div>
+      </div>
+      <div class="icon-badge">
+        <div class="ext-icon gray"><div class="ext-icon-dot"></div></div>
+        <div class="icon-label">No monitors</div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="screen-label">Screen 1a — empty state</div>
+    <div class="popup">
+      <div class="header">
+        <span class="header-title">Uptime Monitor</span>
+        <span class="header-icons">⚙</span>
+      </div>
+      <div class="connection-block">
+        <div class="dot"></div>
+        <div>
+          <div class="connection-title">Internet connection</div>
+          <div class="connection-sub">Online — 142ms ping</div>
+        </div>
+      </div>
+      <div class="empty-state">
+        <div class="empty-circle">○</div>
+        <div class="empty-title">No monitors yet</div>
+        <div class="empty-sub">Add a URL to start tracking uptime</div>
+        <button class="btn-primary">+ Add your first monitor</button>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="screen-label">Screen 1b — dashboard</div>
+    <div class="popup">
+      <div class="header">
+        <span class="header-title">Uptime Monitor</span>
+        <span class="header-icons">⚙</span>
+      </div>
+      <div class="connection-block">
+        <div class="dot"></div>
+        <div>
+          <div class="connection-title">Internet connection</div>
+          <div class="connection-sub">Online — 142ms ping</div>
+        </div>
+      </div>
+      <div class="monitor-list">
+        <div class="monitor-row">
+          <div class="monitor-dot"></div>
+          <div class="monitor-info">
+            <div class="monitor-name">example.com</div>
+            <div class="monitor-meta">99.9%</div>
+          </div>
+          <span class="resp-green">98ms</span>
+          <span class="arrow" style="margin-left:4px;">›</span>
+        </div>
+        <div class="monitor-row down">
+          <div class="monitor-dot red"></div>
+          <div class="monitor-info">
+            <div class="monitor-name">api.example.com</div>
+            <div class="monitor-meta red">Down — 2m ago</div>
+          </div>
+          <div class="monitor-right">
+            <span class="badge-down">DOWN</span>
+            <span class="arrow">›</span>
+          </div>
+        </div>
+        <div class="monitor-row">
+          <div class="monitor-dot"></div>
+          <div class="monitor-info">
+            <div class="monitor-name">store.example.com</div>
+            <div class="monitor-meta">100%</div>
+          </div>
+          <span class="resp-orange">680ms</span>
+          <span class="arrow" style="margin-left:4px;">›</span>
+        </div>
+      </div>
+      <button class="add-btn">+ Add monitor</button>
+    </div>
+  </div>
+
+  <div>
+    <div class="screen-label">Screen 2 — add monitor</div>
+    <div class="popup">
+      <div class="header">
+        <span style="font-size:13px;color:#888;">←</span>
+        <span class="header-title" style="flex:1;margin-left:8px;">Add monitor</span>
+      </div>
+      <div class="form-section">
+        <div>
+          <div class="field-label">Type</div>
+          <div class="type-row">
+            <div class="type-btn active">Website</div>
+            <div class="type-btn">API</div>
+            <div class="type-btn">IP / hostname</div>
+          </div>
+        </div>
+        <div>
+          <div class="field-label">URL</div>
+          <input type="text" placeholder="https://example.com">
+          <div class="field-hint">Name will be set automatically from domain</div>
+        </div>
+        <div>
+          <div class="field-label">Check every</div>
+          <div class="interval-row">
+            <div class="interval-btn">30s</div>
+            <div class="interval-btn active">1 min</div>
+            <div class="interval-btn">5 min</div>
+            <div class="interval-btn">15 min</div>
+          </div>
+        </div>
+        <button class="btn-primary">Save monitor</button>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="screen-label">Screen 3 — monitor details</div>
+    <div class="popup">
+      <div class="header">
+        <span style="font-size:13px;color:#888;">←</span>
+        <span class="header-title" style="flex:1;margin-left:8px;">api.example.com</span>
+        <span class="badge-down">DOWN</span>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Uptime</div>
+          <div class="stat-value">97.2%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg resp</div>
+          <div class="stat-value orange">680ms</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Incidents</div>
+          <div class="stat-value">3</div>
+        </div>
+      </div>
+      <div class="chart-section">
+        <div class="chart-label">Response time — last 24h</div>
+        <div class="chart-bars">
+          <div class="bar" style="background:#97C459;height:40%;"></div>
+          <div class="bar" style="background:#97C459;height:50%;"></div>
+          <div class="bar" style="background:#97C459;height:35%;"></div>
+          <div class="bar" style="background:#EF9F27;height:70%;"></div>
+          <div class="bar" style="background:#EF9F27;height:85%;"></div>
+          <div class="bar" style="background:#97C459;height:45%;"></div>
+          <div class="bar" style="background:#E24B4A;height:100%;"></div>
+          <div class="bar" style="background:#E24B4A;height:100%;"></div>
+          <div class="bar" style="background:#97C459;height:40%;"></div>
+          <div class="bar" style="background:#97C459;height:35%;"></div>
+        </div>
+        <div class="chart-legend">
+          <span class="legend-item" style="color:#3B6D11;">good</span>
+          <span class="legend-item" style="color:#EF9F27;">slow</span>
+          <span class="legend-item" style="color:#A32D2D;">down</span>
+        </div>
+      </div>
+      <div class="incidents-section">
+        <div class="incidents-label">Incidents</div>
+        <div class="incident-row">
+          <span class="incident-status">Down</span>
+          <span class="incident-time">today 14:32 — ongoing</span>
+        </div>
+        <div class="incident-row">
+          <span style="color:#888;font-size:11px;">Down</span>
+          <span class="incident-time">yesterday 09:14 — 4m 12s</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <button class="btn-action primary">Check now</button>
+        <button class="btn-action">Pause</button>
+        <button class="btn-action">⋯</button>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="screen-label">Screen 4 — settings</div>
+    <div class="popup">
+      <div class="header">
+        <span style="font-size:13px;color:#888;">←</span>
+        <span class="header-title" style="flex:1;margin-left:8px;">Settings</span>
+      </div>
+      <div class="settings-section">
+        <div class="settings-title">Notifications</div>
+        <div class="toggle-row">
+          <span class="toggle-label">Browser notifications</span>
+          <div class="toggle"><div class="toggle-thumb"></div></div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-title">Default check interval</div>
+        <div class="interval-row">
+          <div class="interval-btn">30s</div>
+          <div class="interval-btn active">1 min</div>
+          <div class="interval-btn">5 min</div>
+          <div class="interval-btn">15 min</div>
+        </div>
+      </div>
+      <div class="ping-section">
+        <div class="settings-title">Advanced</div>
+        <div class="field-label">Ping URL</div>
+        <input type="text" value="8.8.8.8">
+        <div class="field-hint">Change if your network blocks Google DNS</div>
+      </div>
+      <div class="danger-section">
+        <div class="danger-row">
+          <span class="danger-label">Clear all monitors</span>
+          <span class="danger-label">Delete</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

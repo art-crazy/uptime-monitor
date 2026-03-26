@@ -1,0 +1,1 @@
+export { checkNow } from './checkNow'

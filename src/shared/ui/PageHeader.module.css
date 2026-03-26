@@ -1,0 +1,25 @@
+.header {
+  display: grid;
+  grid-template-columns: minmax(32px, auto) 1fr minmax(32px, auto);
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(24, 22, 19, 0.08);
+  background: var(--color-surface-muted);
+}
+
+.leading,
+.trailing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 800;
+}

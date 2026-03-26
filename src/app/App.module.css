@@ -1,0 +1,27 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--color-surface);
+}
+
+.loadingState {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 14px;
+  text-align: center;
+}
+
+.loadingTitle {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.loadingSubtitle {
+  margin-top: 4px;
+  color: var(--color-muted);
+  font-size: 11px;
+}

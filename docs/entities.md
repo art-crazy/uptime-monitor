@@ -1,38 +1,48 @@
 # Entities
 
 > Types are defined in `src/entities/*/model/types.ts`.
-> This file describes the shape and intent of each entity — update it when types change.
+> Update this file when the persisted entity model changes.
 
 ## Monitor
 
 The core entity. Represents one tracked target.
 
 ```ts
-type MonitorType     = 'website' | 'api' | 'ip'
-type MonitorStatus   = 'online' | 'down' | 'paused' | 'pending'
-type CheckInterval   = 30 | 60 | 300 | 900  // seconds
+type MonitorType = 'website' | 'api' | 'host'
+type MonitorStatus = 'online' | 'down' | 'paused' | 'pending'
+type MonitorCheckState = 'idle' | 'running'
+type CheckInterval = 30 | 60 | 300 | 900 // seconds
 
 interface Monitor {
-  id:            string          // crypto.randomUUID()
-  name:          string          // auto-detected from domain, editable
-  url:           string          // full URL or IP/hostname
-  type:          MonitorType
-  interval:      CheckInterval
-  status:        MonitorStatus
-  lastChecked:   number | null   // Unix ms
-  responseTime:  number | null   // ms, null if down
-  uptimePercent: number          // 0–100, calculated from history
-  incidentCount: number          // total incidents
-  history:       HistoryEntry[]  // capped at HISTORY_MAX_ENTRIES (288 = 24h / 5min)
-  createdAt:     number          // Unix ms
+  id: string
+  name: string
+  url: string
+  type: MonitorType
+  interval: CheckInterval
+  status: MonitorStatus
+  checkState: MonitorCheckState
+  lastCheckError: string | null
+  lastChecked: number | null
+  responseTime: number | null
+  uptimePercent: number
+  incidentCount: number
+  history: HistoryEntry[]
+  checkVersion: number
+  createdAt: number
 }
 
 interface HistoryEntry {
-  timestamp:    number           // Unix ms
-  responseTime: number | null    // null = down
-  status:       'online' | 'down'
+  timestamp: number
+  responseTime: number | null
+  status: 'online' | 'down'
 }
 ```
+
+Notes:
+
+- `host` means a browser-reachable host or IP target checked over HTTP/HTTPS.
+- Legacy stored values with `type: 'ip'` are migrated to `host` during background initialization.
+- `checkState`, `lastCheckError`, and `checkVersion` are runtime-safety fields used by the background worker.
 
 ## Incident
 
@@ -40,44 +50,44 @@ A period when a monitor was down.
 
 ```ts
 interface Incident {
-  id:        string
+  id: string
   monitorId: string
-  startTime: number        // Unix ms — when monitor went down
-  endTime:   number | null // Unix ms — when it came back; null = ongoing
+  startTime: number
+  endTime: number | null
 }
 ```
 
-Duration = `endTime - startTime`. Displayed in MonitorDetails incidents list.
+Duration is `endTime - startTime`.
 
 ## Settings
 
-Global extension settings. Single record in storage under key `settings`.
+Global extension settings. Stored under the `settings` key.
 
 ```ts
 interface Settings {
-  notificationsEnabled: boolean      // default: true
-  defaultInterval:      CheckInterval // default: 60 (1 min)
-  pingUrl:              string        // default: '8.8.8.8'
+  notificationsEnabled: boolean
+  defaultInterval: CheckInterval
+  pingUrl: string
 }
 ```
 
 ## InternetStatus
 
-Stored under key `internetStatus`. Updated by background on every internet ping.
+Stored under the `internetStatus` key. Updated by the background worker.
 
 ```ts
 interface InternetStatus {
-  online:      boolean
-  pingMs:      number | null  // null if offline
-  lastChecked: number         // Unix ms
+  online: boolean
+  pingMs: number | null
+  lastChecked: number
 }
 ```
 
-## Storage layout (chrome.storage.local keys)
+## Storage layout
 
-| Key              | Type              | Notes                        |
-|------------------|-------------------|------------------------------|
-| `monitors`       | `Monitor[]`       | Full array, replaced on update |
-| `incidents`      | `Incident[]`      | Appended; old entries pruned |
-| `settings`       | `Settings`        | Single object                |
-| `internetStatus` | `InternetStatus`  | Overwritten each ping        |
+| Key              | Type             | Notes                         |
+|------------------|------------------|-------------------------------|
+| `monitors`       | `Monitor[]`      | Full array, replaced on write |
+| `incidents`      | `Incident[]`     | Rewritten together with monitors when needed |
+| `settings`       | `Settings`       | Single object                 |
+| `internetStatus` | `InternetStatus` | Overwritten on each connectivity check |

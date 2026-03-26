@@ -1,0 +1,22 @@
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.online {
+  background: var(--color-green);
+}
+
+.down {
+  background: var(--color-red);
+}
+
+.paused {
+  background: var(--color-subtle);
+}
+
+.pending {
+  background: var(--color-orange);
+}

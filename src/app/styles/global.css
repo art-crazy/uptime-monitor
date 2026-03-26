@@ -1,0 +1,77 @@
+:root {
+  color-scheme: light;
+  font-family:
+    "Trebuchet MS",
+    "Segoe UI",
+    sans-serif;
+  line-height: 1.4;
+  font-weight: 400;
+  color: #181613;
+  background: #f2efe7;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --color-bg: #f2efe7;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f5f2ea;
+  --color-surface-strong: #eee8db;
+  --color-border: rgba(24, 22, 19, 0.12);
+  --color-border-strong: rgba(24, 22, 19, 0.2);
+  --color-text: #181613;
+  --color-muted: #70695b;
+  --color-subtle: #9b9283;
+  --color-green: #4f8529;
+  --color-green-bg: #e7f1d8;
+  --color-green-border: #b9d08f;
+  --color-orange: #c67a12;
+  --color-orange-bg: #f8ead5;
+  --color-orange-border: #ebc892;
+  --color-red: #ba3f3e;
+  --color-red-bg: #f8e1df;
+  --color-red-border: #e8b0ad;
+  --color-blue: #1f5d94;
+  --color-blue-bg: #e5eef8;
+  --color-blue-border: #afc7e5;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --transition-fast: 120ms ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 320px;
+  min-width: 320px;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+body {
+  font-size: 12px;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}

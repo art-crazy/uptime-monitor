@@ -1,0 +1,60 @@
+.block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 14px;
+  border: 1px solid;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+
+.online {
+  border-color: var(--color-green-border);
+  background: var(--color-green-bg);
+  color: #2f5712;
+}
+
+.offline {
+  border-color: var(--color-red-border);
+  background: var(--color-red-bg);
+  color: #8d3838;
+}
+
+.pending {
+  border-color: var(--color-border);
+  background: var(--color-surface-muted);
+  color: var(--color-muted);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dotOnline {
+  background: var(--color-green);
+}
+
+.dotOffline {
+  background: var(--color-red);
+}
+
+.dotPending {
+  background: var(--color-subtle);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.subtitle {
+  font-size: 11px;
+}

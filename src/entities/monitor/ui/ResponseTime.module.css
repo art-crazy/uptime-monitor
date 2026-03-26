@@ -1,0 +1,18 @@
+.good,
+.slow,
+.down {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.good {
+  color: var(--color-green);
+}
+
+.slow {
+  color: var(--color-orange);
+}
+
+.down {
+  color: var(--color-red);
+}

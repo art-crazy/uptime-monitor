@@ -1,0 +1,48 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  color: var(--color-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: 9px 10px;
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--color-blue-border);
+  outline: 2px solid transparent;
+}
+
+.input:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.inputError {
+  border-color: var(--color-red-border);
+}
+
+.hint {
+  color: var(--color-muted);
+  font-size: 10px;
+  min-height: 14px;
+}

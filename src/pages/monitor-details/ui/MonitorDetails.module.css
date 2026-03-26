@@ -1,0 +1,106 @@
+.page {
+  min-height: 100vh;
+  background: var(--color-surface);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(24, 22, 19, 0.08);
+}
+
+.card {
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
+  padding: 8px;
+  text-align: center;
+}
+
+.cardLabel {
+  color: var(--color-muted);
+  font-size: 10px;
+}
+
+.cardValue {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.incidents {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(24, 22, 19, 0.08);
+}
+
+.sectionLabel {
+  margin-bottom: 8px;
+  color: var(--color-muted);
+  font-size: 11px;
+}
+
+.incidentList {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.empty {
+  color: var(--color-muted);
+  font-size: 11px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  padding: 12px 14px 14px;
+}
+
+.menuWrap {
+  position: relative;
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 1;
+  display: flex;
+  min-width: 112px;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.menuItem {
+  border: none;
+  background: var(--color-surface);
+  cursor: pointer;
+  padding: 9px 10px;
+  text-align: left;
+}
+
+.menuItem:hover {
+  background: var(--color-surface-muted);
+}
+
+.menuItem:focus-visible {
+  outline: 2px solid var(--color-blue-border);
+  outline-offset: -2px;
+}
+
+.menuDanger {
+  color: var(--color-red);
+}
+
+.feedback {
+  padding: 0 14px 14px;
+  color: var(--color-muted);
+  font-size: 11px;
+}
+
+.feedbackError {
+  color: var(--color-red);
+}

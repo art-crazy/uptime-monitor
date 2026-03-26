@@ -1,0 +1,24 @@
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  font-size: 11px;
+}
+
+.label {
+  font-weight: 800;
+}
+
+.down {
+  color: var(--color-red);
+}
+
+.up {
+  color: var(--color-muted);
+}
+
+.meta {
+  color: var(--color-muted);
+  text-align: right;
+}
