@@ -72,8 +72,7 @@ export function calculateMedianResponseTime(history: HistoryEntry[]): number | n
 
 export function getChartRange(
   history: HistoryEntry[],
-  bucketCount = 24,
-  bucketMs = 60 * 60 * 1000,
+  windowMs = 24 * 60 * 60 * 1000,
   chartEnd = history.at(-1)?.timestamp ?? null,
 ): ChartRange | null {
   if (chartEnd === null) {
@@ -82,18 +81,16 @@ export function getChartRange(
 
   return {
     end: chartEnd,
-    start: chartEnd - bucketCount * bucketMs,
+    start: chartEnd - windowMs,
   }
 }
 
 export function getChartBuckets(
   history: HistoryEntry[],
+  range: ChartRange | null,
   bucketCount = 24,
   bucketMs = 60 * 60 * 1000,
-  chartEnd = history.at(-1)?.timestamp ?? null,
 ): ChartBucket[] {
-  const range = getChartRange(history, bucketCount, bucketMs, chartEnd)
-
   if (range === null) {
     return Array.from({ length: bucketCount }, (_, index) => ({
       averageResponseTime: null,
@@ -106,10 +103,10 @@ export function getChartBuckets(
   }
 
   return Array.from({ length: bucketCount }, (_, index) => {
-    const bucketStart = range.end - (bucketCount - index) * bucketMs
-    const bucketEnd = bucketStart + bucketMs
+    const bucketStart = range.start + index * bucketMs
+    const bucketEnd = Math.min(bucketStart + bucketMs, range.end)
     const bucketEntries = history.filter(
-      (entry) => entry.timestamp >= bucketStart && entry.timestamp < bucketEnd,
+      (entry) => entry.timestamp >= bucketStart && (index === bucketCount - 1 ? entry.timestamp <= bucketEnd : entry.timestamp < bucketEnd),
     )
     const onlineEntries = bucketEntries.filter(
       (entry) => entry.status === 'online' && entry.responseTime !== null,

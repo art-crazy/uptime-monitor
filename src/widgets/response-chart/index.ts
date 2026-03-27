@@ -1,2 +1,3 @@
 export { ResponseChart } from './ui/ResponseChart'
-export { RESPONSE_CHART_PERIODS } from './model/periods'
+export { getResponseChartPeriods } from './model/periods'
+export type { ResponseChartPeriod } from './model/periods'

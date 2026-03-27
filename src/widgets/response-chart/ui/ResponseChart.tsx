@@ -8,13 +8,14 @@ import {
 } from '../../../entities/monitor'
 import { t } from '@shared/lib/i18n'
 import { formatResponseTime, formatTimeRange } from '@shared/lib/time'
-import { RESPONSE_CHART_PERIODS } from '../model/periods'
+import type { ResponseChartPeriod } from '../model/periods'
 import styles from './ResponseChart.module.css'
 
 interface ResponseChartProps {
   chartRange: ChartRange | null
   history: HistoryEntry[]
   onPeriodChange?: (periodIndex: number) => void
+  periods: ResponseChartPeriod[]
   periodIndex?: number
 }
 
@@ -109,6 +110,7 @@ export function ResponseChart({
   chartRange,
   history,
   onPeriodChange,
+  periods,
   periodIndex: controlledPeriodIndex,
 }: ResponseChartProps) {
   const [internalPeriodIndex, setInternalPeriodIndex] = useState(0)
@@ -116,13 +118,13 @@ export function ResponseChart({
   const barsWrapRef = useRef<HTMLDivElement | null>(null)
   const tooltipRef = useRef<HTMLDivElement | null>(null)
   const periodIndex = controlledPeriodIndex ?? internalPeriodIndex
-  const period = RESPONSE_CHART_PERIODS[periodIndex]
+  const period = periods[periodIndex] ?? periods[0]
 
   const buckets = useMemo(() => {
-    return getChartBuckets(history, period.bucketCount, period.bucketMs, chartRange?.end ?? null)
+    return getChartBuckets(history, chartRange, period.bucketCount, period.bucketMs)
   }, [chartRange, history, period])
 
-  const periodLabels = useMemo(() => RESPONSE_CHART_PERIODS.map((item) => t(item.labelKey)), [])
+  const periodLabels = useMemo(() => periods.map((item) => t(item.labelKey)), [periods])
 
   const { maxResponseTime, minResponseTime } = useMemo(() => {
     const values = buckets
@@ -178,7 +180,9 @@ export function ResponseChart({
             ref={tooltipRef}
           >
             <div className={styles.tooltipLine}>
-              {formatTimeRange(hoveredBucket.bucket.bucketStart, hoveredBucket.bucket.bucketEnd)}
+              {hoveredBucket.bucket.sampleCount === 0 && hoveredBucket.bucket.failureCount === 0
+                ? t('chart_bar_no_samples')
+                : formatTimeRange(hoveredBucket.bucket.bucketStart, hoveredBucket.bucket.bucketEnd)}
             </div>
             <div className={styles.tooltipLine}>
               {t('chart_bar_failures', String(hoveredBucket.bucket.failureCount))}
@@ -211,7 +215,9 @@ export function ResponseChart({
                 </div>
                 <button
                   aria-label={[
-                    formatTimeRange(bucket.bucketStart, bucket.bucketEnd),
+                    bucket.sampleCount === 0 && bucket.failureCount === 0
+                      ? t('chart_bar_no_samples')
+                      : formatTimeRange(bucket.bucketStart, bucket.bucketEnd),
                     t('chart_bar_failures', String(bucket.failureCount)),
                     bucket.averageResponseTime === null
                       ? t('chart_bar_no_samples')

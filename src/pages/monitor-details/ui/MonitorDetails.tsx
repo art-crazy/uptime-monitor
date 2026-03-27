@@ -21,7 +21,7 @@ import { Spinner } from '@shared/ui/Spinner'
 import { PageHeader } from '@shared/ui/PageHeader'
 import { PageLayout } from '@shared/ui/PageLayout'
 import { useToast } from '@shared/ui/toast'
-import { RESPONSE_CHART_PERIODS, ResponseChart } from '../../../widgets/response-chart'
+import { getResponseChartPeriods, ResponseChart } from '../../../widgets/response-chart'
 import styles from './MonitorDetails.module.css'
 
 interface StatusBadgeProps {
@@ -138,12 +138,12 @@ export function MonitorDetailsPage({
   const sortedIncidents = [...incidents]
     .filter((incident) => incident.monitorId === monitor.id)
     .sort((left, right) => right.startTime - left.startTime)
-  const chartPeriod = RESPONSE_CHART_PERIODS[chartPeriodIndex] ?? RESPONSE_CHART_PERIODS[0]
+  const chartPeriods = useMemo(() => getResponseChartPeriods(monitor.interval), [monitor.interval])
+  const chartPeriod = chartPeriods[chartPeriodIndex] ?? chartPeriods[0]
   const chartRange = useMemo(
     () => getChartRange(
       monitor.history,
-      chartPeriod.bucketCount,
-      chartPeriod.bucketMs,
+      chartPeriod.windowMs,
       monitor.history.at(-1)?.timestamp ?? monitor.lastChecked,
     ),
     [chartPeriod, monitor.history, monitor.lastChecked],
@@ -306,6 +306,7 @@ export function MonitorDetailsPage({
         chartRange={chartRange}
         history={monitor.history}
         onPeriodChange={setChartPeriodIndex}
+        periods={chartPeriods}
         periodIndex={chartPeriodIndex}
       />
 
