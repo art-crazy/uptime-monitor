@@ -10,7 +10,6 @@ import { delay } from '@shared/lib/async'
 import { t } from '@shared/lib/i18n'
 import { saveMonitorDraft } from '@shared/lib/runtime'
 import { formatCheckInterval } from '@shared/lib/time'
-import { Button } from '@shared/ui/Button'
 import { Toggle } from '@shared/ui/Toggle'
 import styles from './AddMonitorForm.module.css'
 import { getInitialMonitorFormState } from '../model/defaults'
@@ -24,10 +23,10 @@ import {
 
 interface AddMonitorFormProps {
   defaultInterval: CheckInterval
-  formId?: string
+  formId: string
   monitor?: MonitorFormDraft
   onSaved: (monitorId: string) => void
-  onStateChange?: (state: { isDisabled: boolean; isSaving: boolean }) => void
+  onStateChange: (state: { isDisabled: boolean; isSaving: boolean }) => void
 }
 
 type FieldErrorKey =
@@ -110,7 +109,7 @@ export function AddMonitorForm({
   const isApiType = type === 'api'
 
   useEffect(() => {
-    onStateChange?.({ isDisabled: isUrlEmpty, isSaving })
+    onStateChange({ isDisabled: isUrlEmpty, isSaving })
   }, [isSaving, isUrlEmpty, onStateChange])
 
   const isApiPostMethod = isApiType && apiMethod === 'POST'
@@ -552,20 +551,6 @@ export function AddMonitorForm({
 
       {fieldErrors.save ? (
         <div className={[styles.hint, styles.hintError].join(' ')}>{fieldErrors.save}</div>
-      ) : null}
-
-      {formId == null ? (
-        <div className={styles.footer}>
-          <Button
-            disabled={isUrlEmpty}
-            fullWidth
-            loading={isSaving}
-            type="submit"
-            variant="primary"
-          >
-            {monitor ? t('add_monitor_button_save_changes') : t('add_monitor_button_save')}
-          </Button>
-        </div>
       ) : null}
     </form>
   )

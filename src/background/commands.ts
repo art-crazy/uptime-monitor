@@ -18,6 +18,7 @@ import {
   type RuntimeCommand,
   type SaveMonitorDraftPayload,
 } from '@shared/lib/runtime-contract'
+import { UserFacingError } from '@shared/lib/user-facing-error'
 import { runMonitorCheck } from './checks'
 import { assertTelegramNotificationConfigured, sendTelegramTestMessage } from './notifications'
 import { enqueueBackgroundTask } from './queue'
@@ -51,7 +52,7 @@ async function saveMonitorCommand(
   const normalizedApiConfig = normalizeApiMonitorConfig(monitorDraft.apiConfig)
 
   if (!normalizedUrl) {
-    throw new Error('Invalid monitor target')
+    throw new UserFacingError('Invalid monitor target')
   }
 
   const result = await enqueueBackgroundTask(async () => {
@@ -224,7 +225,7 @@ async function updateTelegramSettingsCommand(
     const normalizedChatId = normalizedTelegramPatch.chatId.trim()
 
     if (!normalizedChatId) {
-      throw new Error('Invalid Telegram chat ID')
+      throw new UserFacingError('Invalid Telegram chat ID')
     }
 
     normalizedTelegramPatch.chatId = normalizedChatId
@@ -273,7 +274,7 @@ async function setPingUrlCommand(pingUrl: string): Promise<void> {
   const normalizedPingUrl = normalizeNetworkTarget(pingUrl)
 
   if (!normalizedPingUrl) {
-    throw new Error('Invalid ping URL')
+    throw new UserFacingError('Invalid ping URL')
   }
 
   await enqueueBackgroundTask(async () => {

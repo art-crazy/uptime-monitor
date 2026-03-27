@@ -1,6 +1,7 @@
 import type { TelegramNotificationSettings } from '../../entities/settings'
 import { TELEGRAM_BOT_TOKEN } from '@shared/constants'
 import { t } from '@shared/lib/i18n'
+import { UserFacingError } from '@shared/lib/user-facing-error'
 
 import { getNotificationContent } from './format'
 import type { MonitorStatusChangeNotificationEvent } from './types'
@@ -20,7 +21,7 @@ export function assertTelegramNotificationConfigured(
   settings: TelegramNotificationSettings,
 ): void {
   if (!settings.chatId.trim()) {
-    throw new Error('Telegram chat ID is not configured')
+    throw new UserFacingError('Telegram chat ID is not configured')
   }
 }
 

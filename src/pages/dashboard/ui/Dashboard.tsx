@@ -8,6 +8,7 @@ import { formatPercent, formatRelativeFromNow } from '@shared/lib/time'
 import { Button } from '@shared/ui/Button'
 import { IconButton } from '@shared/ui/IconButton'
 import { PageHeader } from '@shared/ui/PageHeader'
+import { PageLayout } from '@shared/ui/PageLayout'
 import { InternetStatusWidget } from '../../../widgets/internet-status'
 import { MonitorList, type MonitorListEntry } from '../../../widgets/monitor-list'
 import styles from './Dashboard.module.css'
@@ -76,37 +77,36 @@ export function DashboardPage({
   }))
 
   return (
-    <div className={styles.page}>
-      <PageHeader
-        title={t('dashboard_title')}
-        trailing={
-          <IconButton aria-label={t('dashboard_open_settings_aria')} onClick={onOpenSettings}>
-            <Settings size={16} strokeWidth={1.75} />
-          </IconButton>
-        }
-      />
-
-      <div className={styles.body}>
-        <InternetStatusWidget status={internetStatus} />
-
-        {monitors.length === 0 ? (
-          <div className={styles.emptyState}>
-            <div className={styles.emptyIcon}>
-              <CircleDashed size={30} strokeWidth={1.8} />
-            </div>
-            <div className={styles.emptyTitle}>{t('dashboard_empty_title')}</div>
-            <div className={styles.emptySubtitle}>{t('dashboard_empty_subtitle')}</div>
-          </div>
-        ) : (
-          <MonitorList items={items} onSelect={onOpenMonitor} />
-        )}
-      </div>
-
-      <div className={styles.footer}>
+    <PageLayout
+      header={
+        <PageHeader
+          title={t('dashboard_title')}
+          trailing={
+            <IconButton aria-label={t('dashboard_open_settings_aria')} onClick={onOpenSettings}>
+              <Settings size={16} strokeWidth={1.75} />
+            </IconButton>
+          }
+        />
+      }
+      footer={
         <Button fullWidth onClick={onAddMonitor} variant={monitors.length === 0 ? 'primary' : 'dashed'}>
           {monitors.length === 0 ? t('dashboard_add_first_monitor') : t('dashboard_add_monitor')}
         </Button>
-      </div>
-    </div>
+      }
+    >
+      <InternetStatusWidget status={internetStatus} />
+
+      {monitors.length === 0 ? (
+        <div className={styles.emptyState}>
+          <div className={styles.emptyIcon}>
+            <CircleDashed size={30} strokeWidth={1.8} />
+          </div>
+          <div className={styles.emptyTitle}>{t('dashboard_empty_title')}</div>
+          <div className={styles.emptySubtitle}>{t('dashboard_empty_subtitle')}</div>
+        </div>
+      ) : (
+        <MonitorList items={items} onSelect={onOpenMonitor} />
+      )}
+    </PageLayout>
   )
 }

@@ -5,6 +5,12 @@
   background: var(--color-surface);
 }
 
+.screen {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
 .loadingState {
   display: flex;
   flex: 1;

@@ -18,6 +18,7 @@ import { Button } from '@shared/ui/Button'
 import { IconButton } from '@shared/ui/IconButton'
 import { Spinner } from '@shared/ui/Spinner'
 import { PageHeader } from '@shared/ui/PageHeader'
+import { PageLayout } from '@shared/ui/PageLayout'
 import { ResponseChart } from '../../../widgets/response-chart'
 import styles from './MonitorDetails.module.css'
 
@@ -205,105 +206,107 @@ export function MonitorDetailsPage({
   }
 
   return (
-    <div className={styles.page}>
-      <PageHeader
-        leading={
-          <IconButton aria-label={t('common_go_back_aria')} onClick={onBack}>
-            <ArrowLeft size={16} strokeWidth={2} />
-          </IconButton>
-        }
-        title={monitor.name}
-        trailing={
-          <div className={styles.menuWrap} ref={menuRef}>
-            <IconButton
-              aria-label={t('monitor_details_more_actions_aria')}
-              onClick={() => {
-                if (!isBusy) {
-                  setIsMenuOpen((current) => !current)
-                }
-              }}
-            >
-              <Ellipsis size={16} strokeWidth={2} />
+    <PageLayout
+      header={
+        <PageHeader
+          leading={
+            <IconButton aria-label={t('common_go_back_aria')} onClick={onBack}>
+              <ArrowLeft size={16} strokeWidth={2} />
             </IconButton>
-            {isMenuOpen ? (
-              <div className={styles.menu}>
-                <button
-                  className={styles.menuItem}
-                  onClick={() => {
-                    setIsMenuOpen(false)
-                    onEdit()
-                  }}
-                  type="button"
-                >
-                  {t('common_edit')}
-                </button>
-                <button
-                  className={[styles.menuItem, styles.menuDanger].join(' ')}
-                  onClick={handleDelete}
-                  type="button"
-                >
-                  {t('common_delete')}
-                </button>
-              </div>
-            ) : null}
-          </div>
-        }
-      />
-
-      <div className={styles.body}>
-        <section className={styles.stats}>
-          <div className={styles.card}>
-            <div className={styles.cardLabel}>{t('monitor_details_stat_status')}</div>
-            <div className={styles.cardValue}><StatusBadge className={styles.statusBadge} status={isStatusSpinning ? 'pending' : monitorStatus} /></div>
-          </div>
-          <div className={styles.card}>
-            <div className={styles.cardLabel}>{t('monitor_details_stat_uptime')}</div>
-            <div className={styles.cardValue}>{formatPercent(monitor.uptimePercent)}</div>
-          </div>
-          <div className={styles.card}>
-            <div className={styles.cardLabel}>{t('monitor_details_stat_avg_response')}</div>
-            <div className={styles.cardValue}>
-              <ResponseTime responseTime={monitor.responseTime} />
+          }
+          title={monitor.name}
+          trailing={
+            <div className={styles.menuWrap} ref={menuRef}>
+              <IconButton
+                aria-label={t('monitor_details_more_actions_aria')}
+                onClick={() => {
+                  if (!isBusy) {
+                    setIsMenuOpen((current) => !current)
+                  }
+                }}
+              >
+                <Ellipsis size={16} strokeWidth={2} />
+              </IconButton>
+              {isMenuOpen ? (
+                <div className={styles.menu}>
+                  <button
+                    className={styles.menuItem}
+                    onClick={() => {
+                      setIsMenuOpen(false)
+                      onEdit()
+                    }}
+                    type="button"
+                  >
+                    {t('common_edit')}
+                  </button>
+                  <button
+                    className={[styles.menuItem, styles.menuDanger].join(' ')}
+                    onClick={handleDelete}
+                    type="button"
+                  >
+                    {t('common_delete')}
+                  </button>
+                </div>
+              ) : null}
             </div>
+          }
+        />
+      }
+      footer={
+        <>
+          <div className={styles.actions}>
+            <Button className={styles.actionButton} loading={isCheckPending} onClick={handleCheckNow}>
+              {t('monitor_details_button_check_now')}
+            </Button>
+            <Button className={styles.actionButton} loading={isResuming} onClick={handleTogglePause} variant="secondary">
+              {monitorStatus === 'paused'
+                ? t('monitor_details_button_resume')
+                : t('monitor_details_button_pause')}
+            </Button>
           </div>
-          <div className={styles.card}>
-            <div className={styles.cardLabel}>{t('monitor_details_stat_incidents')}</div>
-            <div className={styles.cardValue}>{sortedIncidents.length}</div>
-          </div>
-        </section>
-
-        <ResponseChart history={monitor.history} />
-
-        <section className={styles.incidents}>
-          <div className={styles.sectionLabel}>{t('monitor_details_section_incidents')}</div>
-          {sortedIncidents.length > 0 ? (
-            <div className={styles.incidentList}>
-              {sortedIncidents.map((incident) => (
-                <IncidentRow incident={incident} key={incident.id} />
-              ))}
+          {feedbackMessage ? (
+            <div className={[styles.feedback, styles.feedbackError].join(' ')}>
+              {feedbackMessage}
             </div>
-          ) : (
-            <div className={styles.empty}>{t('monitor_details_empty_incidents')}</div>
-          )}
-        </section>
-      </div>
-
-      <div className={styles.actions}>
-        <Button className={styles.actionButton} loading={isCheckPending} onClick={handleCheckNow}>
-          {t('monitor_details_button_check_now')}
-        </Button>
-        <Button className={styles.actionButton} loading={isResuming} onClick={handleTogglePause} variant="secondary">
-          {monitorStatus === 'paused'
-            ? t('monitor_details_button_resume')
-            : t('monitor_details_button_pause')}
-        </Button>
-      </div>
-
-      {feedbackMessage ? (
-        <div className={[styles.feedback, styles.feedbackError].join(' ')}>
-          {feedbackMessage}
+          ) : null}
+        </>
+      }
+    >
+      <section className={styles.stats}>
+        <div className={styles.card}>
+          <div className={styles.cardLabel}>{t('monitor_details_stat_status')}</div>
+          <div className={styles.cardValue}><StatusBadge className={styles.statusBadge} status={isStatusSpinning ? 'pending' : monitorStatus} /></div>
         </div>
-      ) : null}
-    </div>
+        <div className={styles.card}>
+          <div className={styles.cardLabel}>{t('monitor_details_stat_uptime')}</div>
+          <div className={styles.cardValue}>{formatPercent(monitor.uptimePercent)}</div>
+        </div>
+        <div className={styles.card}>
+          <div className={styles.cardLabel}>{t('monitor_details_stat_avg_response')}</div>
+          <div className={styles.cardValue}>
+            <ResponseTime responseTime={monitor.responseTime} />
+          </div>
+        </div>
+        <div className={styles.card}>
+          <div className={styles.cardLabel}>{t('monitor_details_stat_incidents')}</div>
+          <div className={styles.cardValue}>{sortedIncidents.length}</div>
+        </div>
+      </section>
+
+      <ResponseChart history={monitor.history} />
+
+      <section className={styles.incidents}>
+        <div className={styles.sectionLabel}>{t('monitor_details_section_incidents')}</div>
+        {sortedIncidents.length > 0 ? (
+          <div className={styles.incidentList}>
+            {sortedIncidents.map((incident) => (
+              <IncidentRow incident={incident} key={incident.id} />
+            ))}
+          </div>
+        ) : (
+          <div className={styles.empty}>{t('monitor_details_empty_incidents')}</div>
+        )}
+      </section>
+    </PageLayout>
   )
 }

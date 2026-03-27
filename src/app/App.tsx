@@ -1,4 +1,4 @@
-import { startTransition, useEffect, useMemo, useState } from 'react'
+import { startTransition, useEffect, useMemo, useState, type ReactNode } from 'react'
 
 import { useIncidents } from '../entities/incident'
 import { useInternetStatus } from '../entities/internet'
@@ -78,6 +78,14 @@ export function App() {
     document.title = screenTitle
   }, [screenTitle])
 
+  const renderScreen = (content: ReactNode) => (
+    <div className={styles.page}>
+      <div className={styles.screen}>
+        {content}
+      </div>
+    </div>
+  )
+
   if (!isHydrated) {
     return (
       <div className={styles.page}>
@@ -91,7 +99,7 @@ export function App() {
   }
 
   if (normalizedScreen.key === 'add') {
-    return (
+    return renderScreen(
       <AddMonitorPage
         key={selectedMonitor?.id ?? 'new-monitor'}
         defaultInterval={settings.defaultInterval}
@@ -120,12 +128,12 @@ export function App() {
               : { key: 'dashboard' },
           )
         }
-      />
+      />,
     )
   }
 
   if (normalizedScreen.key === 'details' && selectedMonitor) {
-    return (
+    return renderScreen(
       <MonitorDetailsPage
         key={selectedMonitor.id}
         incidents={incidents}
@@ -133,17 +141,17 @@ export function App() {
         onBack={() => navigate({ key: 'dashboard' })}
         onDeleted={() => navigate({ key: 'dashboard' })}
         onEdit={() => navigate({ key: 'add', monitorId: selectedMonitor.id })}
-      />
+      />,
     )
   }
 
   if (normalizedScreen.key === 'settings') {
-    return (
+    return renderScreen(
       <SettingsPage onBack={() => navigate({ key: 'dashboard' })} settings={settings} />
     )
   }
 
-  return (
+  return renderScreen(
     <DashboardPage
       incidents={incidents}
       internetStatus={internetStatus}
@@ -151,6 +159,6 @@ export function App() {
       onAddMonitor={() => navigate({ key: 'add' })}
       onOpenMonitor={(monitorId) => navigate({ key: 'details', monitorId })}
       onOpenSettings={() => navigate({ key: 'settings' })}
-    />
+    />,
   )
 }

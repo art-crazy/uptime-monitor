@@ -19,6 +19,7 @@ import { formatCheckInterval } from '@shared/lib/time'
 import { Button } from '@shared/ui/Button'
 import { IconButton } from '@shared/ui/IconButton'
 import { PageHeader } from '@shared/ui/PageHeader'
+import { PageLayout } from '@shared/ui/PageLayout'
 import { Toggle } from '@shared/ui/Toggle'
 import styles from './Settings.module.css'
 
@@ -79,6 +80,8 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
   const clearFeedback = () => {
     setFeedback(null)
   }
+
+  const hasConfiguredTelegramChatId = settings.notifications.telegram.chatId.trim().length > 0
 
   const commitPingUrl = async (value: string, input: HTMLInputElement) => {
     if (isPingBusy) {
@@ -181,6 +184,12 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
       return
     }
 
+    if (!hasConfiguredTelegramChatId) {
+      setTelegramChatIdError(t('settings_error_invalid_telegram_chat_id'))
+      setFeedback(null)
+      return
+    }
+
     setIsTelegramTestBusy(true)
     clearFeedback()
 
@@ -227,18 +236,41 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
   }
 
   return (
-    <div className={styles.page}>
-      <PageHeader
-        leading={
-          <IconButton aria-label={t('common_go_back_aria')} onClick={onBack}>
-            <ArrowLeft size={16} strokeWidth={2} />
-          </IconButton>
-        }
-        title={t('settings_title')}
-      />
-
-      <div className={styles.body}>
-        <section className={styles.section}>
+    <PageLayout
+      header={
+        <PageHeader
+          leading={
+            <IconButton aria-label={t('common_go_back_aria')} onClick={onBack}>
+              <ArrowLeft size={16} strokeWidth={2} />
+            </IconButton>
+          }
+          title={t('settings_title')}
+        />
+      }
+      footer={
+        <>
+          <Button
+            fullWidth
+            loading={isClearBusy}
+            onClick={handleClearAll}
+            variant="danger"
+          >
+            {t('settings_button_clear_all')}
+          </Button>
+          {feedback ? (
+            <div
+              className={[
+                styles.feedback,
+                feedback.type === 'error' ? styles.feedbackError : styles.feedbackSuccess,
+              ].join(' ')}
+            >
+              {feedback.message}
+            </div>
+          ) : null}
+        </>
+      }
+    >
+      <section className={styles.section}>
           <div className={styles.sectionTitle}>{t('settings_section_notifications')}</div>
           <div className={styles.row}>
             <span className={styles.label}>{t('settings_browser_notifications')}</span>
@@ -374,6 +406,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
 
             <div className={styles.buttonRow}>
               <Button
+                disabled={!hasConfiguredTelegramChatId}
                 loading={isTelegramTestBusy}
                 onClick={handleSendTelegramTest}
                 size="sm"
@@ -435,29 +468,6 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
             {pingError ?? t('settings_connectivity_hint')}
           </div>
         </section>
-
-        <section className={[styles.section, styles.sectionDanger].join(' ')}>
-          <Button
-            fullWidth
-            loading={isClearBusy}
-            onClick={handleClearAll}
-            variant="danger"
-          >
-            {t('settings_button_clear_all')}
-          </Button>
-        </section>
-      </div>
-
-      {feedback ? (
-        <div
-          className={[
-            styles.feedback,
-            feedback.type === 'error' ? styles.feedbackError : styles.feedbackSuccess,
-          ].join(' ')}
-        >
-          {feedback.message}
-        </div>
-      ) : null}
-    </div>
+    </PageLayout>
   )
 }

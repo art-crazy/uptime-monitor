@@ -7,6 +7,7 @@ import { settingsSchema } from '../entities/settings'
 import {
   INTERNET_ALARM_NAME,
 } from '@shared/constants'
+import { isUserFacingError } from '@shared/lib/user-facing-error'
 import {
   didMonitorSchedulesChange,
   ensureInternetAlarm,
@@ -177,7 +178,10 @@ chrome.runtime.onMessage.addListener(
       .then(() => handleRuntimeMessage(message))
       .then((data) => sendResponse({ ok: true, data }))
       .catch((error: unknown) => {
-        logBackgroundError('runtime:onMessage', error)
+        if (!isUserFacingError(error)) {
+          logBackgroundError('runtime:onMessage', error)
+        }
+
         sendResponse({
           ok: false,
           error: error instanceof Error ? error.message : String(error),
