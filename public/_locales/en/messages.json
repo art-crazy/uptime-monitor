@@ -342,7 +342,7 @@
     "message": "Uptime"
   },
   "monitor_details_stat_avg_response": {
-    "message": "Latest response"
+    "message": "Response"
   },
   "monitor_details_stat_incidents": {
     "message": "Incidents"

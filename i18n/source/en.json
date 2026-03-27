@@ -122,7 +122,7 @@
   "monitor_details": {
     "stat_status": "Status",
     "stat_uptime": "Uptime",
-    "stat_avg_response": "Latest response",
+    "stat_avg_response": "Response",
     "stat_incidents": "Incidents",
     "section_incidents": "Incidents",
     "empty_incidents": "No incidents recorded yet",
