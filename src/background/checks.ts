@@ -19,6 +19,7 @@ import {
 import { DEFAULT_SETTINGS, getSettings, settingsSchema } from '../entities/settings'
 import { STORAGE_KEYS } from '@shared/constants'
 import { createLocalizedMessage } from '@shared/lib/localized-message'
+import { isIgnorableExtensionError } from '@shared/lib/user-facing-error'
 import { updateExtensionIcon } from './icon'
 import { notifyMonitorStatusChange } from './notifications'
 import { pingInternetTarget, pingMonitorTarget } from './ping'
@@ -409,7 +410,9 @@ async function drainMonitorChecks(monitorId: string): Promise<void> {
     try {
       await runMonitorCheckOnce(monitorId, pendingCheck.requestId, pendingCheck)
     } catch (error) {
-      console.error(`[background] runMonitorCheck:${monitorId}`, error)
+      if (!isIgnorableExtensionError(error)) {
+        console.error(`[background] runMonitorCheck:${monitorId}`, error)
+      }
     }
   }
 }

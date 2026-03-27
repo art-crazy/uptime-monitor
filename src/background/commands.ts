@@ -18,7 +18,7 @@ import {
   type RuntimeCommand,
   type SaveMonitorDraftPayload,
 } from '@shared/lib/runtime-contract'
-import { UserFacingError } from '@shared/lib/user-facing-error'
+import { isIgnorableExtensionError, UserFacingError } from '@shared/lib/user-facing-error'
 import { runMonitorCheck } from './checks'
 import { assertTelegramNotificationConfigured, sendTelegramTestMessage } from './notifications'
 import { enqueueBackgroundTask } from './queue'
@@ -29,7 +29,9 @@ function triggerMonitorCheck(
   options?: { force?: boolean },
 ): void {
   void runMonitorCheck(monitorId, options).catch((error) => {
-    console.error(`[background] runMonitorCheck:${monitorId}`, error)
+    if (!isIgnorableExtensionError(error)) {
+      console.error(`[background] runMonitorCheck:${monitorId}`, error)
+    }
   })
 }
 
@@ -138,7 +140,7 @@ async function toggleMonitorCommand(monitorId: string): Promise<void> {
     const monitorIndex = monitors.findIndex((monitor) => monitor.id === monitorId)
 
     if (monitorIndex === -1) {
-      throw new Error('Monitor not found')
+      throw new UserFacingError('Monitor not found')
     }
 
     const currentMonitor = monitors[monitorIndex]

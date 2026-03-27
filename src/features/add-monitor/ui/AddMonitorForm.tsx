@@ -222,8 +222,7 @@ export function AddMonitorForm({
       ])
 
       onSaved(response.monitorId)
-    } catch (saveError) {
-      console.error('[popup] saveMonitorDraft', saveError)
+    } catch {
       setFieldErrors(translateFieldMessages({ save: 'add_monitor_error_unable_to_save' }))
     } finally {
       setIsSaving(false)

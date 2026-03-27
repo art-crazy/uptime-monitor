@@ -1,6 +1,7 @@
 import type { Monitor } from '../../entities/monitor'
 import type { Settings } from '../../entities/settings'
 import { translateLocalizedMessage } from '@shared/lib/i18n'
+import { isIgnorableExtensionError } from '@shared/lib/user-facing-error'
 
 import { sendBrowserStatusChangeNotification } from './browser'
 import {
@@ -59,10 +60,12 @@ export async function notifyMonitorStatusChange(
 
   notificationResults.forEach((result, index) => {
     if (result.status === 'rejected') {
-      console.error(
-        `[background] notifyMonitorStatusChange:${channels[index].name}`,
-        result.reason,
-      )
+      if (!isIgnorableExtensionError(result.reason)) {
+        console.warn(
+          `[background] notifyMonitorStatusChange:${channels[index].name}`,
+          result.reason,
+        )
+      }
     }
   })
 }

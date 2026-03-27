@@ -7,7 +7,7 @@ import { settingsSchema } from '../entities/settings'
 import {
   INTERNET_ALARM_NAME,
 } from '@shared/constants'
-import { isUserFacingError } from '@shared/lib/user-facing-error'
+import { isIgnorableExtensionError, isUserFacingError } from '@shared/lib/user-facing-error'
 import {
   didMonitorSchedulesChange,
   ensureInternetAlarm,
@@ -36,6 +36,10 @@ type TaskContext =
   | `alarms:onAlarm:${string}`
 
 function logBackgroundError(context: TaskContext, error: unknown): void {
+  if (isIgnorableExtensionError(error)) {
+    return
+  }
+
   console.error(`[background] ${context}`, error)
 }
 
