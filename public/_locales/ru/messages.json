@@ -33,25 +33,25 @@
     "message": "Мониторов пока нет"
   },
   "dashboard_empty_subtitle": {
-    "message": "Добавьте URL, чтобы начать отслеживание доступности"
+    "message": "Добавьте URL, чтобы начать отслеживание"
   },
   "dashboard_add_first_monitor": {
-    "message": "+ Добавить первый монитор"
+    "message": "+ Добавить монитор"
   },
   "dashboard_add_monitor": {
     "message": "+ Добавить монитор"
   },
   "dashboard_status_down_relative": {
-    "message": "Недоступен - $1"
+    "message": "Недоступен — $1"
   },
   "dashboard_status_down_waiting": {
-    "message": "Недоступен - ждем восстановления"
+    "message": "Недоступен — ждём восстановления"
   },
   "dashboard_status_paused": {
     "message": "На паузе"
   },
   "dashboard_status_pending": {
-    "message": "Проверяем первый ответ"
+    "message": "Ожидаем первый ответ"
   },
   "dashboard_status_uptime": {
     "message": "Доступность $1"
@@ -60,7 +60,7 @@
     "message": "Добавить монитор"
   },
   "add_monitor_edit_title": {
-    "message": "Изменить монитор"
+    "message": "Редактировать монитор"
   },
   "add_monitor_field_type": {
     "message": "Тип"
@@ -87,10 +87,10 @@
     "message": "https://example.com"
   },
   "add_monitor_hint_host": {
-    "message": "Проверяет доступность этого хоста по HTTP/HTTPS"
+    "message": "Проверяет доступность по HTTP/HTTPS"
   },
   "add_monitor_hint_url": {
-    "message": "Имя будет определено по домену автоматически"
+    "message": "Имя будет взято из домена автоматически"
   },
   "add_monitor_field_interval": {
     "message": "Проверять каждые"
@@ -99,16 +99,16 @@
     "message": "Сохраняем..."
   },
   "add_monitor_button_save": {
-    "message": "Сохранить монитор"
+    "message": "Сохранить"
   },
   "add_monitor_button_save_changes": {
     "message": "Сохранить изменения"
   },
   "add_monitor_error_invalid_host": {
-    "message": "Введите корректный хост, IP или HTTP/HTTPS URL"
+    "message": "Введите корректный хост, IP или URL"
   },
   "add_monitor_error_invalid_url": {
-    "message": "Введите корректный URL с http или https"
+    "message": "Введите корректный URL, начинающийся с http или https"
   },
   "add_monitor_error_unable_to_save": {
     "message": "Не удалось сохранить монитор"
@@ -129,43 +129,43 @@
     "message": "Дополнительно"
   },
   "settings_connectivity_target": {
-    "message": "Цель проверки сети"
+    "message": "Адрес для проверки связи"
   },
   "settings_connectivity_hint": {
-    "message": "В Chromium используется HTTP/HTTPS-проверка. Измените значение, если Google DNS заблокирован"
+    "message": "Используется для определения доступности интернета. Измените, если Google DNS недоступен"
   },
   "settings_section_danger": {
-    "message": "Опасная зона"
+    "message": "Сброс данных"
   },
   "settings_button_working": {
     "message": "Выполняем..."
   },
   "settings_button_clear_all": {
-    "message": "Очистить все мониторы"
+    "message": "Удалить все мониторы"
   },
   "settings_confirm_clear_all": {
-    "message": "Очистить все мониторы и инциденты?"
+    "message": "Удалить все мониторы и историю сбоев?"
   },
   "settings_error_invalid_ping_target": {
-    "message": "Введите корректный хост, IP или HTTP/HTTPS URL"
+    "message": "Введите корректный хост, IP или URL"
   },
   "settings_error_unable_to_save_ping_target": {
-    "message": "Сейчас не удалось сохранить цель проверки"
+    "message": "Не удалось сохранить адрес проверки"
   },
   "settings_error_unable_to_clear": {
-    "message": "Сейчас не удалось очистить мониторы"
+    "message": "Не удалось удалить мониторы"
   },
   "settings_error_unable_to_update_notifications": {
-    "message": "Сейчас не удалось обновить уведомления"
+    "message": "Не удалось обновить настройки уведомлений"
   },
   "settings_error_unable_to_update_interval": {
-    "message": "Сейчас не удалось обновить интервал по умолчанию"
+    "message": "Не удалось обновить интервал проверки"
   },
   "monitor_badge_up": {
-    "message": "UP"
+    "message": "ОК"
   },
   "monitor_badge_down": {
-    "message": "DOWN"
+    "message": "СБОЙ"
   },
   "monitor_badge_paused": {
     "message": "ПАУЗА"
@@ -174,7 +174,7 @@
     "message": "ПРОВЕРКА"
   },
   "monitor_error_check_failed": {
-    "message": "Не удалось завершить последнюю проверку"
+    "message": "Последняя проверка завершилась с ошибкой"
   },
   "monitor_error_check_interrupted": {
     "message": "Последняя проверка была прервана"
@@ -183,16 +183,16 @@
     "message": "Доступность"
   },
   "monitor_details_stat_avg_response": {
-    "message": "Средний отклик"
+    "message": "Отклик"
   },
   "monitor_details_stat_incidents": {
-    "message": "Инциденты"
+    "message": "Сбоев"
   },
   "monitor_details_section_incidents": {
-    "message": "Инциденты"
+    "message": "История сбоев"
   },
   "monitor_details_empty_incidents": {
-    "message": "Инцидентов пока нет"
+    "message": "Сбоев пока не было"
   },
   "monitor_details_button_checking": {
     "message": "Проверяем..."
@@ -201,7 +201,7 @@
     "message": "Проверить сейчас"
   },
   "monitor_details_button_resume": {
-    "message": "Продолжить"
+    "message": "Возобновить"
   },
   "monitor_details_button_pause": {
     "message": "Пауза"
@@ -210,31 +210,31 @@
     "message": "Дополнительные действия"
   },
   "monitor_details_confirm_delete": {
-    "message": "Удалить монитор \"$1\"?"
+    "message": "Удалить монитор «$1»?"
   },
   "monitor_details_error_check_now": {
-    "message": "Сейчас не удалось запустить ручную проверку"
+    "message": "Не удалось запустить проверку"
   },
   "monitor_details_error_toggle": {
-    "message": "Сейчас не удалось обновить этот монитор"
+    "message": "Не удалось обновить монитор"
   },
   "monitor_details_error_delete": {
-    "message": "Сейчас не удалось удалить этот монитор"
+    "message": "Не удалось удалить монитор"
   },
   "internet_title": {
     "message": "Интернет-соединение"
   },
   "internet_status_online": {
-    "message": "Онлайн - отклик $1"
+    "message": "Онлайн — отклик $1"
   },
   "internet_status_offline": {
-    "message": "Офлайн - нет ответа"
+    "message": "Офлайн — нет ответа"
   },
   "internet_status_checking": {
     "message": "Проверяем..."
   },
   "chart_title": {
-    "message": "Время ответа - последние 24 ч"
+    "message": "Время ответа — последние 24 ч"
   },
   "chart_bar_down": {
     "message": "Недоступен"
@@ -258,7 +258,7 @@
     "message": "Восстановлен"
   },
   "incident_duration_ongoing": {
-    "message": "идет сейчас"
+    "message": "продолжается"
   },
   "notification_down_title": {
     "message": "$1 недоступен"
@@ -267,15 +267,15 @@
     "message": "$1 снова доступен"
   },
   "notification_down_message": {
-    "message": "Последняя проверка доступности для $1 завершилась ошибкой."
+    "message": "Проверка доступности $1 завершилась ошибкой."
   },
   "notification_up_message": {
-    "message": "Последнее время ответа: $1."
+    "message": "Время последнего ответа: $1."
   },
   "time_today_at": {
-    "message": "сегодня $1"
+    "message": "сегодня в $1"
   },
   "time_yesterday_at": {
-    "message": "вчера $1"
+    "message": "вчера в $1"
   }
 }

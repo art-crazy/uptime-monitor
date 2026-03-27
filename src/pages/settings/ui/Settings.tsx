@@ -192,7 +192,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
         </div>
       </section>
 
-      <section className={styles.section}>
+      <section className={[styles.section, styles.sectionDanger].join(' ')}>
         <div className={styles.sectionTitle}>{t('settings_section_danger')}</div>
         <button
           className={styles.clearButton}

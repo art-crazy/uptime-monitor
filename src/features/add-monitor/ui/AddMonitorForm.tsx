@@ -154,6 +154,7 @@ export function AddMonitorForm({
       </div>
 
       <Button
+        className={styles.saveButton}
         disabled={isSaving || isUrlEmpty}
         fullWidth
         onClick={handleSave}

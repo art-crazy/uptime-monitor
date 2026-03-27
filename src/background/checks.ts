@@ -12,6 +12,7 @@ import {
 } from '../entities/monitor'
 import {
   DEFAULT_INTERNET_STATUS,
+  getInternetStatus,
   internetStatusSchema,
 } from '../entities/internet'
 import { DEFAULT_SETTINGS, getSettings, settingsSchema } from '../entities/settings'
@@ -207,7 +208,7 @@ async function runMonitorCheckOnce(
   options: RunMonitorCheckOptions = {},
 ): Promise<void> {
   const force = options.force ?? false
-  const monitors = await getMonitors()
+  const [monitors, internet] = await Promise.all([getMonitors(), getInternetStatus()])
   const monitor = monitors.find((entry) => entry.id === monitorId)
 
   if (!monitor) {
@@ -215,7 +216,7 @@ async function runMonitorCheckOnce(
   }
 
   if (monitor.status === 'paused' && !force) {
-    await updateExtensionIcon(monitors)
+    await updateExtensionIcon(monitors, internet)
     return
   }
 
@@ -296,10 +297,11 @@ async function runMonitorCheckOnce(
   }
 
   await enqueueBackgroundTask(async () => {
-    const [currentMonitors, incidents, settings] = await Promise.all([
+    const [currentMonitors, incidents, settings, internet] = await Promise.all([
       getMonitors(),
       getIncidents(),
       getSettings(),
+      getInternetStatus(),
     ])
     const monitorIndex = currentMonitors.findIndex(
       (currentMonitor) => currentMonitor.id === monitorId,
@@ -312,7 +314,7 @@ async function runMonitorCheckOnce(
     const currentMonitor = currentMonitors[monitorIndex]
 
     if (currentMonitor.status === 'paused' && !force) {
-      await updateExtensionIcon(currentMonitors)
+      await updateExtensionIcon(currentMonitors, internet)
       return
     }
 
@@ -380,7 +382,7 @@ async function runMonitorCheckOnce(
       await notifyMonitorStatusChange(currentMonitor, nextMonitor, settings)
     }
 
-    await updateExtensionIcon(nextMonitors)
+    await updateExtensionIcon(nextMonitors, internet)
   })
 }
 
@@ -482,7 +484,7 @@ export async function runAllMonitorChecks(): Promise<void> {
 
 export async function refreshIconFromStorage(): Promise<void> {
   await enqueueBackgroundTask(async () => {
-    const monitors = await getMonitors()
-    await updateExtensionIcon(monitors)
+    const [monitors, internet] = await Promise.all([getMonitors(), getInternetStatus()])
+    await updateExtensionIcon(monitors, internet)
   })
 }

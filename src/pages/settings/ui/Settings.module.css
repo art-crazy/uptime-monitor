@@ -1,4 +1,6 @@
 .page {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   background: var(--color-surface);
 }
@@ -6,6 +8,11 @@
 .section {
   padding: 12px 14px;
   border-bottom: 1px solid rgba(24, 22, 19, 0.08);
+}
+
+.sectionDanger {
+  margin-top: auto;
+  border-bottom: none;
 }
 
 .sectionTitle {

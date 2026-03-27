@@ -1,3 +1,4 @@
+import type { InternetStatus } from '../entities/internet'
 import type { Monitor } from '../entities/monitor'
 
 type IconState = 'gray' | 'green' | 'red'
@@ -60,10 +61,10 @@ function createIcon(size: number, state: IconState): ImageData | null {
 
   const palette = PALETTES[state]
 
+  const dotStroke = Math.max(1.5, size * 0.07)
   context.clearRect(0, 0, size, size)
   drawRoundedRect(context, size, palette)
   context.beginPath()
-  const dotStroke = Math.max(1.5, size * 0.07)
   context.arc(size / 2, size / 2, size * 0.22 - dotStroke / 2, 0, Math.PI * 2)
   context.lineWidth = dotStroke
   context.strokeStyle = palette.stroke
@@ -72,8 +73,15 @@ function createIcon(size: number, state: IconState): ImageData | null {
   return context.getImageData(0, 0, size, size)
 }
 
-function getIconState(monitors: Monitor[]): { downCount: number; state: IconState } {
+function getIconState(
+  monitors: Monitor[],
+  internet: InternetStatus | null,
+): { downCount: number; state: IconState } {
   if (monitors.length === 0) {
+    return { state: 'gray', downCount: 0 }
+  }
+
+  if (internet !== null && internet.lastChecked > 0 && !internet.online) {
     return { state: 'gray', downCount: 0 }
   }
 
@@ -90,8 +98,8 @@ export function didExtensionIconStateChange(
   previousMonitors: Monitor[],
   nextMonitors: Monitor[],
 ): boolean {
-  const previousIconState = getIconState(previousMonitors)
-  const nextIconState = getIconState(nextMonitors)
+  const previousIconState = getIconState(previousMonitors, null)
+  const nextIconState = getIconState(nextMonitors, null)
 
   return (
     previousIconState.state !== nextIconState.state ||
@@ -99,8 +107,11 @@ export function didExtensionIconStateChange(
   )
 }
 
-export async function updateExtensionIcon(monitors: Monitor[]): Promise<void> {
-  const { downCount, state } = getIconState(monitors)
+export async function updateExtensionIcon(
+  monitors: Monitor[],
+  internet: InternetStatus,
+): Promise<void> {
+  const { downCount, state } = getIconState(monitors, internet)
   const image16 = createIcon(16, state)
   const image32 = createIcon(32, state)
   const image48 = createIcon(48, state)

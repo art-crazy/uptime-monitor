@@ -137,6 +137,13 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
     }
   }
 
+  if (changes.internetStatus) {
+    runBackgroundTask(
+      refreshIconFromStorage(),
+      'storage:onChanged:internetStatus:refreshIcon',
+    )
+  }
+
   if (changes.settings && didPingUrlChange(changes.settings)) {
     runBackgroundTask(runInternetCheck(), 'storage:onChanged:runInternetCheck')
   }
