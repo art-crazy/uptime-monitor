@@ -209,6 +209,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
 
       <section className={[styles.section, styles.sectionDanger].join(' ')}>
         <Button
+          fullWidth
           loading={isClearBusy}
           onClick={handleClearAll}
           variant="danger"
