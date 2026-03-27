@@ -24,13 +24,23 @@ import {
 } from './checks'
 import { didExtensionIconStateChange } from './icon'
 
-function logBackgroundError(context: string, error: unknown): void {
+type TaskContext =
+  | 'bootstrap:onInstalled'
+  | 'bootstrap:onStartup'
+  | 'storage:onChanged:syncFromStorage'
+  | 'storage:onChanged:refreshIconFromStorage'
+  | 'storage:onChanged:internetStatus:refreshIcon'
+  | 'storage:onChanged:runInternetCheck'
+  | 'runtime:onMessage'
+  | `alarms:onAlarm:${string}`
+
+function logBackgroundError(context: TaskContext, error: unknown): void {
   console.error(`[background] ${context}`, error)
 }
 
 function runBackgroundTask(
   task: Promise<void>,
-  context: string,
+  context: TaskContext,
 ): void {
   void task.catch((error) => {
     logBackgroundError(context, error)
@@ -130,18 +140,12 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
         changedMonitors.nextMonitors,
       )
     ) {
-      runBackgroundTask(
-        refreshIconFromStorage(),
-        'storage:onChanged:refreshIconFromStorage',
-      )
+      runBackgroundTask(refreshIconFromStorage(), 'storage:onChanged:refreshIconFromStorage')
     }
   }
 
   if (changes.internetStatus) {
-    runBackgroundTask(
-      refreshIconFromStorage(),
-      'storage:onChanged:internetStatus:refreshIcon',
-    )
+    runBackgroundTask(refreshIconFromStorage(), 'storage:onChanged:internetStatus:refreshIcon')
   }
 
   if (changes.settings && didPingUrlChange(changes.settings)) {
