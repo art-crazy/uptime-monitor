@@ -303,6 +303,7 @@ export function MonitorDetailsPage({
       </section>
 
       <ResponseChart
+        chartRange={chartRange}
         history={monitor.history}
         onPeriodChange={setChartPeriodIndex}
         periodIndex={chartPeriodIndex}

@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState, type RefObject } from 'react'
 
 import {
   getChartBuckets,
-  getChartRange,
+  type ChartRange,
   type ChartBucket,
   type HistoryEntry,
 } from '../../../entities/monitor'
@@ -12,6 +12,7 @@ import { RESPONSE_CHART_PERIODS } from '../model/periods'
 import styles from './ResponseChart.module.css'
 
 interface ResponseChartProps {
+  chartRange: ChartRange | null
   history: HistoryEntry[]
   onPeriodChange?: (periodIndex: number) => void
   periodIndex?: number
@@ -20,6 +21,67 @@ interface ResponseChartProps {
 interface HoveredBucketState {
   bucket: ChartBucket
   index: number
+}
+
+function updateTooltipPosition(
+  barsWrapElement: HTMLDivElement,
+  tooltipElement: HTMLDivElement,
+  bucketIndex: number,
+  bucketCount: number,
+) {
+  if (bucketCount === 0) {
+    tooltipElement.style.removeProperty('left')
+    return
+  }
+
+  const containerWidth = barsWrapElement.clientWidth
+  const tooltipWidth = tooltipElement.offsetWidth
+  const anchorX = ((bucketIndex + 0.5) / bucketCount) * containerWidth
+  const edgePadding = 6
+  const maxLeft = Math.max(edgePadding, containerWidth - tooltipWidth - edgePadding)
+  const nextLeft = Math.min(Math.max(anchorX - tooltipWidth / 2, edgePadding), maxLeft)
+
+  tooltipElement.style.left = `${nextLeft}px`
+}
+
+function useTooltipPosition(
+  barsWrapRef: RefObject<HTMLDivElement | null>,
+  tooltipRef: RefObject<HTMLDivElement | null>,
+  hoveredBucket: HoveredBucketState | null,
+  bucketCount: number,
+) {
+  useLayoutEffect(() => {
+    if (!tooltipRef.current) {
+      return
+    }
+
+    if (!hoveredBucket || !barsWrapRef.current || bucketCount === 0) {
+      tooltipRef.current.style.removeProperty('left')
+      return
+    }
+
+    updateTooltipPosition(barsWrapRef.current, tooltipRef.current, hoveredBucket.index, bucketCount)
+  }, [barsWrapRef, bucketCount, hoveredBucket, tooltipRef])
+
+  useLayoutEffect(() => {
+    if (!barsWrapRef.current || !tooltipRef.current || !hoveredBucket) {
+      return
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      if (!barsWrapRef.current || !tooltipRef.current || bucketCount === 0) {
+        return
+      }
+
+      updateTooltipPosition(barsWrapRef.current, tooltipRef.current, hoveredBucket.index, bucketCount)
+    })
+
+    resizeObserver.observe(barsWrapRef.current)
+
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [barsWrapRef, bucketCount, hoveredBucket, tooltipRef])
 }
 
 function getBarHeight(
@@ -44,18 +106,17 @@ function getBarHeight(
 }
 
 export function ResponseChart({
+  chartRange,
   history,
   onPeriodChange,
   periodIndex: controlledPeriodIndex,
 }: ResponseChartProps) {
   const [internalPeriodIndex, setInternalPeriodIndex] = useState(0)
   const [hoveredBucket, setHoveredBucket] = useState<HoveredBucketState | null>(null)
+  const barsWrapRef = useRef<HTMLDivElement | null>(null)
+  const tooltipRef = useRef<HTMLDivElement | null>(null)
   const periodIndex = controlledPeriodIndex ?? internalPeriodIndex
   const period = RESPONSE_CHART_PERIODS[periodIndex]
-  const chartRange = useMemo(
-    () => getChartRange(history, period.bucketCount, period.bucketMs),
-    [history, period],
-  )
 
   const buckets = useMemo(() => {
     return getChartBuckets(history, period.bucketCount, period.bucketMs, chartRange?.end ?? null)
@@ -80,6 +141,8 @@ export function ResponseChart({
       minResponseTime: Math.min(...values),
     }
   }, [buckets])
+
+  useTooltipPosition(barsWrapRef, tooltipRef, hoveredBucket, buckets.length)
 
   return (
     <section className={styles.section}>
@@ -108,11 +171,11 @@ export function ResponseChart({
         </div>
       </div>
 
-      <div className={styles.barsWrap}>
+      <div className={styles.barsWrap} ref={barsWrapRef}>
         {hoveredBucket ? (
           <div
             className={styles.tooltip}
-            style={{ left: `${((hoveredBucket.index + 0.5) / buckets.length) * 100}%` }}
+            ref={tooltipRef}
           >
             <div className={styles.tooltipLine}>
               {formatTimeRange(hoveredBucket.bucket.bucketStart, hoveredBucket.bucket.bucketEnd)}
@@ -133,49 +196,48 @@ export function ResponseChart({
           </div>
         ) : null}
         <div className={styles.bars}>
-        {buckets.map((bucket, index) => {
-          const hasData = bucket.sampleCount > 0 || bucket.failureCount > 0
-          const hasFailures = bucket.failureCount > 0
-          const isMaxBucket =
-            bucket.averageResponseTime !== null &&
-            maxResponseTime > minResponseTime &&
-            bucket.averageResponseTime === maxResponseTime
+          {buckets.map((bucket, index) => {
+            const hasData = bucket.sampleCount > 0 || bucket.failureCount > 0
+            const hasFailures = bucket.failureCount > 0
+            const isMaxBucket =
+              bucket.averageResponseTime !== null &&
+              maxResponseTime > minResponseTime &&
+              bucket.averageResponseTime === maxResponseTime
 
-          return (
-            <div className={styles.barSlot} key={`${index}-${bucket.bucketStart}`}>
-              <div className={styles.barValue}>
-                {bucket.averageResponseTime === null ? '' : Math.round(bucket.averageResponseTime)}
+            return (
+              <div className={styles.barSlot} key={`${index}-${bucket.bucketStart}`}>
+                <div className={styles.barValue}>
+                  {bucket.averageResponseTime === null ? '' : Math.round(bucket.averageResponseTime)}
+                </div>
+                <button
+                  aria-label={[
+                    formatTimeRange(bucket.bucketStart, bucket.bucketEnd),
+                    t('chart_bar_failures', String(bucket.failureCount)),
+                    bucket.averageResponseTime === null
+                      ? t('chart_bar_no_samples')
+                      : t('chart_bar_average', formatResponseTime(bucket.averageResponseTime)),
+                    bucket.medianResponseTime === null
+                      ? null
+                      : t('chart_bar_median', formatResponseTime(bucket.medianResponseTime)),
+                  ].filter(Boolean).join(', ')}
+                  className={[
+                    styles.barButton,
+                    styles.bar,
+                    hasFailures ? styles.barFailure : hasData ? styles.barHealthy : styles.barEmpty,
+                    isMaxBucket ? styles.barPeak : '',
+                  ].join(' ')}
+                  onBlur={() => setHoveredBucket((current) => current?.index === index ? null : current)}
+                  onFocus={() => setHoveredBucket({ bucket, index })}
+                  onMouseEnter={() => setHoveredBucket({ bucket, index })}
+                  onMouseLeave={() => setHoveredBucket((current) => current?.index === index ? null : current)}
+                  style={{ height: `${getBarHeight(bucket, minResponseTime, maxResponseTime)}%` }}
+                  type="button"
+                />
               </div>
-              <button
-                aria-label={[
-                  formatTimeRange(bucket.bucketStart, bucket.bucketEnd),
-                  t('chart_bar_failures', String(bucket.failureCount)),
-                  bucket.averageResponseTime === null
-                    ? t('chart_bar_no_samples')
-                    : t('chart_bar_average', formatResponseTime(bucket.averageResponseTime)),
-                  bucket.medianResponseTime === null
-                    ? null
-                    : t('chart_bar_median', formatResponseTime(bucket.medianResponseTime)),
-                ].filter(Boolean).join(', ')}
-                className={[
-                  styles.barButton,
-                  styles.bar,
-                  hasFailures ? styles.barFailure : hasData ? styles.barHealthy : styles.barEmpty,
-                  isMaxBucket ? styles.barPeak : '',
-                ].join(' ')}
-                onBlur={() => setHoveredBucket((current) => current?.index === index ? null : current)}
-                onFocus={() => setHoveredBucket({ bucket, index })}
-                onMouseEnter={() => setHoveredBucket({ bucket, index })}
-                onMouseLeave={() => setHoveredBucket((current) => current?.index === index ? null : current)}
-                style={{ height: `${getBarHeight(bucket, minResponseTime, maxResponseTime)}%` }}
-                type="button"
-              />
-            </div>
-          )
-        })}
+            )
+          })}
         </div>
       </div>
-
     </section>
   )
 }
