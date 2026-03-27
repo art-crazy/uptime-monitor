@@ -24,6 +24,7 @@ export function getInitialMonitorFormState(
     authType: apiConfig.authType,
     authUsername: apiConfig.authUsername,
     body: apiConfig.body,
+    expectedStatus: apiConfig.expectedStatus === null ? '' : String(apiConfig.expectedStatus),
     headersText: formatApiHeaders(apiConfig.headers),
     type: monitor?.type ?? 'website',
     url: monitor?.url ?? '',

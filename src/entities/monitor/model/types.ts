@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { localizedMessageSchema } from '@shared/lib/localized-message'
 
 const checkIntervalSchema = z.union([
   z.literal(30),
@@ -21,6 +22,7 @@ export const DEFAULT_API_MONITOR_CONFIG: {
   authType: 'none' | 'bearer' | 'basic'
   authUsername: string
   body: string
+  expectedStatus: number | null
   headers: { name: string; value: string }[]
   method: 'GET' | 'POST'
   responseBody: string
@@ -33,6 +35,7 @@ export const DEFAULT_API_MONITOR_CONFIG: {
   authType: 'none',
   authUsername: '',
   body: '',
+  expectedStatus: null,
   headers: [],
   method: 'GET',
   responseBody: '',
@@ -47,6 +50,7 @@ export const apiMonitorConfigSchema = z.object({
   authType: apiMonitorAuthTypeSchema.default(DEFAULT_API_MONITOR_CONFIG.authType),
   authUsername: z.string().default(DEFAULT_API_MONITOR_CONFIG.authUsername),
   body: z.string().default(DEFAULT_API_MONITOR_CONFIG.body),
+  expectedStatus: z.number().int().min(100).max(599).nullable().default(DEFAULT_API_MONITOR_CONFIG.expectedStatus),
   headers: z.array(apiMonitorHeaderSchema).default(DEFAULT_API_MONITOR_CONFIG.headers),
   method: apiMonitorMethodSchema.default(DEFAULT_API_MONITOR_CONFIG.method),
   responseBody: z.string().default(DEFAULT_API_MONITOR_CONFIG.responseBody),
@@ -66,6 +70,10 @@ export const historyEntrySchema = z.object({
   responseTime: z.number().int().nonnegative().nullable(),
   status: z.enum(['online', 'down']),
 })
+export const monitorCheckErrorSchema = z.preprocess(
+  (value) => (typeof value === 'string' ? { key: value, substitutions: [] } : value),
+  localizedMessageSchema,
+)
 
 export const monitorSchema = z.object({
   apiConfig: apiMonitorConfigSchema,
@@ -76,7 +84,7 @@ export const monitorSchema = z.object({
   interval: checkIntervalSchema,
   status: monitorStatusSchema,
   checkState: monitorCheckStateSchema,
-  lastCheckError: z.string().nullable().default(null),
+  lastCheckError: monitorCheckErrorSchema.nullable().default(null),
   lastChecked: z.number().int().nonnegative().nullable(),
   responseTime: z.number().int().nonnegative().nullable(),
   uptimePercent: z.number().min(0).max(100),
@@ -98,4 +106,5 @@ export type ApiMonitorHeader = z.infer<typeof apiMonitorHeaderSchema>
 export type ApiMonitorAuthType = z.infer<typeof apiMonitorAuthTypeSchema>
 export type ApiMonitorResponseMode = z.infer<typeof apiMonitorResponseModeSchema>
 export type ApiMonitorConfig = z.infer<typeof apiMonitorConfigSchema>
+export type MonitorCheckError = z.infer<typeof monitorCheckErrorSchema>
 export type Monitor = z.infer<typeof monitorSchema>

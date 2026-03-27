@@ -12,7 +12,7 @@ import { deleteMonitor } from '../../../features/delete-monitor'
 import { toggleMonitor } from '../../../features/toggle-monitor'
 import { MIN_LOADING_MS } from '@shared/constants'
 import { delay } from '@shared/lib/async'
-import { t, translateDynamicKey } from '@shared/lib/i18n'
+import { t, translateLocalizedMessage } from '@shared/lib/i18n'
 import { formatPercent } from '@shared/lib/time'
 import { Badge } from '@shared/ui/Badge'
 import { Button } from '@shared/ui/Button'
@@ -66,6 +66,7 @@ export function MonitorDetailsPage({
   const [monitorStatus, setMonitorStatus] = useState(monitor.status)
   const [statusDelayDone, setStatusDelayDone] = useState(true)
   const menuRef = useRef<HTMLDivElement>(null)
+  const statusDelayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     setMonitorStatus(monitor.status)
@@ -78,10 +79,23 @@ export function MonitorDetailsPage({
 
     setStatusDelayDone(false)
 
-    setTimeout(() => {
+    if (statusDelayTimerRef.current) {
+      clearTimeout(statusDelayTimerRef.current)
+    }
+
+    statusDelayTimerRef.current = setTimeout(() => {
       setStatusDelayDone(true)
+      statusDelayTimerRef.current = null
     }, MIN_LOADING_MS)
   }, [monitor.checkState])
+
+  useEffect(() => {
+    return () => {
+      if (statusDelayTimerRef.current) {
+        clearTimeout(statusDelayTimerRef.current)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (isBusy) {
@@ -120,7 +134,7 @@ export function MonitorDetailsPage({
   const isCheckPending = isCheckingNow || (!isBusy && monitor.checkState === 'running')
   const feedbackMessage =
     actionError ??
-    (monitor.lastCheckError ? translateDynamicKey(monitor.lastCheckError) : null)
+    translateLocalizedMessage(monitor.lastCheckError)
   const sortedIncidents = [...incidents]
     .filter((incident) => incident.monitorId === monitor.id)
     .sort((left, right) => right.startTime - left.startTime)
@@ -238,41 +252,43 @@ export function MonitorDetailsPage({
         }
       />
 
-      <section className={styles.stats}>
-        <div className={styles.card}>
-          <div className={styles.cardLabel}>{t('monitor_details_stat_status')}</div>
-          <div className={styles.cardValue}><StatusBadge className={styles.statusBadge} status={isStatusSpinning ? 'pending' : monitorStatus} /></div>
-        </div>
-        <div className={styles.card}>
-          <div className={styles.cardLabel}>{t('monitor_details_stat_uptime')}</div>
-          <div className={styles.cardValue}>{formatPercent(monitor.uptimePercent)}</div>
-        </div>
-        <div className={styles.card}>
-          <div className={styles.cardLabel}>{t('monitor_details_stat_avg_response')}</div>
-          <div className={styles.cardValue}>
-            <ResponseTime responseTime={avgResponse} />
+      <div className={styles.body}>
+        <section className={styles.stats}>
+          <div className={styles.card}>
+            <div className={styles.cardLabel}>{t('monitor_details_stat_status')}</div>
+            <div className={styles.cardValue}><StatusBadge className={styles.statusBadge} status={isStatusSpinning ? 'pending' : monitorStatus} /></div>
           </div>
-        </div>
-        <div className={styles.card}>
-          <div className={styles.cardLabel}>{t('monitor_details_stat_incidents')}</div>
-          <div className={styles.cardValue}>{sortedIncidents.length}</div>
-        </div>
-      </section>
-
-      <ResponseChart history={monitor.history} />
-
-      <section className={styles.incidents}>
-        <div className={styles.sectionLabel}>{t('monitor_details_section_incidents')}</div>
-        {sortedIncidents.length > 0 ? (
-          <div className={styles.incidentList}>
-            {sortedIncidents.map((incident) => (
-              <IncidentRow incident={incident} key={incident.id} />
-            ))}
+          <div className={styles.card}>
+            <div className={styles.cardLabel}>{t('monitor_details_stat_uptime')}</div>
+            <div className={styles.cardValue}>{formatPercent(monitor.uptimePercent)}</div>
           </div>
-        ) : (
-          <div className={styles.empty}>{t('monitor_details_empty_incidents')}</div>
-        )}
-      </section>
+          <div className={styles.card}>
+            <div className={styles.cardLabel}>{t('monitor_details_stat_avg_response')}</div>
+            <div className={styles.cardValue}>
+              <ResponseTime responseTime={avgResponse} />
+            </div>
+          </div>
+          <div className={styles.card}>
+            <div className={styles.cardLabel}>{t('monitor_details_stat_incidents')}</div>
+            <div className={styles.cardValue}>{sortedIncidents.length}</div>
+          </div>
+        </section>
+
+        <ResponseChart history={monitor.history} />
+
+        <section className={styles.incidents}>
+          <div className={styles.sectionLabel}>{t('monitor_details_section_incidents')}</div>
+          {sortedIncidents.length > 0 ? (
+            <div className={styles.incidentList}>
+              {sortedIncidents.map((incident) => (
+                <IncidentRow incident={incident} key={incident.id} />
+              ))}
+            </div>
+          ) : (
+            <div className={styles.empty}>{t('monitor_details_empty_incidents')}</div>
+          )}
+        </section>
+      </div>
 
       <div className={styles.actions}>
         <Button className={styles.actionButton} loading={isCheckPending} onClick={handleCheckNow}>

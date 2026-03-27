@@ -30,11 +30,13 @@ export function AddMonitorPage({
         }
         title={monitor ? t('add_monitor_edit_title') : t('add_monitor_title')}
       />
-      <AddMonitorForm
-        defaultInterval={defaultInterval}
-        monitor={monitor}
-        onSaved={onSaved}
-      />
+      <div className={styles.body}>
+        <AddMonitorForm
+          defaultInterval={defaultInterval}
+          monitor={monitor}
+          onSaved={onSaved}
+        />
+      </div>
     </div>
   )
 }

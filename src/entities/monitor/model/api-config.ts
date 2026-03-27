@@ -38,6 +38,13 @@ export function normalizeApiMonitorConfig(
     authType,
     authUsername: authType === 'basic' ? source.authUsername?.trim() ?? '' : '',
     body: method === 'POST' ? source.body ?? '' : '',
+    expectedStatus:
+      typeof source.expectedStatus === 'number' &&
+      Number.isInteger(source.expectedStatus) &&
+      source.expectedStatus >= 100 &&
+      source.expectedStatus <= 599
+        ? source.expectedStatus
+        : null,
     headers,
     method,
     responseBody:

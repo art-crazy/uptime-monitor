@@ -114,8 +114,11 @@
   "add_monitor_field_api_body": {
     "message": "Тело запроса"
   },
+  "add_monitor_field_api_expected_status": {
+    "message": "Ожидаемый HTTP-статус"
+  },
   "add_monitor_field_api_response_check": {
-    "message": "Как проверять ответ"
+    "message": "Дополнительная проверка ответа"
   },
   "add_monitor_field_api_response_body": {
     "message": "Текст в ответе"
@@ -132,6 +135,9 @@
   "add_monitor_placeholder_api": {
     "message": "https://api.example.com/health"
   },
+  "add_monitor_placeholder_api_expected_status": {
+    "message": "200"
+  },
   "add_monitor_placeholder_api_headers": {
     "message": "X-Environment: production"
   },
@@ -142,13 +148,25 @@
     "message": "Проверяет доступность по HTTP/HTTPS"
   },
   "add_monitor_hint_api": {
-    "message": "Отправляет запрос к API и ожидает успешный ответ 2xx. HTML-страницы считаются ошибкой"
+    "message": "Отправляет GET или POST запрос к API и по умолчанию ожидает успешный ответ 2xx. HTML-страницы считаются ошибкой"
   },
   "add_monitor_hint_api_headers": {
-    "message": "Указывайте по одному заголовку на строку: Имя: значение"
+    "message": "Указывайте по одному заголовку на строку: Имя: значение. Authorization лучше задавать через блок ниже"
+  },
+  "add_monitor_hint_api_auth_token": {
+    "message": "Будет передан в заголовке Authorization"
+  },
+  "add_monitor_hint_api_auth_username": {
+    "message": "Имя пользователя для Basic auth"
+  },
+  "add_monitor_hint_api_auth_password": {
+    "message": "Пароль для Basic auth"
   },
   "add_monitor_hint_api_body": {
     "message": "Используется для POST-запросов. Если Content-Type не задан, он будет добавлен автоматически"
+  },
+  "add_monitor_hint_api_expected_status": {
+    "message": "Оставьте пустым, чтобы принимать любой успешный ответ 2xx"
   },
   "add_monitor_hint_api_response_body": {
     "message": "Проверяет, что в ответе есть указанный текст"
@@ -207,11 +225,26 @@
   "add_monitor_error_invalid_api_headers": {
     "message": "Введите заголовки по одному на строку в формате Имя: значение"
   },
-  "add_monitor_error_invalid_api_auth": {
-    "message": "Заполните обязательные поля для авторизации"
+  "add_monitor_error_invalid_api_authorization_header": {
+    "message": "Не дублируйте Authorization в заголовках. Используйте блок авторизации ниже"
   },
-  "add_monitor_error_invalid_api_response": {
-    "message": "Заполните обязательные поля для проверки ответа"
+  "add_monitor_error_invalid_api_bearer_token": {
+    "message": "Укажите токен Bearer"
+  },
+  "add_monitor_error_invalid_api_basic_auth_username": {
+    "message": "Укажите логин для Basic auth"
+  },
+  "add_monitor_error_invalid_api_status": {
+    "message": "Введите корректный HTTP-статус от 100 до 599"
+  },
+  "add_monitor_error_invalid_api_response_body": {
+    "message": "Укажите текст, который должен быть в ответе"
+  },
+  "add_monitor_error_invalid_api_response_json_path": {
+    "message": "Укажите путь в JSON"
+  },
+  "add_monitor_error_invalid_api_response_json_value": {
+    "message": "Укажите ожидаемое значение JSON"
   },
   "add_monitor_error_unable_to_save": {
     "message": "Не удалось сохранить монитор"
@@ -275,6 +308,17 @@
   },
   "monitor_error_api_html_response": {
     "message": "Сервис вернул HTML-страницу вместо ответа API"
+  },
+  "monitor_error_api_unexpected_status": {
+    "message": "Ожидался HTTP-статус $VALUE$, получен $VALUE2$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      },
+      "value2": {
+        "content": "$2"
+      }
+    }
   },
   "monitor_error_api_response_body_mismatch": {
     "message": "В ответе нет ожидаемого текста"

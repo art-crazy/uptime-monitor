@@ -20,6 +20,7 @@ export interface ApiMonitorFormFields {
   authType: ApiMonitorAuthType
   authUsername: string
   body: string
+  expectedStatus: string
   headersText: string
   method: ApiMonitorConfig['method']
   responseBody: string

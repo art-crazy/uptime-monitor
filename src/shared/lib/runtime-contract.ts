@@ -16,6 +16,7 @@ export const runtimeApiMonitorConfigSchema = z.object({
   authType: z.enum(['none', 'bearer', 'basic']),
   authUsername: z.string(),
   body: z.string(),
+  expectedStatus: z.number().int().min(100).max(599).nullable(),
   headers: z.array(
     z.object({
       name: z.string().min(1),

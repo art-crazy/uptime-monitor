@@ -5,7 +5,12 @@
   background: var(--color-surface);
 }
 
-.footer {
-  padding: 12px 14px;
-  margin-top: auto;
+.body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  max-height: var(--popup-body-max-height);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
+

@@ -114,8 +114,11 @@
   "add_monitor_field_api_body": {
     "message": "Request body"
   },
+  "add_monitor_field_api_expected_status": {
+    "message": "Expected HTTP status"
+  },
   "add_monitor_field_api_response_check": {
-    "message": "Response check"
+    "message": "Additional response check"
   },
   "add_monitor_field_api_response_body": {
     "message": "Body must include"
@@ -132,6 +135,9 @@
   "add_monitor_placeholder_api": {
     "message": "https://api.example.com/health"
   },
+  "add_monitor_placeholder_api_expected_status": {
+    "message": "200"
+  },
   "add_monitor_placeholder_api_headers": {
     "message": "X-Environment: production"
   },
@@ -142,13 +148,25 @@
     "message": "Checks HTTP/HTTPS availability for this host"
   },
   "add_monitor_hint_api": {
-    "message": "Checks an API endpoint with GET and expects a 2xx response that is not an HTML page"
+    "message": "Sends a GET or POST request to an API endpoint and expects a successful 2xx response by default. HTML pages are treated as errors"
   },
   "add_monitor_hint_api_headers": {
-    "message": "One header per line in the format Name: value"
+    "message": "One header per line in the format Name: value. Prefer the auth section below for Authorization"
+  },
+  "add_monitor_hint_api_auth_token": {
+    "message": "Sent in the Authorization header"
+  },
+  "add_monitor_hint_api_auth_username": {
+    "message": "Username for Basic auth"
+  },
+  "add_monitor_hint_api_auth_password": {
+    "message": "Password for Basic auth"
   },
   "add_monitor_hint_api_body": {
     "message": "For POST requests. Content-Type is added automatically if you do not specify one"
+  },
+  "add_monitor_hint_api_expected_status": {
+    "message": "Leave empty to accept any successful 2xx response"
   },
   "add_monitor_hint_api_response_body": {
     "message": "Case-sensitive substring match against the raw response body"
@@ -207,11 +225,26 @@
   "add_monitor_error_invalid_api_headers": {
     "message": "Enter headers one per line in the format Name: value"
   },
-  "add_monitor_error_invalid_api_auth": {
-    "message": "Fill in the required API authorization fields"
+  "add_monitor_error_invalid_api_authorization_header": {
+    "message": "Do not duplicate Authorization in headers. Use the auth section below"
   },
-  "add_monitor_error_invalid_api_response": {
-    "message": "Fill in the required API response validation fields"
+  "add_monitor_error_invalid_api_bearer_token": {
+    "message": "Enter a Bearer token"
+  },
+  "add_monitor_error_invalid_api_basic_auth_username": {
+    "message": "Enter a username for Basic auth"
+  },
+  "add_monitor_error_invalid_api_status": {
+    "message": "Enter a valid HTTP status from 100 to 599"
+  },
+  "add_monitor_error_invalid_api_response_body": {
+    "message": "Enter the text that must appear in the response"
+  },
+  "add_monitor_error_invalid_api_response_json_path": {
+    "message": "Enter a JSON path"
+  },
+  "add_monitor_error_invalid_api_response_json_value": {
+    "message": "Enter an expected JSON value"
   },
   "add_monitor_error_unable_to_save": {
     "message": "Unable to save monitor"
@@ -275,6 +308,17 @@
   },
   "monitor_error_api_html_response": {
     "message": "The API endpoint returned an HTML page instead of an API response"
+  },
+  "monitor_error_api_unexpected_status": {
+    "message": "Expected HTTP status $VALUE$, got $VALUE2$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      },
+      "value2": {
+        "content": "$2"
+      }
+    }
   },
   "monitor_error_api_response_body_mismatch": {
     "message": "The API response body did not match the expected text"

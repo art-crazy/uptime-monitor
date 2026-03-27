@@ -2,6 +2,7 @@ import {
   DEFAULT_API_MONITOR_CONFIG,
   normalizeApiMonitorConfig,
   type ApiMonitorConfig,
+  type MonitorCheckError,
   type MonitorType,
 } from '../entities/monitor'
 import { getMonitorCheckCandidates } from '../entities/monitor'
@@ -10,10 +11,11 @@ import {
   DEFAULT_PING_URL,
   INTERNET_TIMEOUT_MS,
 } from '@shared/constants'
+import { createLocalizedMessage } from '@shared/lib/localized-message'
 import { hasHttpProtocol, normalizeNetworkTarget } from '@shared/lib/network'
 
 interface PingResult {
-  errorKey?: string
+  error?: MonitorCheckError
   ok: boolean
   responseTime: number | null
 }
@@ -59,6 +61,16 @@ async function timedFetch(
 
 function isHtmlContentType(contentType: string | null): boolean {
   return contentType?.toLowerCase().startsWith('text/html') === true
+}
+
+function matchesExpectedStatus(status: number, config: ApiMonitorConfig): boolean {
+  return config.expectedStatus === null
+    ? status >= 200 && status < 300
+    : status === config.expectedStatus
+}
+
+function getExpectedStatusLabel(config: ApiMonitorConfig): string {
+  return config.expectedStatus === null ? '2xx' : String(config.expectedStatus)
 }
 
 async function probeUrl(url: string, timeoutMs: number): Promise<PingResult> {
@@ -178,8 +190,12 @@ async function probeApiUrl(
       config.method === 'POST' ? config.body : undefined,
     )
 
-    if (!response.ok) {
+    if (!matchesExpectedStatus(response.status, config)) {
       return {
+        error: createLocalizedMessage('monitor_error_api_unexpected_status', [
+          getExpectedStatusLabel(config),
+          String(response.status),
+        ]),
         ok: false,
         responseTime: null,
       }
@@ -187,7 +203,7 @@ async function probeApiUrl(
 
     if (isHtmlContentType(response.headers.get('content-type'))) {
       return {
-        errorKey: 'monitor_error_api_html_response',
+        error: createLocalizedMessage('monitor_error_api_html_response'),
         ok: false,
         responseTime: null,
       }
@@ -198,7 +214,7 @@ async function probeApiUrl(
 
       if (!responseText.includes(config.responseBody)) {
         return {
-          errorKey: 'monitor_error_api_response_body_mismatch',
+          error: createLocalizedMessage('monitor_error_api_response_body_mismatch'),
           ok: false,
           responseTime: null,
         }
@@ -212,7 +228,7 @@ async function probeApiUrl(
         responseJson = await response.json()
       } catch {
         return {
-          errorKey: 'monitor_error_api_invalid_json',
+          error: createLocalizedMessage('monitor_error_api_invalid_json'),
           ok: false,
           responseTime: null,
         }
@@ -222,7 +238,7 @@ async function probeApiUrl(
 
       if (!matchesExpectedJsonValue(actualValue, config.responseJsonValue)) {
         return {
-          errorKey: 'monitor_error_api_response_json_mismatch',
+          error: createLocalizedMessage('monitor_error_api_response_json_mismatch'),
           ok: false,
           responseTime: null,
         }
@@ -287,7 +303,7 @@ export async function pingMonitorTarget(
       return result
     }
 
-    if (result.errorKey) {
+    if (result.error) {
       return result
     }
   }

@@ -86,19 +86,22 @@ export function DashboardPage({
         }
       />
 
-      <InternetStatusWidget status={internetStatus} />
+      <div className={styles.body}>
+        <InternetStatusWidget status={internetStatus} />
 
-      {monitors.length === 0 ? (
-        <div className={styles.emptyState}>
-          <div className={styles.emptyIcon}>
-            <CircleDashed size={30} strokeWidth={1.8} />
+        {monitors.length === 0 ? (
+          <div className={styles.emptyState}>
+            <div className={styles.emptyIcon}>
+              <CircleDashed size={30} strokeWidth={1.8} />
+            </div>
+            <div className={styles.emptyTitle}>{t('dashboard_empty_title')}</div>
+            <div className={styles.emptySubtitle}>{t('dashboard_empty_subtitle')}</div>
           </div>
-          <div className={styles.emptyTitle}>{t('dashboard_empty_title')}</div>
-          <div className={styles.emptySubtitle}>{t('dashboard_empty_subtitle')}</div>
-        </div>
-      ) : (
-        <MonitorList items={items} onSelect={onOpenMonitor} />
-      )}
+        ) : (
+          <MonitorList items={items} onSelect={onOpenMonitor} />
+        )}
+      </div>
+
       <div className={styles.footer}>
         <Button fullWidth onClick={onAddMonitor} variant={monitors.length === 0 ? 'primary' : 'dashed'}>
           {monitors.length === 0 ? t('dashboard_add_first_monitor') : t('dashboard_add_monitor')}

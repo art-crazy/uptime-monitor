@@ -3,6 +3,7 @@ import {
   MESSAGE_KEYS,
   type MessageKey,
 } from './i18n.generated'
+import type { LocalizedMessage } from './localized-message'
 
 export type TranslationKey = MessageKey
 export type TranslationSubstitution = number | string
@@ -63,6 +64,16 @@ export function t(
 
 export function translateDynamicKey(value: string): string {
   return isTranslationKey(value) ? t(value) : value
+}
+
+export function translateLocalizedMessage(value: LocalizedMessage | null): string | null {
+  if (!value) {
+    return null
+  }
+
+  return isTranslationKey(value.key)
+    ? t(value.key, value.substitutions)
+    : applySubstitutions(value.key, value.substitutions)
 }
 
 export function getRuntimeLocale(): string | undefined {

@@ -5,6 +5,13 @@
   background: var(--color-surface);
 }
 
+.body {
+  flex: 1;
+  max-height: var(--popup-body-max-height);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .emptyState {
   display: flex;
   flex: 1;

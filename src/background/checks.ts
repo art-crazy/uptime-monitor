@@ -18,6 +18,7 @@ import {
 } from '../entities/internet'
 import { DEFAULT_SETTINGS, getSettings, settingsSchema } from '../entities/settings'
 import { STORAGE_KEYS } from '@shared/constants'
+import { createLocalizedMessage } from '@shared/lib/localized-message'
 import { updateExtensionIcon } from './icon'
 import { notifyMonitorStatusChange } from './notifications'
 import { pingInternetTarget, pingMonitorTarget } from './ping'
@@ -68,7 +69,10 @@ function getMigratedMonitors(value: unknown): {
       return false
     }
 
-    return 'type' in monitor && monitor.type === 'ip'
+    return (
+      ('type' in monitor && monitor.type === 'ip') ||
+      ('lastCheckError' in monitor && typeof monitor.lastCheckError === 'string')
+    )
   })
 
   return {
@@ -93,12 +97,12 @@ function matchesMonitorSnapshot(
   )
 }
 
-function getMonitorCheckErrorMessage(): string {
-  return 'monitor_error_check_failed'
+function getMonitorCheckErrorMessage() {
+  return createLocalizedMessage('monitor_error_check_failed')
 }
 
-function getInterruptedCheckMessage(): string {
-  return 'monitor_error_check_interrupted'
+function getInterruptedCheckMessage() {
+  return createLocalizedMessage('monitor_error_check_interrupted')
 }
 
 function scheduleMonitorCheck(
@@ -368,7 +372,7 @@ async function runMonitorCheckOnce(
       ? {
           ...currentMonitor,
           checkState: 'idle',
-          lastCheckError: result.ok ? null : (result.errorKey ?? null),
+          lastCheckError: result.ok ? null : (result.error ?? null),
           status: nextStatus,
           lastChecked: now,
           responseTime: result.ok ? result.responseTime : null,

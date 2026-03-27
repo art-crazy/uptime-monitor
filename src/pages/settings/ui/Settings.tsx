@@ -117,95 +117,98 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
         title={t('settings_title')}
       />
 
-      <section className={styles.section}>
-        <div className={styles.row}>
-          <span className={styles.label}>{t('settings_browser_notifications')}</span>
-          <button
-            aria-pressed={notificationsEnabled}
-            className={[
-              styles.switch,
-              notificationsEnabled ? styles.switchOn : styles.switchOff,
-            ].join(' ')}
-            disabled={isNotificationsBusy}
-            onClick={async () => {
-              const next = !notificationsEnabled
-              setNotificationsEnabled(next)
-              setIsNotificationsBusy(true)
+      <div className={styles.body}>
+        <section className={styles.section}>
+          <div className={styles.row}>
+            <span className={styles.label}>{t('settings_browser_notifications')}</span>
+            <button
+              aria-pressed={notificationsEnabled}
+              className={[
+                styles.switch,
+                notificationsEnabled ? styles.switchOn : styles.switchOff,
+              ].join(' ')}
+              disabled={isNotificationsBusy}
+              onClick={async () => {
+                const next = !notificationsEnabled
+                setNotificationsEnabled(next)
+                setIsNotificationsBusy(true)
+                setActionError(null)
+
+                try {
+                  await saveNotificationsEnabled(next)
+                } catch {
+                  setNotificationsEnabled(!next)
+                  setActionError(t('settings_error_unable_to_update_notifications'))
+                } finally {
+                  setIsNotificationsBusy(false)
+                }
+              }}
+              type="button"
+            >
+              <span className={styles.thumb} />
+            </button>
+          </div>
+        </section>
+
+        <section className={styles.section}>
+          <div className={styles.sectionTitle}>{t('settings_section_default_interval')}</div>
+          <Toggle
+            onChange={async (value) => {
+              const next = value as Settings['defaultInterval']
+              setDefaultInterval(next)
               setActionError(null)
 
               try {
-                await saveNotificationsEnabled(next)
+                await setDefaultCheckInterval(next)
               } catch {
-                setNotificationsEnabled(!next)
-                setActionError(t('settings_error_unable_to_update_notifications'))
-              } finally {
-                setIsNotificationsBusy(false)
+                setDefaultInterval(settings.defaultInterval)
+                setActionError(t('settings_error_unable_to_update_interval'))
               }
             }}
-            type="button"
-          >
-            <span className={styles.thumb} />
-          </button>
-        </div>
-      </section>
+            options={intervalOptions}
+            value={defaultInterval}
+          />
+        </section>
 
-      <section className={styles.section}>
-        <div className={styles.sectionTitle}>{t('settings_section_default_interval')}</div>
-        <Toggle
-          onChange={async (value) => {
-            const next = value as Settings['defaultInterval']
-            setDefaultInterval(next)
-            setActionError(null)
+        <section className={styles.section}>
+          <div className={styles.sectionTitle}>{t('settings_section_advanced')}</div>
+          <label className={styles.fieldLabel} htmlFor="ping-url">
+            {t('settings_connectivity_target')}
+          </label>
+          <input
+            aria-invalid={pingError !== null}
+            className={styles.input}
+            defaultValue={settings.pingUrl}
+            disabled={isPingBusy}
+            id="ping-url"
+            key={settings.pingUrl}
+            onChange={() => setPingError(null)}
+            onBlur={(event) => {
+              void commitPingUrl(event.currentTarget.value, event.currentTarget)
+            }}
+            onKeyDown={(event) => {
+              if (event.key === 'Escape') {
+                event.preventDefault()
+                event.currentTarget.value = settings.pingUrl
+                event.currentTarget.blur()
+                return
+              }
 
-            try {
-              await setDefaultCheckInterval(next)
-            } catch {
-              setDefaultInterval(settings.defaultInterval)
-              setActionError(t('settings_error_unable_to_update_interval'))
-            }
-          }}
-          options={intervalOptions}
-          value={defaultInterval}
-        />
-      </section>
+              if (event.key === 'Enter') {
+                event.preventDefault()
+                event.currentTarget.blur()
+              }
+            }}
+            placeholder="8.8.8.8"
+            spellCheck={false}
+            type="text"
+          />
+          <div className={styles.hint}>
+            {pingError ?? t('settings_connectivity_hint')}
+          </div>
+        </section>
 
-      <section className={styles.section}>
-        <div className={styles.sectionTitle}>{t('settings_section_advanced')}</div>
-        <label className={styles.fieldLabel} htmlFor="ping-url">
-          {t('settings_connectivity_target')}
-        </label>
-        <input
-          aria-invalid={pingError !== null}
-          className={styles.input}
-          defaultValue={settings.pingUrl}
-          disabled={isPingBusy}
-          id="ping-url"
-          key={settings.pingUrl}
-          onChange={() => setPingError(null)}
-          onBlur={(event) => {
-            void commitPingUrl(event.currentTarget.value, event.currentTarget)
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Escape') {
-              event.preventDefault()
-              event.currentTarget.value = settings.pingUrl
-              event.currentTarget.blur()
-              return
-            }
-
-            if (event.key === 'Enter') {
-              event.preventDefault()
-              event.currentTarget.blur()
-            }
-          }}
-          placeholder="8.8.8.8"
-          spellCheck={false}
-          type="text"
-        />
-        <div className={styles.hint}>
-          {pingError ?? t('settings_connectivity_hint')}
-        </div>
-      </section>
+      </div>
 
       <section className={[styles.section, styles.sectionDanger].join(' ')}>
         <Button
