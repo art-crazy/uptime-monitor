@@ -88,6 +88,8 @@ export const DEFAULT_MESSAGES = {
   "settings_telegram_enabled": "Telegram notifications",
   "settings_telegram_chat_id": "Chat ID",
   "settings_telegram_chat_id_hint": "Start a conversation with the bot and enter your numeric chat ID here",
+  "settings_telegram_status_connected": "Connected",
+  "settings_telegram_status_not_configured": "Not configured",
   "settings_telegram_send_recovery": "Send recovery messages",
   "settings_telegram_test_button": "Send test message",
   "settings_telegram_test_success": "Telegram test message sent successfully",

@@ -267,6 +267,12 @@
   "settings_telegram_chat_id_hint": {
     "message": "Напишите боту и укажите числовой ID чата"
   },
+  "settings_telegram_status_connected": {
+    "message": "Подключен"
+  },
+  "settings_telegram_status_not_configured": {
+    "message": "Не настроен"
+  },
   "settings_telegram_send_recovery": {
     "message": "Отправлять сообщения о восстановлении"
   },

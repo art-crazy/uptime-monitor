@@ -2,13 +2,24 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   border: 1px solid transparent;
   border-radius: var(--radius-md);
   cursor: pointer;
   transition:
     background-color var(--transition-fast),
     border-color var(--transition-fast),
-    color var(--transition-fast);
+    color var(--transition-fast),
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.3s ease;
+}
+
+.iconLeading {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .button:disabled {
@@ -89,4 +100,21 @@
   background: var(--color-red-bg);
   border-color: var(--color-red-border);
   color: var(--color-red);
+}
+
+.telegram {
+  border: none;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #0088cc, #00a8ff);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #fff;
+}
+
+.telegram:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0077b6, #0096d6);
+  transform: translateY(-2px);
+}
+
+.telegram:active:not(:disabled) {
+  transform: translateY(0);
 }

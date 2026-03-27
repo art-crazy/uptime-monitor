@@ -96,6 +96,8 @@
     "telegram_enabled": "Telegram notifications",
     "telegram_chat_id": "Chat ID",
     "telegram_chat_id_hint": "Start a conversation with the bot and enter your numeric chat ID here",
+    "telegram_status_connected": "Connected",
+    "telegram_status_not_configured": "Not configured",
     "telegram_send_recovery": "Send recovery messages",
     "telegram_test_button": "Send test message",
     "telegram_test_success": "Telegram test message sent successfully",

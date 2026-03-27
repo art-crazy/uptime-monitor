@@ -16,11 +16,64 @@
   margin-top: 12px;
 }
 
+.telegramCard {
+  gap: 0;
+  margin-top: 10px;
+  border: 1px solid rgba(36, 161, 222, 0.18);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, rgba(36, 161, 222, 0.08) 0%, rgba(36, 161, 222, 0.02) 100%),
+    var(--color-surface);
+  overflow: hidden;
+}
+
 .row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+
+.telegramHeaderRow {
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.66);
+}
+
+.telegramHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.telegramHeaderContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.telegramIconBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.telegramStatusBadge {
+  min-height: 18px;
+  padding: 0 7px;
+  font-size: 9px;
+  letter-spacing: 0.05em;
+}
+
+.telegramBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  border-top: 1px solid rgba(36, 161, 222, 0.12);
 }
 
 .label,

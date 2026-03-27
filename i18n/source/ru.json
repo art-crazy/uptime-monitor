@@ -96,6 +96,8 @@
     "telegram_enabled": "Уведомления Telegram",
     "telegram_chat_id": "ID чата",
     "telegram_chat_id_hint": "Напишите боту и укажите числовой ID чата",
+    "telegram_status_connected": "Подключен",
+    "telegram_status_not_configured": "Не настроен",
     "telegram_send_recovery": "Отправлять сообщения о восстановлении",
     "telegram_test_button": "Отправить тестовое сообщение",
     "telegram_test_success": "Тестовое сообщение в Telegram отправлено",
