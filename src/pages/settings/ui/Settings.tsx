@@ -12,24 +12,17 @@ import {
   setTelegramEnabled as saveTelegramEnabled,
   setTelegramRecoveryEnabled,
 } from '../../../features/update-settings'
-import {
-  CHECK_INTERVAL_OPTIONS,
-  TELEGRAM_BOT_USERNAME,
-  MIN_LOADING_MS,
-  TELEGRAM_BOT_URL,
-  TELEGRAM_CHAT_ID_HELPER_URL,
-} from '@shared/constants'
+import { CHECK_INTERVAL_OPTIONS, MIN_LOADING_MS } from '@shared/constants'
 import { delay } from '@shared/lib/async'
 import { t } from '@shared/lib/i18n'
 import { formatCheckInterval } from '@shared/lib/time'
-import { Badge } from '@shared/ui/Badge'
 import { Button } from '@shared/ui/Button'
 import { IconButton } from '@shared/ui/IconButton'
 import { PageHeader } from '@shared/ui/PageHeader'
 import { PageLayout } from '@shared/ui/PageLayout'
-import { TelegramIcon } from '@shared/ui/TelegramIcon'
 import { Toggle } from '@shared/ui/Toggle'
 import styles from './Settings.module.css'
+import { TelegramSettingsSection } from './TelegramSettingsSection'
 
 interface SettingsPageProps {
   onBack: () => void
@@ -284,7 +277,6 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
       }
     >
       <section className={styles.section}>
-          <div className={styles.sectionTitle}>{t('settings_section_notifications')}</div>
           <div className={styles.row}>
             <span className={styles.label}>{t('settings_browser_notifications')}</span>
             <button
@@ -316,164 +308,6 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
             >
               <span className={styles.thumb} />
             </button>
-          </div>
-
-          <div className={[styles.stack, styles.telegramCard].join(' ')}>
-            <div className={[styles.row, styles.telegramHeaderRow].join(' ')}>
-              <div className={styles.telegramHeader}>
-                <span className={styles.telegramIconBadge}>
-                  <TelegramIcon />
-                </span>
-                <div className={styles.telegramHeaderContent}>
-                  <span className={styles.label}>{t('settings_telegram_enabled')}</span>
-                  <Badge className={styles.telegramStatusBadge} tone={telegramStatusTone}>
-                    {telegramStatusLabel}
-                  </Badge>
-                </div>
-              </div>
-              <button
-                aria-pressed={telegramEnabled}
-                className={[
-                  styles.switch,
-                  telegramEnabled ? styles.switchOn : styles.switchOff,
-                ].join(' ')}
-                disabled={isTelegramBusy}
-                onClick={async () => {
-                  const next = !telegramEnabled
-                  setTelegramEnabled(next)
-                  setIsTelegramBusy(true)
-                  clearFeedback()
-
-                  try {
-                    await saveTelegramEnabled(next)
-                  } catch {
-                    setTelegramEnabled(!next)
-                    setFeedback({
-                      type: 'error',
-                      message: t('settings_error_unable_to_update_telegram'),
-                    })
-                  } finally {
-                    setIsTelegramBusy(false)
-                  }
-                }}
-                type="button"
-              >
-                <span className={styles.thumb} />
-              </button>
-            </div>
-
-            <div className={styles.telegramBody}>
-              <div className={styles.telegramSetup}>
-                <div className={styles.telegramSetupTitle}>
-                  {t('settings_telegram_setup_title')}
-                </div>
-                <div className={styles.telegramSetupSteps}>
-                  <div className={styles.telegramSetupStep}>{t('settings_telegram_setup_step_1')}</div>
-                  <div className={styles.telegramSetupStep}>{t('settings_telegram_setup_step_2')}</div>
-                  <div className={styles.telegramSetupStep}>{t('settings_telegram_setup_step_3')}</div>
-                </div>
-                <div className={styles.telegramBotUsername}>
-                  <span>{t('settings_telegram_bot_username_label')}</span>
-                  <code>@{TELEGRAM_BOT_USERNAME}</code>
-                </div>
-                <div className={styles.telegramLinks}>
-                  <a
-                    className={styles.telegramLink}
-                    href={TELEGRAM_BOT_URL}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    {t('settings_telegram_open_bot')}
-                  </a>
-                  <a
-                    className={styles.telegramLinkSecondary}
-                    href={TELEGRAM_CHAT_ID_HELPER_URL}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    {t('settings_telegram_open_chat_id_helper')}
-                  </a>
-                </div>
-              </div>
-
-              <div>
-              <label className={styles.fieldLabel} htmlFor="telegram-chat-id">
-                {t('settings_telegram_chat_id')}
-              </label>
-              <input
-                aria-invalid={telegramChatIdError !== null}
-                className={styles.input}
-                defaultValue={settings.notifications.telegram.chatId}
-                disabled={isTelegramBusy}
-                id="telegram-chat-id"
-                key={settings.notifications.telegram.chatId}
-                onChange={() => setTelegramChatIdError(null)}
-                onBlur={(event) => {
-                  void commitTelegramChatId(event.currentTarget.value, event.currentTarget)
-                }}
-                onKeyDown={(event) => {
-                  handleTextFieldKeyDown(event, settings.notifications.telegram.chatId)
-                }}
-                placeholder="-1001234567890"
-                spellCheck={false}
-                type="text"
-              />
-              <div
-                className={[
-                  styles.hint,
-                  telegramChatIdError ? styles.hintError : '',
-                ].join(' ')}
-              >
-                {telegramChatIdError ?? t('settings_telegram_chat_id_hint')}
-              </div>
-              </div>
-
-              <div className={styles.row}>
-                <span className={styles.label}>{t('settings_telegram_send_recovery')}</span>
-                <button
-                  aria-pressed={telegramSendRecovery}
-                  className={[
-                    styles.switch,
-                    telegramSendRecovery ? styles.switchOn : styles.switchOff,
-                  ].join(' ')}
-                  disabled={isTelegramBusy}
-                  onClick={async () => {
-                    const next = !telegramSendRecovery
-                    setTelegramSendRecovery(next)
-                    setIsTelegramBusy(true)
-                    clearFeedback()
-
-                    try {
-                      await setTelegramRecoveryEnabled(next)
-                    } catch {
-                      setTelegramSendRecovery(!next)
-                      setFeedback({
-                        type: 'error',
-                        message: t('settings_error_unable_to_update_telegram'),
-                      })
-                    } finally {
-                      setIsTelegramBusy(false)
-                    }
-                  }}
-                  type="button"
-                >
-                  <span className={styles.thumb} />
-                </button>
-              </div>
-
-              <div className={styles.buttonRow}>
-                <Button
-                  disabled={!isTelegramConfigured}
-                  fullWidth
-                  loading={isTelegramTestBusy}
-                  onClick={handleSendTelegramTest}
-                  size="sm"
-                  variant="telegram"
-                >
-                  {t('settings_telegram_test_button')}
-                </Button>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -527,6 +361,62 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
             {pingError ?? t('settings_connectivity_hint')}
           </div>
         </section>
+
+        <TelegramSettingsSection
+          chatId={settings.notifications.telegram.chatId}
+          chatIdError={telegramChatIdError}
+          isBusy={isTelegramBusy}
+          isConfigured={isTelegramConfigured}
+          isTestBusy={isTelegramTestBusy}
+          onChatIdBlur={(event) => {
+            void commitTelegramChatId(event.currentTarget.value, event.currentTarget)
+          }}
+          onChatIdChange={() => setTelegramChatIdError(null)}
+          onChatIdKeyDown={(event) => {
+            handleTextFieldKeyDown(event, settings.notifications.telegram.chatId)
+          }}
+          onSendRecoveryToggle={async () => {
+            const next = !telegramSendRecovery
+            setTelegramSendRecovery(next)
+            setIsTelegramBusy(true)
+            clearFeedback()
+
+            try {
+              await setTelegramRecoveryEnabled(next)
+            } catch {
+              setTelegramSendRecovery(!next)
+              setFeedback({
+                type: 'error',
+                message: t('settings_error_unable_to_update_telegram'),
+              })
+            } finally {
+              setIsTelegramBusy(false)
+            }
+          }}
+          onSendTest={handleSendTelegramTest}
+          onTelegramToggle={async () => {
+            const next = !telegramEnabled
+            setTelegramEnabled(next)
+            setIsTelegramBusy(true)
+            clearFeedback()
+
+            try {
+              await saveTelegramEnabled(next)
+            } catch {
+              setTelegramEnabled(!next)
+              setFeedback({
+                type: 'error',
+                message: t('settings_error_unable_to_update_telegram'),
+              })
+            } finally {
+              setIsTelegramBusy(false)
+            }
+          }}
+          sendRecovery={telegramSendRecovery}
+          statusLabel={telegramStatusLabel}
+          statusTone={telegramStatusTone}
+          telegramEnabled={telegramEnabled}
+        />
     </PageLayout>
   )
 }
