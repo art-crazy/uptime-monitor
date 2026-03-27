@@ -1,5 +1,5 @@
-import { t } from '../../../shared/lib/i18n'
-import { formatDuration, formatIncidentTimestamp } from '../../../shared/lib/time'
+import { t } from '@shared/lib/i18n'
+import { formatDuration, formatIncidentTimestamp } from '@shared/lib/time'
 
 import type { Incident } from '../model/types'
 import styles from './IncidentRow.module.css'
@@ -25,7 +25,7 @@ export function IncidentRow({ incident }: IncidentRowProps) {
         {label}
       </span>
       <span className={styles.meta}>
-        {timestamp} {' · '} {duration}
+        {timestamp} {' Р’В· '} {duration}
       </span>
     </div>
   )

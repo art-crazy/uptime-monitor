@@ -4,8 +4,8 @@ import {
   CHECK_TIMEOUT_MS,
   DEFAULT_PING_URL,
   INTERNET_TIMEOUT_MS,
-} from '../shared/constants'
-import { hasHttpProtocol, normalizeNetworkTarget } from '../shared/lib/network'
+} from '@shared/constants'
+import { hasHttpProtocol, normalizeNetworkTarget } from '@shared/lib/network'
 
 interface PingResult {
   ok: boolean

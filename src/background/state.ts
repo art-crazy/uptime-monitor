@@ -5,8 +5,8 @@ import {
   type Monitor,
 } from '../entities/monitor'
 import type { Settings } from '../entities/settings'
-import { STORAGE_KEYS } from '../shared/constants'
-import { setStorageValues } from '../shared/lib/storage'
+import { STORAGE_KEYS } from '@shared/constants'
+import { setStorageValues } from '@shared/lib/storage'
 
 function prepareMonitors(monitors: Monitor[]): Monitor[] {
   return monitors.map((monitor) => ({

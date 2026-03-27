@@ -1,6 +1,6 @@
 import type { InternetStatus } from '../../../entities/internet'
-import { t } from '../../../shared/lib/i18n'
-import { formatResponseTime } from '../../../shared/lib/time'
+import { t } from '@shared/lib/i18n'
+import { formatResponseTime } from '@shared/lib/time'
 import styles from './InternetStatus.module.css'
 
 interface InternetStatusProps {

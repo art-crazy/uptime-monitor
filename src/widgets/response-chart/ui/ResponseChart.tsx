@@ -1,7 +1,7 @@
 import { getChartHistory, type HistoryEntry } from '../../../entities/monitor'
-import { t } from '../../../shared/lib/i18n'
-import { formatResponseTime } from '../../../shared/lib/time'
-import { getResponseTone } from '../../../shared/lib/response'
+import { t } from '@shared/lib/i18n'
+import { formatResponseTime } from '@shared/lib/time'
+import { getResponseTone } from '@shared/lib/response'
 import styles from './ResponseChart.module.css'
 
 interface ResponseChartProps {

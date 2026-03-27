@@ -95,9 +95,6 @@
   "add_monitor_field_interval": {
     "message": "Проверять каждые"
   },
-  "add_monitor_button_saving": {
-    "message": "Сохраняем..."
-  },
   "add_monitor_button_save": {
     "message": "Сохранить"
   },
@@ -136,9 +133,6 @@
   },
   "settings_section_danger": {
     "message": "Сброс данных"
-  },
-  "settings_button_working": {
-    "message": "Выполняем..."
   },
   "settings_button_clear_all": {
     "message": "Удалить все мониторы"
@@ -179,6 +173,9 @@
   "monitor_error_check_interrupted": {
     "message": "Последняя проверка была прервана"
   },
+  "monitor_details_stat_status": {
+    "message": "Статус"
+  },
   "monitor_details_stat_uptime": {
     "message": "Доступность"
   },
@@ -193,9 +190,6 @@
   },
   "monitor_details_empty_incidents": {
     "message": "Сбоев пока не было"
-  },
-  "monitor_details_button_checking": {
-    "message": "Проверяем..."
   },
   "monitor_details_button_check_now": {
     "message": "Проверить сейчас"

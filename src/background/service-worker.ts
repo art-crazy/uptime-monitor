@@ -6,7 +6,7 @@ import {
 import { settingsSchema } from '../entities/settings'
 import {
   INTERNET_ALARM_NAME,
-} from '../shared/constants'
+} from '@shared/constants'
 import {
   didMonitorSchedulesChange,
   ensureInternetAlarm,

@@ -13,6 +13,7 @@
   --color-surface: #ffffff;
   --color-surface-muted: #f5f2ea;
   --color-surface-strong: #eee8db;
+  --color-separator: rgba(24, 22, 19, 0.08);
   --color-border: rgba(24, 22, 19, 0.12);
   --color-border-strong: rgba(24, 22, 19, 0.2);
   --color-text: #181613;

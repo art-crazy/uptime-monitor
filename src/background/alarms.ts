@@ -3,7 +3,7 @@ import {
   INTERNET_ALARM_NAME,
   INTERNET_CHECK_MINUTES,
   MONITOR_ALARM_PREFIX,
-} from '../shared/constants'
+} from '@shared/constants'
 
 function getMonitorAlarmName(monitorId: string): string {
   return `${MONITOR_ALARM_PREFIX}${monitorId}`

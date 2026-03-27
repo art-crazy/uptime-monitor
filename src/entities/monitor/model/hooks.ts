@@ -1,5 +1,5 @@
-import { STORAGE_KEYS } from '../../../shared/constants'
-import { useStorageValue } from '../../../shared/hooks/useStorageValue'
+import { STORAGE_KEYS } from '@shared/constants'
+import { useStorageValue } from '@shared/hooks/useStorageValue'
 import { monitorsSchema, type Monitor } from './types'
 
 const EMPTY_MONITORS: Monitor[] = []

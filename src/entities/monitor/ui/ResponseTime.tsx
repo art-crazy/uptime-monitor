@@ -1,5 +1,5 @@
-import { getResponseTone } from '../../../shared/lib/response'
-import { formatResponseTime } from '../../../shared/lib/time'
+import { getResponseTone } from '@shared/lib/response'
+import { formatResponseTime } from '@shared/lib/time'
 
 import styles from './ResponseTime.module.css'
 

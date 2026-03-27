@@ -9,13 +9,13 @@ import {
   type Monitor,
 } from '../entities/monitor'
 import { getSettings } from '../entities/settings'
-import { MESSAGE_TYPES } from '../shared/constants'
-import { normalizeNetworkTarget } from '../shared/lib/network'
+import { MESSAGE_TYPES } from '@shared/constants'
+import { normalizeNetworkTarget } from '@shared/lib/network'
 import {
   runtimeMessageSchema,
   type RuntimeCommand,
   type SaveMonitorDraftPayload,
-} from '../shared/lib/runtime-contract'
+} from '@shared/lib/runtime-contract'
 import { runMonitorCheck } from './checks'
 import { enqueueBackgroundTask } from './queue'
 import { writeMonitoringData, writeSettings } from './state'

@@ -10,29 +10,37 @@ import {
 import { checkNow } from '../../../features/check-monitor'
 import { deleteMonitor } from '../../../features/delete-monitor'
 import { toggleMonitor } from '../../../features/toggle-monitor'
-import { t, translateDynamicKey } from '../../../shared/lib/i18n'
-import { formatPercent } from '../../../shared/lib/time'
-import { Badge } from '../../../shared/ui/Badge'
-import { Button } from '../../../shared/ui/Button'
-import { IconButton } from '../../../shared/ui/IconButton'
-import { PageHeader } from '../../../shared/ui/PageHeader'
+import { MIN_LOADING_MS } from '@shared/constants'
+import { delay } from '@shared/lib/async'
+import { t, translateDynamicKey } from '@shared/lib/i18n'
+import { formatPercent } from '@shared/lib/time'
+import { Badge } from '@shared/ui/Badge'
+import { Button } from '@shared/ui/Button'
+import { IconButton } from '@shared/ui/IconButton'
+import { Spinner } from '@shared/ui/Spinner'
+import { PageHeader } from '@shared/ui/PageHeader'
 import { ResponseChart } from '../../../widgets/response-chart'
 import styles from './MonitorDetails.module.css'
 
-function getStatusBadge(monitor: Monitor) {
-  if (monitor.status === 'online') {
-    return <Badge tone="success">{t('monitor_badge_up')}</Badge>
+interface StatusBadgeProps {
+  className?: string
+  status: Monitor['status']
+}
+
+function StatusBadge({ className, status }: StatusBadgeProps) {
+  if (status === 'online') {
+    return <Badge className={className} tone="success">{t('monitor_badge_up')}</Badge>
   }
 
-  if (monitor.status === 'down') {
-    return <Badge tone="danger">{t('monitor_badge_down')}</Badge>
+  if (status === 'down') {
+    return <Badge className={className} tone="danger">{t('monitor_badge_down')}</Badge>
   }
 
-  return (
-    <Badge tone="muted">
-      {monitor.status === 'paused' ? t('monitor_badge_paused') : t('monitor_badge_checking')}
-    </Badge>
-  )
+  if (status === 'paused') {
+    return <Badge className={className} tone="muted">{t('monitor_badge_paused')}</Badge>
+  }
+
+  return <Badge className={className} tone="muted"><Spinner /></Badge>
 }
 
 interface MonitorDetailsPageProps {
@@ -53,74 +61,26 @@ export function MonitorDetailsPage({
   const [actionError, setActionError] = useState<string | null>(null)
   const [isBusy, setIsBusy] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const menuRef = useRef<HTMLDivElement | null>(null)
-  const avgResponse = calculateAverageResponseTime(monitor.history)
-  const isCheckPending = monitor.checkState === 'running'
-  const feedbackMessage =
-    actionError ??
-    (monitor.lastCheckError ? translateDynamicKey(monitor.lastCheckError) : null)
-  const sortedIncidents = [...incidents]
-    .filter((incident) => incident.monitorId === monitor.id)
-    .sort((left, right) => right.startTime - left.startTime)
+  const [isCheckingNow, setIsCheckingNow] = useState(false)
+  const [monitorStatus, setMonitorStatus] = useState(monitor.status)
+  const [statusDelayDone, setStatusDelayDone] = useState(true)
+  const menuRef = useRef<HTMLDivElement>(null)
 
-  const handleCheckNow = async () => {
-    if (isBusy || isCheckPending) {
+  useEffect(() => {
+    setMonitorStatus(monitor.status)
+  }, [monitor.status])
+
+  useEffect(() => {
+    if (monitor.checkState !== 'running') {
       return
     }
 
-    setIsBusy(true)
-    setActionError(null)
+    setStatusDelayDone(false)
 
-    try {
-      await checkNow(monitor.id)
-    } catch {
-      setActionError(t('monitor_details_error_check_now'))
-    } finally {
-      setIsBusy(false)
-    }
-  }
-
-  const handleTogglePause = async () => {
-    if (isBusy) {
-      return
-    }
-
-    setIsBusy(true)
-    setActionError(null)
-
-    try {
-      await toggleMonitor(monitor.id)
-    } catch {
-      setActionError(t('monitor_details_error_toggle'))
-    } finally {
-      setIsBusy(false)
-    }
-  }
-
-  const handleDelete = async () => {
-    if (isBusy) {
-      return
-    }
-
-    setIsMenuOpen(false)
-    const confirmed = window.confirm(t('monitor_details_confirm_delete', monitor.name))
-
-    if (!confirmed) {
-      return
-    }
-
-    setIsBusy(true)
-    setActionError(null)
-
-    try {
-      await deleteMonitor(monitor.id)
-      onDeleted()
-    } catch {
-      setActionError(t('monitor_details_error_delete'))
-    } finally {
-      setIsBusy(false)
-    }
-  }
+    setTimeout(() => {
+      setStatusDelayDone(true)
+    }, MIN_LOADING_MS)
+  }, [monitor.checkState])
 
   useEffect(() => {
     if (isBusy) {
@@ -154,6 +114,78 @@ export function MonitorDetailsPage({
     }
   }, [isMenuOpen])
 
+  const avgResponse = calculateAverageResponseTime(monitor.history)
+  const isStatusSpinning = monitor.checkState === 'running' || !statusDelayDone
+  const isCheckPending = isCheckingNow || (!isBusy && monitor.checkState === 'running')
+  const feedbackMessage =
+    actionError ??
+    (monitor.lastCheckError ? translateDynamicKey(monitor.lastCheckError) : null)
+  const sortedIncidents = [...incidents]
+    .filter((incident) => incident.monitorId === monitor.id)
+    .sort((left, right) => right.startTime - left.startTime)
+
+  const handleCheckNow = async () => {
+    if (isCheckPending) {
+      return
+    }
+
+    setIsCheckingNow(true)
+    setActionError(null)
+
+    try {
+      await Promise.all([checkNow(monitor.id), delay(MIN_LOADING_MS)])
+    } catch {
+      setActionError(t('monitor_details_error_check_now'))
+    } finally {
+      setIsCheckingNow(false)
+    }
+  }
+
+  const handleTogglePause = async () => {
+    if (isBusy) {
+      return
+    }
+
+    const nextStatus = monitorStatus === 'paused' ? 'online' : 'paused'
+    setMonitorStatus(nextStatus)
+    setIsBusy(true)
+    setActionError(null)
+
+    try {
+      await Promise.all([toggleMonitor(monitor.id), delay(MIN_LOADING_MS)])
+    } catch {
+      setMonitorStatus(monitorStatus)
+      setActionError(t('monitor_details_error_toggle'))
+    } finally {
+      setIsBusy(false)
+    }
+  }
+
+  const handleDelete = async () => {
+    if (isBusy) {
+      return
+    }
+
+    setIsMenuOpen(false)
+    const confirmed = window.confirm(t('monitor_details_confirm_delete', monitor.name))
+
+    if (!confirmed) {
+      return
+    }
+
+    setIsBusy(true)
+    setActionError(null)
+
+    try {
+      await deleteMonitor(monitor.id)
+      onDeleted()
+    } catch {
+      setActionError(t('monitor_details_error_delete'))
+    } finally {
+      setIsBusy(false)
+    }
+  }
+
   return (
     <div className={styles.page}>
       <PageHeader
@@ -163,10 +195,48 @@ export function MonitorDetailsPage({
           </IconButton>
         }
         title={monitor.name}
-        trailing={getStatusBadge(monitor)}
+        trailing={
+          <div className={styles.menuWrap} ref={menuRef}>
+            <IconButton
+              aria-label={t('monitor_details_more_actions_aria')}
+              onClick={() => {
+                if (!isBusy) {
+                  setIsMenuOpen((current) => !current)
+                }
+              }}
+            >
+              <Ellipsis size={16} strokeWidth={2} />
+            </IconButton>
+            {isMenuOpen ? (
+              <div className={styles.menu}>
+                <button
+                  className={styles.menuItem}
+                  onClick={() => {
+                    setIsMenuOpen(false)
+                    onEdit()
+                  }}
+                  type="button"
+                >
+                  {t('common_edit')}
+                </button>
+                <button
+                  className={[styles.menuItem, styles.menuDanger].join(' ')}
+                  onClick={handleDelete}
+                  type="button"
+                >
+                  {t('common_delete')}
+                </button>
+              </div>
+            ) : null}
+          </div>
+        }
       />
 
       <section className={styles.stats}>
+        <div className={styles.card}>
+          <div className={styles.cardLabel}>{t('monitor_details_stat_status')}</div>
+          <div className={styles.cardValue}><StatusBadge className={styles.statusBadge} status={isStatusSpinning ? 'pending' : monitorStatus} /></div>
+        </div>
         <div className={styles.card}>
           <div className={styles.cardLabel}>{t('monitor_details_stat_uptime')}</div>
           <div className={styles.cardValue}>{formatPercent(monitor.uptimePercent)}</div>
@@ -199,49 +269,14 @@ export function MonitorDetailsPage({
       </section>
 
       <div className={styles.actions}>
-        <Button disabled={isBusy || isCheckPending} fullWidth onClick={handleCheckNow}>
-          {isCheckPending ? t('monitor_details_button_checking') : t('monitor_details_button_check_now')}
+        <Button className={styles.actionButton} loading={isCheckPending} onClick={handleCheckNow}>
+          {t('monitor_details_button_check_now')}
         </Button>
-        <Button disabled={isBusy} onClick={handleTogglePause} variant="secondary">
-          {monitor.status === 'paused'
+        <Button className={styles.actionButton} loading={isBusy} onClick={handleTogglePause} variant="secondary">
+          {monitorStatus === 'paused'
             ? t('monitor_details_button_resume')
             : t('monitor_details_button_pause')}
         </Button>
-        <div className={styles.menuWrap} ref={menuRef}>
-          <Button
-            aria-label={t('monitor_details_more_actions_aria')}
-            disabled={isBusy}
-            onClick={() => {
-              if (!isBusy) {
-                setIsMenuOpen((current) => !current)
-              }
-            }}
-            variant="secondary"
-          >
-            <Ellipsis size={14} strokeWidth={2} />
-          </Button>
-          {isMenuOpen ? (
-            <div className={styles.menu}>
-              <button
-                className={styles.menuItem}
-                onClick={() => {
-                  setIsMenuOpen(false)
-                  onEdit()
-                }}
-                type="button"
-              >
-                {t('common_edit')}
-              </button>
-              <button
-                className={[styles.menuItem, styles.menuDanger].join(' ')}
-                onClick={handleDelete}
-                type="button"
-              >
-                {t('common_delete')}
-              </button>
-            </div>
-          ) : null}
-        </div>
       </div>
 
       {feedbackMessage ? (

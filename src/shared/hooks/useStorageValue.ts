@@ -7,13 +7,17 @@ import {
   subscribeToStorageKeys,
 } from '../lib/storage'
 
+interface StorageState<T> {
+  isLoaded: boolean
+  value: T
+}
+
 export function useStorageValue<T>(
   key: string,
   schema: z.ZodType<T>,
   fallback: T,
 ): { isLoaded: boolean; value: T } {
-  const [value, setValue] = useState<T>(fallback)
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [state, setState] = useState<StorageState<T>>({ isLoaded: false, value: fallback })
 
   useEffect(() => {
     let active = true
@@ -22,8 +26,7 @@ export function useStorageValue<T>(
       const nextValue = await getStorageValue(key, schema, fallback)
 
       if (active) {
-        setValue(nextValue)
-        setIsLoaded(true)
+        setState({ isLoaded: true, value: nextValue })
       }
     }
 
@@ -33,8 +36,7 @@ export function useStorageValue<T>(
       const nextValue = parseStorageChangeValue(changes[key], schema)
 
       if (nextValue !== null && active) {
-        setValue(nextValue)
-        setIsLoaded(true)
+        setState({ isLoaded: true, value: nextValue })
         return
       }
 
@@ -47,8 +49,5 @@ export function useStorageValue<T>(
     }
   }, [fallback, key, schema])
 
-  return {
-    isLoaded,
-    value,
-  }
+  return state
 }

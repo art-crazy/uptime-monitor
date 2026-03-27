@@ -1,5 +1,5 @@
-import { STORAGE_KEYS } from '../../../shared/constants'
-import { getStorageValue } from '../../../shared/lib/storage'
+import { STORAGE_KEYS } from '@shared/constants'
+import { getStorageValue } from '@shared/lib/storage'
 
 import { monitorsSchema, type Monitor } from './types'
 

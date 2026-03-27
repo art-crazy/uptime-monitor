@@ -22,6 +22,7 @@ export const DEFAULT_PING_URL = '8.8.8.8'
 export const INTERNET_ALARM_NAME = 'internet-ping'
 export const MONITOR_ALARM_PREFIX = 'monitor:'
 export const CHECK_TIMEOUT_MS = 10_000
+export const MIN_LOADING_MS = 600
 export const INTERNET_TIMEOUT_MS = 5_000
 export const INTERNET_CHECK_MINUTES = 0.5
 

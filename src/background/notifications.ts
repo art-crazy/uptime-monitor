@@ -1,7 +1,7 @@
 import type { Monitor } from '../entities/monitor'
 import type { Settings } from '../entities/settings'
-import { t } from '../shared/lib/i18n'
-import { formatResponseTime } from '../shared/lib/time'
+import { t } from '@shared/lib/i18n'
+import { formatResponseTime } from '@shared/lib/time'
 
 export async function notifyMonitorStatusChange(
   previous: Monitor,

@@ -1,12 +1,13 @@
 import { useMemo, useState } from 'react'
 
 import { type CheckInterval } from '../../../entities/monitor'
-import { CHECK_INTERVAL_OPTIONS } from '../../../shared/constants'
-import { t } from '../../../shared/lib/i18n'
-import { saveMonitorDraft } from '../../../shared/lib/runtime'
-import { formatCheckInterval } from '../../../shared/lib/time'
-import { Button } from '../../../shared/ui/Button'
-import { Toggle } from '../../../shared/ui/Toggle'
+import { CHECK_INTERVAL_OPTIONS, MIN_LOADING_MS } from '@shared/constants'
+import { delay } from '@shared/lib/async'
+import { t } from '@shared/lib/i18n'
+import { saveMonitorDraft } from '@shared/lib/runtime'
+import { formatCheckInterval } from '@shared/lib/time'
+import { Button } from '@shared/ui/Button'
+import { Toggle } from '@shared/ui/Toggle'
 import styles from './AddMonitorForm.module.css'
 import { getInitialMonitorFormState } from '../model/defaults'
 import type { MonitorFormDraft } from '../model/types'
@@ -79,12 +80,10 @@ export function AddMonitorForm({
     try {
       const normalizedUrl = result.normalized
 
-      const response = await saveMonitorDraft({
-        id: monitor?.id,
-        interval,
-        type,
-        url: normalizedUrl,
-      })
+      const [response] = await Promise.all([
+        saveMonitorDraft({ id: monitor?.id, interval, type, url: normalizedUrl }),
+        delay(MIN_LOADING_MS),
+      ])
 
       onSaved(response.monitorId)
     } catch (saveError) {
@@ -155,17 +154,14 @@ export function AddMonitorForm({
 
       <Button
         className={styles.saveButton}
-        disabled={isSaving || isUrlEmpty}
+        disabled={isUrlEmpty}
         fullWidth
+        loading={isSaving}
         onClick={handleSave}
         type="button"
         variant="primary"
       >
-        {isSaving
-          ? t('add_monitor_button_saving')
-          : monitor
-            ? t('add_monitor_button_save_changes')
-            : t('add_monitor_button_save')}
+        {monitor ? t('add_monitor_button_save_changes') : t('add_monitor_button_save')}
       </Button>
     </div>
   )

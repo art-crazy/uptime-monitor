@@ -1,4 +1,4 @@
-import { HISTORY_MAX_ENTRIES } from '../../../shared/constants'
+import { HISTORY_MAX_ENTRIES } from '@shared/constants'
 
 import type { HistoryEntry } from './types'
 

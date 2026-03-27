@@ -1,4 +1,4 @@
-import { DEFAULT_PING_URL } from '../../../shared/constants'
+import { DEFAULT_PING_URL } from '@shared/constants'
 
 import type { Settings } from './types'
 

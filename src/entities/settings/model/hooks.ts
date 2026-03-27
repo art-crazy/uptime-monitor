@@ -1,5 +1,5 @@
-import { STORAGE_KEYS } from '../../../shared/constants'
-import { useStorageValue } from '../../../shared/hooks/useStorageValue'
+import { STORAGE_KEYS } from '@shared/constants'
+import { useStorageValue } from '@shared/hooks/useStorageValue'
 
 import { DEFAULT_SETTINGS } from './defaults'
 import { settingsSchema, type Settings } from './types'

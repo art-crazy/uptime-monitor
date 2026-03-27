@@ -25,6 +25,10 @@
   width: 100%;
 }
 
+.loading {
+  pointer-events: none;
+}
+
 .md {
   min-height: 38px;
   padding: 9px 12px;

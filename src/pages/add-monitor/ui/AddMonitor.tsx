@@ -2,9 +2,9 @@ import { ArrowLeft } from 'lucide-react'
 
 import type { CheckInterval } from '../../../entities/monitor'
 import { AddMonitorForm, type MonitorFormDraft } from '../../../features/add-monitor'
-import { t } from '../../../shared/lib/i18n'
-import { IconButton } from '../../../shared/ui/IconButton'
-import { PageHeader } from '../../../shared/ui/PageHeader'
+import { t } from '@shared/lib/i18n'
+import { IconButton } from '@shared/ui/IconButton'
+import { PageHeader } from '@shared/ui/PageHeader'
 import styles from './AddMonitor.module.css'
 
 interface AddMonitorPageProps {

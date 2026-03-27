@@ -82,7 +82,7 @@ function getIconState(
   }
 
   if (internet !== null && internet.lastChecked > 0 && !internet.online) {
-    return { state: 'gray', downCount: 0 }
+    return { state: 'red', downCount: 0 }
   }
 
   const downCount = monitors.filter((monitor) => monitor.status === 'down').length

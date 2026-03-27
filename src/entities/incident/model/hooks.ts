@@ -1,5 +1,5 @@
-import { STORAGE_KEYS } from '../../../shared/constants'
-import { useStorageValue } from '../../../shared/hooks/useStorageValue'
+import { STORAGE_KEYS } from '@shared/constants'
+import { useStorageValue } from '@shared/hooks/useStorageValue'
 import { incidentsSchema, type Incident } from './types'
 
 const EMPTY_INCIDENTS: Incident[] = []

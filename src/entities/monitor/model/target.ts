@@ -3,7 +3,7 @@ import {
   hasHttpProtocol,
   normalizeHttpTarget,
   normalizeNetworkTarget,
-} from '../../../shared/lib/network'
+} from '@shared/lib/network'
 
 import type { MonitorType } from './types'
 

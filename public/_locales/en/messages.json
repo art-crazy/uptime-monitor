@@ -95,9 +95,6 @@
   "add_monitor_field_interval": {
     "message": "Check every"
   },
-  "add_monitor_button_saving": {
-    "message": "Saving..."
-  },
   "add_monitor_button_save": {
     "message": "Save monitor"
   },
@@ -136,9 +133,6 @@
   },
   "settings_section_danger": {
     "message": "Danger"
-  },
-  "settings_button_working": {
-    "message": "Working..."
   },
   "settings_button_clear_all": {
     "message": "Clear all monitors"
@@ -179,6 +173,9 @@
   "monitor_error_check_interrupted": {
     "message": "Last check was interrupted"
   },
+  "monitor_details_stat_status": {
+    "message": "Status"
+  },
   "monitor_details_stat_uptime": {
     "message": "Uptime"
   },
@@ -193,9 +190,6 @@
   },
   "monitor_details_empty_incidents": {
     "message": "No incidents recorded yet"
-  },
-  "monitor_details_button_checking": {
-    "message": "Checking..."
   },
   "monitor_details_button_check_now": {
     "message": "Check now"

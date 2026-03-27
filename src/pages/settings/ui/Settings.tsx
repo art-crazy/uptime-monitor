@@ -1,19 +1,21 @@
 import { ArrowLeft } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import type { Settings } from '../../../entities/settings'
 import { clearAllMonitoringData } from '../../../features/clear-monitoring-data'
 import {
   setDefaultCheckInterval,
-  setNotificationsEnabled,
+  setNotificationsEnabled as saveNotificationsEnabled,
   setPingUrl,
 } from '../../../features/update-settings'
-import { CHECK_INTERVAL_OPTIONS } from '../../../shared/constants'
-import { t } from '../../../shared/lib/i18n'
-import { formatCheckInterval } from '../../../shared/lib/time'
-import { IconButton } from '../../../shared/ui/IconButton'
-import { PageHeader } from '../../../shared/ui/PageHeader'
-import { Toggle } from '../../../shared/ui/Toggle'
+import { CHECK_INTERVAL_OPTIONS, MIN_LOADING_MS } from '@shared/constants'
+import { delay } from '@shared/lib/async'
+import { t } from '@shared/lib/i18n'
+import { formatCheckInterval } from '@shared/lib/time'
+import { Button } from '@shared/ui/Button'
+import { IconButton } from '@shared/ui/IconButton'
+import { PageHeader } from '@shared/ui/PageHeader'
+import { Toggle } from '@shared/ui/Toggle'
 import styles from './Settings.module.css'
 
 interface SettingsPageProps {
@@ -23,7 +25,11 @@ interface SettingsPageProps {
 
 export function SettingsPage({ onBack, settings }: SettingsPageProps) {
   const [actionError, setActionError] = useState<string | null>(null)
-  const [isBusy, setIsBusy] = useState(false)
+  const [isNotificationsBusy, setIsNotificationsBusy] = useState(false)
+  const [isClearBusy, setIsClearBusy] = useState(false)
+  const [isPingBusy, setIsPingBusy] = useState(false)
+  const [notificationsEnabled, setNotificationsEnabled] = useState(settings.notificationsEnabled)
+  const [defaultInterval, setDefaultInterval] = useState(settings.defaultInterval)
   const [pingError, setPingError] = useState<string | null>(null)
   const intervalOptions = useMemo(
     () =>
@@ -34,8 +40,16 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
     [],
   )
 
+  useEffect(() => {
+    setNotificationsEnabled(settings.notificationsEnabled)
+  }, [settings.notificationsEnabled])
+
+  useEffect(() => {
+    setDefaultInterval(settings.defaultInterval)
+  }, [settings.defaultInterval])
+
   const commitPingUrl = async (value: string, input: HTMLInputElement) => {
-    if (isBusy) {
+    if (isPingBusy) {
       return
     }
 
@@ -47,7 +61,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
       return
     }
 
-    setIsBusy(true)
+    setIsPingBusy(true)
     setActionError(null)
 
     try {
@@ -65,12 +79,12 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
       setPingError(t('settings_error_unable_to_save_ping_target'))
       input.value = settings.pingUrl
     } finally {
-      setIsBusy(false)
+      setIsPingBusy(false)
     }
   }
 
   const handleClearAll = async () => {
-    if (isBusy) {
+    if (isClearBusy) {
       return
     }
 
@@ -80,15 +94,15 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
       return
     }
 
-    setIsBusy(true)
+    setIsClearBusy(true)
     setActionError(null)
 
     try {
-      await clearAllMonitoringData()
+      await Promise.all([clearAllMonitoringData(), delay(MIN_LOADING_MS)])
     } catch {
       setActionError(t('settings_error_unable_to_clear'))
     } finally {
-      setIsBusy(false)
+      setIsClearBusy(false)
     }
   }
 
@@ -104,26 +118,28 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
       />
 
       <section className={styles.section}>
-        <div className={styles.sectionTitle}>{t('settings_section_notifications')}</div>
         <div className={styles.row}>
           <span className={styles.label}>{t('settings_browser_notifications')}</span>
           <button
-            aria-pressed={settings.notificationsEnabled}
+            aria-pressed={notificationsEnabled}
             className={[
               styles.switch,
-              settings.notificationsEnabled ? styles.switchOn : styles.switchOff,
+              notificationsEnabled ? styles.switchOn : styles.switchOff,
             ].join(' ')}
-            disabled={isBusy}
+            disabled={isNotificationsBusy}
             onClick={async () => {
-              setIsBusy(true)
+              const next = !notificationsEnabled
+              setNotificationsEnabled(next)
+              setIsNotificationsBusy(true)
               setActionError(null)
 
               try {
-                await setNotificationsEnabled(!settings.notificationsEnabled)
+                await saveNotificationsEnabled(next)
               } catch {
+                setNotificationsEnabled(!next)
                 setActionError(t('settings_error_unable_to_update_notifications'))
               } finally {
-                setIsBusy(false)
+                setIsNotificationsBusy(false)
               }
             }}
             type="button"
@@ -136,21 +152,20 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
       <section className={styles.section}>
         <div className={styles.sectionTitle}>{t('settings_section_default_interval')}</div>
         <Toggle
-          disabled={isBusy}
           onChange={async (value) => {
-            setIsBusy(true)
+            const next = value as Settings['defaultInterval']
+            setDefaultInterval(next)
             setActionError(null)
 
             try {
-              await setDefaultCheckInterval(value as Settings['defaultInterval'])
+              await setDefaultCheckInterval(next)
             } catch {
+              setDefaultInterval(settings.defaultInterval)
               setActionError(t('settings_error_unable_to_update_interval'))
-            } finally {
-              setIsBusy(false)
             }
           }}
           options={intervalOptions}
-          value={settings.defaultInterval}
+          value={defaultInterval}
         />
       </section>
 
@@ -163,7 +178,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
           aria-invalid={pingError !== null}
           className={styles.input}
           defaultValue={settings.pingUrl}
-          disabled={isBusy}
+          disabled={isPingBusy}
           id="ping-url"
           key={settings.pingUrl}
           onChange={() => setPingError(null)}
@@ -193,15 +208,13 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
       </section>
 
       <section className={[styles.section, styles.sectionDanger].join(' ')}>
-        <div className={styles.sectionTitle}>{t('settings_section_danger')}</div>
-        <button
-          className={styles.clearButton}
-          disabled={isBusy}
+        <Button
+          loading={isClearBusy}
           onClick={handleClearAll}
-          type="button"
+          variant="danger"
         >
-          {isBusy ? t('settings_button_working') : t('settings_button_clear_all')}
-        </button>
+          {t('settings_button_clear_all')}
+        </Button>
       </section>
 
       {actionError ? (

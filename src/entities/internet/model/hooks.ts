@@ -1,5 +1,5 @@
-import { STORAGE_KEYS } from '../../../shared/constants'
-import { useStorageValue } from '../../../shared/hooks/useStorageValue'
+import { STORAGE_KEYS } from '@shared/constants'
+import { useStorageValue } from '@shared/hooks/useStorageValue'
 
 import { DEFAULT_INTERNET_STATUS } from './storage'
 import { internetStatusSchema, type InternetStatus } from './types'

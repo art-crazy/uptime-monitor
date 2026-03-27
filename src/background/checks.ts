@@ -16,7 +16,7 @@ import {
   internetStatusSchema,
 } from '../entities/internet'
 import { DEFAULT_SETTINGS, getSettings, settingsSchema } from '../entities/settings'
-import { STORAGE_KEYS } from '../shared/constants'
+import { STORAGE_KEYS } from '@shared/constants'
 import { updateExtensionIcon } from './icon'
 import { notifyMonitorStatusChange } from './notifications'
 import { pingInternetTarget, pingMonitorTarget } from './ping'

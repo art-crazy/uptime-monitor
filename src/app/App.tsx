@@ -8,8 +8,8 @@ import { AddMonitorPage } from '../pages/add-monitor'
 import { DashboardPage } from '../pages/dashboard'
 import { MonitorDetailsPage } from '../pages/monitor-details'
 import { SettingsPage } from '../pages/settings'
-import { t } from '../shared/lib/i18n'
-import { PageHeader } from '../shared/ui/PageHeader'
+import { t } from '@shared/lib/i18n'
+import { PageHeader } from '@shared/ui/PageHeader'
 import styles from './App.module.css'
 
 type Screen =

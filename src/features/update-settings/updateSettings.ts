@@ -1,10 +1,10 @@
 import type { Settings } from '../../entities/settings'
-import { normalizeNetworkTarget } from '../../shared/lib/network'
+import { normalizeNetworkTarget } from '@shared/lib/network'
 import {
   requestSetDefaultCheckInterval,
   requestSetNotificationsEnabled,
   requestSetPingUrl,
-} from '../../shared/lib/runtime'
+} from '@shared/lib/runtime'
 
 export type PingUrlUpdateResult = 'success' | 'invalid'
 

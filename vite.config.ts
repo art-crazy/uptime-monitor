@@ -1,5 +1,6 @@
 import { crx, defineManifest } from '@crxjs/vite-plugin'
 import react from '@vitejs/plugin-react'
+import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
 
 const manifest = defineManifest({
@@ -35,5 +36,10 @@ const manifest = defineManifest({
 })
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@shared': resolve(__dirname, 'src/shared'),
+    },
+  },
   plugins: [react(), crx({ manifest })],
 })

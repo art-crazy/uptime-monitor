@@ -1,5 +1,5 @@
-import { Badge } from '../../../shared/ui/Badge'
-import { t } from '../../../shared/lib/i18n'
+import { Badge } from '@shared/ui/Badge'
+import { t } from '@shared/lib/i18n'
 
 import type { Monitor } from '../model/types'
 import { ResponseTime } from './ResponseTime'
