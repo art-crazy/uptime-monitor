@@ -27,7 +27,7 @@
     "message": "Удалить"
   },
   "dashboard_title": {
-    "message": "Состояние серверов"
+    "message": "Мониторы"
   },
   "dashboard_open_settings_aria": {
     "message": "Открыть настройки"
@@ -36,7 +36,7 @@
     "message": "Мониторов пока нет"
   },
   "dashboard_empty_subtitle": {
-    "message": "Добавьте URL, чтобы начать отслеживание"
+    "message": "Добавьте монитор, чтобы начать отслеживание"
   },
   "dashboard_add_first_monitor": {
     "message": "+ Добавить монитор"
@@ -103,7 +103,7 @@
     "message": "Авторизация"
   },
   "add_monitor_field_api_auth_token": {
-    "message": "Токен"
+    "message": "Bearer-токен"
   },
   "add_monitor_field_api_auth_username": {
     "message": "Логин"
@@ -145,10 +145,10 @@
     "message": "https://example.com"
   },
   "add_monitor_hint_host": {
-    "message": "Проверяет доступность по HTTP/HTTPS"
+    "message": "Проверяет доступность хоста по HTTP/HTTPS"
   },
   "add_monitor_hint_api": {
-    "message": "Отправляет GET или POST запрос к API и по умолчанию ожидает успешный ответ 2xx. HTML-страницы считаются ошибкой"
+    "message": "Отправляет GET- или POST-запрос к API и по умолчанию считает успешным любой ответ 2xx. HTML-страницы считаются ошибкой"
   },
   "add_monitor_hint_api_headers": {
     "message": "Указывайте по одному заголовку на строку: Имя: значение. Authorization лучше задавать через блок ниже"
@@ -262,19 +262,19 @@
     "message": "Уведомления Telegram"
   },
   "settings_telegram_chat_id": {
-    "message": "Chat ID"
+    "message": "ID чата"
   },
   "settings_telegram_chat_id_hint": {
-    "message": "Напишите боту и введите ваш числовой chat ID"
+    "message": "Напишите боту и укажите числовой ID чата"
   },
   "settings_telegram_send_recovery": {
     "message": "Отправлять сообщения о восстановлении"
   },
   "settings_telegram_test_button": {
-    "message": "Отправить test-сообщение"
+    "message": "Отправить тестовое сообщение"
   },
   "settings_telegram_test_success": {
-    "message": "Test-сообщение в Telegram успешно отправлено"
+    "message": "Тестовое сообщение в Telegram отправлено"
   },
   "settings_section_default_interval": {
     "message": "Интервал проверки по умолчанию"
@@ -301,7 +301,7 @@
     "message": "Введите корректный хост, IP или URL"
   },
   "settings_error_invalid_telegram_chat_id": {
-    "message": "Укажите Telegram chat ID"
+    "message": "Укажите ID чата Telegram"
   },
   "settings_error_unable_to_save_ping_target": {
     "message": "Не удалось сохранить адрес проверки"
@@ -316,7 +316,7 @@
     "message": "Не удалось обновить настройки Telegram"
   },
   "settings_error_unable_to_send_telegram_test": {
-    "message": "Не удалось отправить test-сообщение в Telegram"
+    "message": "Не удалось отправить тестовое сообщение в Telegram"
   },
   "settings_error_unable_to_update_interval": {
     "message": "Не удалось обновить интервал проверки"
@@ -372,7 +372,7 @@
     "message": "Отклик"
   },
   "monitor_details_stat_incidents": {
-    "message": "Сбоев"
+    "message": "Сбои"
   },
   "monitor_details_section_incidents": {
     "message": "История сбоев"

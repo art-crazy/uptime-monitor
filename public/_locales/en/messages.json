@@ -6,7 +6,7 @@
     "message": "Uptime Monitor"
   },
   "ext_description": {
-    "message": "Track uptime monitor stats for website, server & network. Get instant downtime alerts and availability reports 24/7."
+    "message": "Monitor websites, APIs, and hosts with local checks and browser alerts."
   },
   "ext_action_title": {
     "message": "Uptime Monitor"
@@ -27,7 +27,7 @@
     "message": "Delete"
   },
   "dashboard_title": {
-    "message": "Server status"
+    "message": "Monitors"
   },
   "dashboard_open_settings_aria": {
     "message": "Open settings"
@@ -36,7 +36,7 @@
     "message": "No monitors yet"
   },
   "dashboard_empty_subtitle": {
-    "message": "Add a URL to start tracking uptime"
+    "message": "Add a monitor to start tracking uptime"
   },
   "dashboard_add_first_monitor": {
     "message": "+ Add your first monitor"
@@ -59,7 +59,7 @@
     "message": "Paused"
   },
   "dashboard_status_pending": {
-    "message": "Checking first response"
+    "message": "Waiting for first check"
   },
   "dashboard_status_uptime": {
     "message": "$VALUE$ uptime",
@@ -121,7 +121,7 @@
     "message": "Additional response check"
   },
   "add_monitor_field_api_response_body": {
-    "message": "Body must include"
+    "message": "Response body must include"
   },
   "add_monitor_field_api_response_json_path": {
     "message": "JSON path"
@@ -145,13 +145,13 @@
     "message": "https://example.com"
   },
   "add_monitor_hint_host": {
-    "message": "Checks HTTP/HTTPS availability for this host"
+    "message": "Checks this host over HTTP/HTTPS"
   },
   "add_monitor_hint_api": {
-    "message": "Sends a GET or POST request to an API endpoint and expects a successful 2xx response by default. HTML pages are treated as errors"
+    "message": "Sends a GET or POST request to the API endpoint. By default, any 2xx response is treated as healthy. HTML responses are treated as failures"
   },
   "add_monitor_hint_api_headers": {
-    "message": "One header per line in the format Name: value. Prefer the auth section below for Authorization"
+    "message": "Enter one header per line in the format Name: value. Use the auth section below for Authorization"
   },
   "add_monitor_hint_api_auth_token": {
     "message": "Sent in the Authorization header"
@@ -163,7 +163,7 @@
     "message": "Password for Basic auth"
   },
   "add_monitor_hint_api_body": {
-    "message": "For POST requests. Content-Type is added automatically if you do not specify one"
+    "message": "Used for POST requests. Content-Type is added automatically unless you set it yourself"
   },
   "add_monitor_hint_api_expected_status": {
     "message": "Leave empty to accept any successful 2xx response"
@@ -286,7 +286,7 @@
     "message": "Connectivity target"
   },
   "settings_connectivity_hint": {
-    "message": "Uses an HTTP/HTTPS check in Chromium. Change if Google DNS is blocked"
+    "message": "Used to detect internet connectivity with an HTTP/HTTPS request in Chromium. Change it if the default target is blocked"
   },
   "settings_section_danger": {
     "message": "Danger"
@@ -369,7 +369,7 @@
     "message": "Uptime"
   },
   "monitor_details_stat_avg_response": {
-    "message": "Response"
+    "message": "Response time"
   },
   "monitor_details_stat_incidents": {
     "message": "Incidents"
@@ -413,7 +413,7 @@
     "message": "Internet connection"
   },
   "internet_status_online": {
-    "message": "Online - $VALUE$ response",
+    "message": "Online - response time: $VALUE$",
     "placeholders": {
       "value": {
         "content": "$1"
@@ -427,7 +427,7 @@
     "message": "Checking..."
   },
   "chart_title": {
-    "message": "Response time - last 24h"
+    "message": "Response time - last 24 hours"
   },
   "chart_bar_down": {
     "message": "Down"
@@ -448,7 +448,7 @@
     "message": "Down"
   },
   "incident_label_up": {
-    "message": "Up"
+    "message": "Recovered"
   },
   "incident_duration_ongoing": {
     "message": "ongoing"
@@ -494,7 +494,7 @@
     }
   },
   "time_today_at": {
-    "message": "today $VALUE$",
+    "message": "today at $VALUE$",
     "placeholders": {
       "value": {
         "content": "$1"
@@ -502,7 +502,7 @@
     }
   },
   "time_yesterday_at": {
-    "message": "yesterday $VALUE$",
+    "message": "yesterday at $VALUE$",
     "placeholders": {
       "value": {
         "content": "$1"
