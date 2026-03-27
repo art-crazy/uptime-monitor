@@ -1,9 +1,9 @@
 {
   "ext": {
-    "name": "Uptime Monitor",
-    "short_name": "Uptime Monitor",
+    "name": "Монитор доступности",
+    "short_name": "Монитор доступности",
     "description": "Отслеживайте доступность сайтов, API и хостов с локальными проверками и уведомлениями браузера.",
-    "action_title": "Uptime Monitor"
+    "action_title": "Монитор доступности"
   },
   "app": {
     "loading_title": "Загружаем мониторы",
