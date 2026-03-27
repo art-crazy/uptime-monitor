@@ -156,6 +156,14 @@ export function formatResponseTime(responseTime: number): string {
   return getLocaleFormatters().millisecond.format(responseTime)
 }
 
+export function formatTimeRange(startTimestamp: number, endTimestamp: number): string {
+  const { time } = getLocaleFormatters()
+  const start = time.format(new Date(startTimestamp))
+  const end = time.format(new Date(endTimestamp))
+
+  return start === end ? start : `${start} - ${end}`
+}
+
 export function formatCheckInterval(intervalSeconds: number): string {
   const { minute, second } = getLocaleFormatters()
 

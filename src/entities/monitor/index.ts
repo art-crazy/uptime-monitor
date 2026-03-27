@@ -6,13 +6,16 @@ export {
 export {
   appendHistoryEntry,
   calculateAverageResponseTime,
+  calculateMedianResponseTime,
   calculateUptimePercent,
-  getChartHistory,
+  getChartBuckets,
+  getChartRange,
 } from './model/selectors'
 export {
   getMonitors,
 } from './model/storage'
 export { useMonitors } from './model/hooks'
+export type { ChartBucket, ChartRange } from './model/selectors'
 export type {
   ApiMonitorAuthType,
   ApiMonitorConfig,

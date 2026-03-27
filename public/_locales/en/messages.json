@@ -459,20 +459,32 @@
   "chart_title": {
     "message": "Response time"
   },
-  "chart_bar_down": {
-    "message": "Down"
-  },
   "chart_bar_no_samples": {
     "message": "No samples"
   },
-  "chart_legend_good": {
-    "message": "good"
+  "chart_bar_failures": {
+    "message": "Failures: $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
-  "chart_legend_slow": {
-    "message": "slow"
+  "chart_bar_average": {
+    "message": "Average: $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
-  "chart_legend_down": {
-    "message": "down"
+  "chart_bar_median": {
+    "message": "Median: $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "chart_period_5m": {
     "message": "5m"

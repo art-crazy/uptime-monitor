@@ -459,20 +459,8 @@
   "chart_title": {
     "message": "Время ответа"
   },
-  "chart_bar_down": {
-    "message": "Недоступен"
-  },
   "chart_bar_no_samples": {
     "message": "Нет данных"
-  },
-  "chart_legend_good": {
-    "message": "хорошо"
-  },
-  "chart_legend_slow": {
-    "message": "медленно"
-  },
-  "chart_legend_down": {
-    "message": "недоступно"
   },
   "chart_period_5m": {
     "message": "5 мин"
@@ -485,6 +473,30 @@
   },
   "chart_period_24h": {
     "message": "24 ч"
+  },
+  "chart_bar_failures": {
+    "message": "Сбоев: $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "chart_bar_average": {
+    "message": "Среднее: $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "chart_bar_median": {
+    "message": "Медиана: $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "incident_label_down": {
     "message": "Сбой"

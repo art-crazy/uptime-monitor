@@ -162,15 +162,14 @@
   },
   "chart": {
     "title": "Время ответа",
-    "bar_down": "Недоступен",
     "bar_no_samples": "Нет данных",
-    "legend_good": "хорошо",
-    "legend_slow": "медленно",
-    "legend_down": "недоступно",
     "period_5m": "5 мин",
     "period_30m": "30 мин",
     "period_1h": "1 ч",
-    "period_24h": "24 ч"
+    "period_24h": "24 ч",
+    "bar_failures": "Сбоев: $1",
+    "bar_average": "Среднее: $1",
+    "bar_median": "Медиана: $1"
   },
   "incident": {
     "label_down": "Сбой",

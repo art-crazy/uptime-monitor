@@ -1,8 +1,9 @@
 import { ArrowLeft, Ellipsis } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
-import { IncidentRow, type Incident } from '../../../entities/incident'
+import { countIncidentsInRange, IncidentRow, type Incident } from '../../../entities/incident'
 import {
+  getChartRange,
   type Monitor,
   ResponseTime,
 } from '../../../entities/monitor'
@@ -20,7 +21,7 @@ import { Spinner } from '@shared/ui/Spinner'
 import { PageHeader } from '@shared/ui/PageHeader'
 import { PageLayout } from '@shared/ui/PageLayout'
 import { useToast } from '@shared/ui/toast'
-import { ResponseChart } from '../../../widgets/response-chart'
+import { RESPONSE_CHART_PERIODS, ResponseChart } from '../../../widgets/response-chart'
 import styles from './MonitorDetails.module.css'
 
 interface StatusBadgeProps {
@@ -59,6 +60,7 @@ export function MonitorDetailsPage({
   onDeleted,
   onEdit,
 }: MonitorDetailsPageProps) {
+  const [chartPeriodIndex, setChartPeriodIndex] = useState(0)
   const [isBusy, setIsBusy] = useState(false)
   const [isResuming, setIsResuming] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -136,6 +138,19 @@ export function MonitorDetailsPage({
   const sortedIncidents = [...incidents]
     .filter((incident) => incident.monitorId === monitor.id)
     .sort((left, right) => right.startTime - left.startTime)
+  const chartPeriod = RESPONSE_CHART_PERIODS[chartPeriodIndex] ?? RESPONSE_CHART_PERIODS[0]
+  const chartRange = useMemo(
+    () => getChartRange(
+      monitor.history,
+      chartPeriod.bucketCount,
+      chartPeriod.bucketMs,
+      monitor.history.at(-1)?.timestamp ?? monitor.lastChecked,
+    ),
+    [chartPeriod, monitor.history, monitor.lastChecked],
+  )
+  const incidentsInSelectedPeriod = useMemo(() => {
+    return countIncidentsInRange(sortedIncidents, chartRange)
+  }, [chartRange, sortedIncidents])
 
   const handleCheckNow = async () => {
     if (isCheckPending) {
@@ -283,11 +298,15 @@ export function MonitorDetailsPage({
         </div>
         <div className={styles.card}>
           <div className={styles.cardLabel}>{t('monitor_details_stat_incidents')}</div>
-          <div className={styles.cardValue}>{sortedIncidents.length}</div>
+          <div className={styles.cardValue}>{incidentsInSelectedPeriod}</div>
         </div>
       </section>
 
-      <ResponseChart history={monitor.history} />
+      <ResponseChart
+        history={monitor.history}
+        onPeriodChange={setChartPeriodIndex}
+        periodIndex={chartPeriodIndex}
+      />
 
       <section className={styles.incidents}>
         <div className={styles.sectionLabel}>{t('monitor_details_section_incidents')}</div>
