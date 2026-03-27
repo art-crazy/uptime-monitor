@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react'
 
 import { IncidentRow, type Incident } from '../../../entities/incident'
 import {
-  calculateAverageResponseTime,
   type Monitor,
   ResponseTime,
 } from '../../../entities/monitor'
@@ -129,7 +128,6 @@ export function MonitorDetailsPage({
     }
   }, [isMenuOpen])
 
-  const avgResponse = calculateAverageResponseTime(monitor.history)
   const isStatusSpinning = monitor.checkState === 'running' || !statusDelayDone
   const isCheckPending = isCheckingNow || (!isBusy && monitor.checkState === 'running')
   const feedbackMessage =
@@ -265,7 +263,7 @@ export function MonitorDetailsPage({
           <div className={styles.card}>
             <div className={styles.cardLabel}>{t('monitor_details_stat_avg_response')}</div>
             <div className={styles.cardValue}>
-              <ResponseTime responseTime={avgResponse} />
+              <ResponseTime responseTime={monitor.responseTime} />
             </div>
           </div>
           <div className={styles.card}>

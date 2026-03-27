@@ -110,7 +110,7 @@ export const DEFAULT_MESSAGES = {
   "monitor_error_check_interrupted": "Last check was interrupted",
   "monitor_details_stat_status": "Status",
   "monitor_details_stat_uptime": "Uptime",
-  "monitor_details_stat_avg_response": "Avg response",
+  "monitor_details_stat_avg_response": "Latest response",
   "monitor_details_stat_incidents": "Incidents",
   "monitor_details_section_incidents": "Incidents",
   "monitor_details_empty_incidents": "No incidents recorded yet",

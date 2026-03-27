@@ -160,7 +160,7 @@ async function toggleMonitorCommand(monitorId: string): Promise<void> {
       checkVersion: currentMonitor.checkVersion + 1,
       lastCheckError: null,
       status: shouldCheck ? 'pending' : 'paused',
-      responseTime: shouldCheck ? null : currentMonitor.responseTime,
+      responseTime: currentMonitor.responseTime,
     }
     const nextMonitors = [...monitors]
     nextMonitors[monitorIndex] = nextMonitor
