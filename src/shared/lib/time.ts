@@ -29,6 +29,7 @@ function getLocaleFormatters(): LocaleFormatters {
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
+      hour12: false,
     }),
     hour: new Intl.NumberFormat(locale, {
       maximumFractionDigits: 0,
@@ -71,6 +72,7 @@ function getLocaleFormatters(): LocaleFormatters {
     time: new Intl.DateTimeFormat(locale, {
       hour: '2-digit',
       minute: '2-digit',
+      hour12: false,
     }),
   }
 
