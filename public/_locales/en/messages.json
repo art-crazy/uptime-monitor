@@ -20,6 +20,9 @@
   "common_go_back_aria": {
     "message": "Go back"
   },
+  "common_close_notification": {
+    "message": "Dismiss notification"
+  },
   "common_edit": {
     "message": "Edit"
   },

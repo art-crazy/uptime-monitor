@@ -233,16 +233,3 @@
 .buttonRow {
   display: flex;
 }
-
-.feedback {
-  padding-top: 6px;
-  font-size: 11px;
-}
-
-.feedbackError {
-  color: var(--color-red);
-}
-
-.feedbackSuccess {
-  color: #1d8a67;
-}

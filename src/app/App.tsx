@@ -10,6 +10,7 @@ import { MonitorDetailsPage } from '../pages/monitor-details'
 import { SettingsPage } from '../pages/settings'
 import { t } from '@shared/lib/i18n'
 import { PageHeader } from '@shared/ui/PageHeader'
+import { ToastProvider } from '@shared/ui/toast'
 import styles from './App.module.css'
 
 type Screen =
@@ -86,8 +87,10 @@ export function App() {
     </div>
   )
 
+  let content: ReactNode
+
   if (!isHydrated) {
-    return (
+    content = (
       <div className={styles.page}>
         <PageHeader title={screenTitle} />
         <div className={styles.loadingState}>
@@ -96,10 +99,8 @@ export function App() {
         </div>
       </div>
     )
-  }
-
-  if (normalizedScreen.key === 'add') {
-    return renderScreen(
+  } else if (normalizedScreen.key === 'add') {
+    content = renderScreen(
       <AddMonitorPage
         key={selectedMonitor?.id ?? 'new-monitor'}
         defaultInterval={settings.defaultInterval}
@@ -130,10 +131,8 @@ export function App() {
         }
       />,
     )
-  }
-
-  if (normalizedScreen.key === 'details' && selectedMonitor) {
-    return renderScreen(
+  } else if (normalizedScreen.key === 'details' && selectedMonitor) {
+    content = renderScreen(
       <MonitorDetailsPage
         key={selectedMonitor.id}
         incidents={incidents}
@@ -143,22 +142,26 @@ export function App() {
         onEdit={() => navigate({ key: 'add', monitorId: selectedMonitor.id })}
       />,
     )
-  }
-
-  if (normalizedScreen.key === 'settings') {
-    return renderScreen(
-      <SettingsPage onBack={() => navigate({ key: 'dashboard' })} settings={settings} />
+  } else if (normalizedScreen.key === 'settings') {
+    content = renderScreen(
+      <SettingsPage onBack={() => navigate({ key: 'dashboard' })} settings={settings} />,
+    )
+  } else {
+    content = renderScreen(
+      <DashboardPage
+        incidents={incidents}
+        internetStatus={internetStatus}
+        monitors={monitors}
+        onAddMonitor={() => navigate({ key: 'add' })}
+        onOpenMonitor={(monitorId) => navigate({ key: 'details', monitorId })}
+        onOpenSettings={() => navigate({ key: 'settings' })}
+      />,
     )
   }
 
-  return renderScreen(
-    <DashboardPage
-      incidents={incidents}
-      internetStatus={internetStatus}
-      monitors={monitors}
-      onAddMonitor={() => navigate({ key: 'add' })}
-      onOpenMonitor={(monitorId) => navigate({ key: 'details', monitorId })}
-      onOpenSettings={() => navigate({ key: 'settings' })}
-    />,
+  return (
+    <ToastProvider>
+      {content}
+    </ToastProvider>
   )
 }

@@ -1,0 +1,96 @@
+.viewport {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--toast-border);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--toast-bg) 90%, white);
+  box-shadow: 0 12px 24px rgba(24, 22, 19, 0.16);
+  animation: toast-enter 180ms ease-out;
+}
+
+.toneSuccess {
+  --toast-accent: var(--color-green);
+  --toast-bg: var(--color-green-bg);
+  --toast-border: var(--color-green-border);
+}
+
+.toneError {
+  --toast-accent: var(--color-red);
+  --toast-bg: var(--color-red-bg);
+  --toast-border: var(--color-red-border);
+}
+
+.toneInfo {
+  --toast-accent: var(--color-blue);
+  --toast-bg: var(--color-blue-bg);
+  --toast-border: var(--color-blue-border);
+}
+
+.accent {
+  width: 3px;
+  align-self: stretch;
+  border-radius: 999px;
+  background: var(--toast-accent);
+}
+
+.message {
+  min-width: 0;
+  padding-top: 1px;
+  color: var(--color-text);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.closeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.closeButton:hover {
+  background: rgba(24, 22, 19, 0.06);
+  color: var(--color-text);
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid var(--color-blue-border);
+  outline-offset: 2px;
+}
+
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

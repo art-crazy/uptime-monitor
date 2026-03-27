@@ -21,6 +21,7 @@ import { IconButton } from '@shared/ui/IconButton'
 import { PageHeader } from '@shared/ui/PageHeader'
 import { PageLayout } from '@shared/ui/PageLayout'
 import { Toggle } from '@shared/ui/Toggle'
+import { useToast } from '@shared/ui/toast'
 import styles from './Settings.module.css'
 import { TelegramSettingsSection } from './TelegramSettingsSection'
 
@@ -29,13 +30,7 @@ interface SettingsPageProps {
   settings: Settings
 }
 
-interface FeedbackState {
-  message: string
-  type: 'error' | 'success'
-}
-
 export function SettingsPage({ onBack, settings }: SettingsPageProps) {
-  const [feedback, setFeedback] = useState<FeedbackState | null>(null)
   const [isNotificationsBusy, setIsNotificationsBusy] = useState(false)
   const [isTelegramBusy, setIsTelegramBusy] = useState(false)
   const [isTelegramTestBusy, setIsTelegramTestBusy] = useState(false)
@@ -53,6 +48,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
   const [defaultInterval, setDefaultInterval] = useState(settings.defaultInterval)
   const [pingError, setPingError] = useState<string | null>(null)
   const [telegramChatIdError, setTelegramChatIdError] = useState<string | null>(null)
+  const { showError, showSuccess } = useToast()
   const intervalOptions = useMemo(
     () =>
       CHECK_INTERVAL_OPTIONS.map((option) => ({
@@ -78,10 +74,6 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
     setDefaultInterval(settings.defaultInterval)
   }, [settings.defaultInterval])
 
-  const clearFeedback = () => {
-    setFeedback(null)
-  }
-
   const hasConfiguredTelegramChatId = settings.notifications.telegram.chatId.trim().length > 0
   const isTelegramConfigured = telegramEnabled && hasConfiguredTelegramChatId
 
@@ -99,7 +91,6 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
     }
 
     setIsPingBusy(true)
-    clearFeedback()
 
     try {
       const result = await setPingUrl(nextPingUrl)
@@ -160,7 +151,6 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
     }
 
     setIsTelegramBusy(true)
-    clearFeedback()
 
     try {
       const result = await setTelegramChatId(nextChatId)
@@ -188,24 +178,16 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
 
     if (!isTelegramConfigured) {
       setTelegramChatIdError(t('settings_error_invalid_telegram_chat_id'))
-      setFeedback(null)
       return
     }
 
     setIsTelegramTestBusy(true)
-    clearFeedback()
 
     try {
       await sendTelegramTestMessage()
-      setFeedback({
-        type: 'success',
-        message: t('settings_telegram_test_success'),
-      })
+      showSuccess(t('settings_telegram_test_success'))
     } catch {
-      setFeedback({
-        type: 'error',
-        message: t('settings_error_unable_to_send_telegram_test'),
-      })
+      showError(t('settings_error_unable_to_send_telegram_test'))
     } finally {
       setIsTelegramTestBusy(false)
     }
@@ -223,15 +205,11 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
     }
 
     setIsClearBusy(true)
-    clearFeedback()
 
     try {
       await Promise.all([clearAllMonitoringData(), delay(MIN_LOADING_MS)])
     } catch {
-      setFeedback({
-        type: 'error',
-        message: t('settings_error_unable_to_clear'),
-      })
+      showError(t('settings_error_unable_to_clear'))
     } finally {
       setIsClearBusy(false)
     }
@@ -259,16 +237,6 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
           >
             {t('settings_button_clear_all')}
           </Button>
-          {feedback ? (
-            <div
-              className={[
-                styles.feedback,
-                feedback.type === 'error' ? styles.feedbackError : styles.feedbackSuccess,
-              ].join(' ')}
-            >
-              {feedback.message}
-            </div>
-          ) : null}
         </>
       }
     >
@@ -286,16 +254,12 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
                 const next = !browserNotificationsEnabled
                 setBrowserNotificationsEnabled(next)
                 setIsNotificationsBusy(true)
-                clearFeedback()
 
                 try {
                   await saveNotificationsEnabled(next)
                 } catch {
                   setBrowserNotificationsEnabled(!next)
-                  setFeedback({
-                    type: 'error',
-                    message: t('settings_error_unable_to_update_notifications'),
-                  })
+                  showError(t('settings_error_unable_to_update_notifications'))
                 } finally {
                   setIsNotificationsBusy(false)
                 }
@@ -313,16 +277,12 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
             onChange={async (value) => {
               const next = value as Settings['defaultInterval']
               setDefaultInterval(next)
-              clearFeedback()
 
               try {
                 await setDefaultCheckInterval(next)
               } catch {
                 setDefaultInterval(settings.defaultInterval)
-                setFeedback({
-                  type: 'error',
-                  message: t('settings_error_unable_to_update_interval'),
-                })
+                showError(t('settings_error_unable_to_update_interval'))
               }
             }}
             options={intervalOptions}
@@ -374,16 +334,12 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
             const next = !telegramSendRecovery
             setTelegramSendRecovery(next)
             setIsTelegramBusy(true)
-            clearFeedback()
 
             try {
               await setTelegramRecoveryEnabled(next)
             } catch {
               setTelegramSendRecovery(!next)
-              setFeedback({
-                type: 'error',
-                message: t('settings_error_unable_to_update_telegram'),
-              })
+              showError(t('settings_error_unable_to_update_telegram'))
             } finally {
               setIsTelegramBusy(false)
             }
@@ -393,16 +349,12 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
             const next = !telegramEnabled
             setTelegramEnabled(next)
             setIsTelegramBusy(true)
-            clearFeedback()
 
             try {
               await saveTelegramEnabled(next)
             } catch {
               setTelegramEnabled(!next)
-              setFeedback({
-                type: 'error',
-                message: t('settings_error_unable_to_update_telegram'),
-              })
+              showError(t('settings_error_unable_to_update_telegram'))
             } finally {
               setIsTelegramBusy(false)
             }

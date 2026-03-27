@@ -9,6 +9,7 @@ export const DEFAULT_MESSAGES = {
   "app_loading_title": "Loading monitors",
   "app_loading_subtitle": "Syncing local data...",
   "common_go_back_aria": "Go back",
+  "common_close_notification": "Dismiss notification",
   "common_edit": "Edit",
   "common_delete": "Delete",
   "dashboard_title": "Server status",

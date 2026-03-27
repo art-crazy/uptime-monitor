@@ -26,6 +26,9 @@
   "common_delete": {
     "message": "Удалить"
   },
+  "common_close_notification": {
+    "message": "??????? ???????????"
+  },
   "dashboard_title": {
     "message": "Состояние серверов"
   },

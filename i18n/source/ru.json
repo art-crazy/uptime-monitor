@@ -12,7 +12,8 @@
   "common": {
     "go_back_aria": "Назад",
     "edit": "Изменить",
-    "delete": "Удалить"
+    "delete": "Удалить",
+    "close_notification": "??????? ???????????"
   },
   "dashboard": {
     "title": "Состояние серверов",

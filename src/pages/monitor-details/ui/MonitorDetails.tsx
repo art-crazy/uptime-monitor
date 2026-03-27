@@ -19,6 +19,7 @@ import { IconButton } from '@shared/ui/IconButton'
 import { Spinner } from '@shared/ui/Spinner'
 import { PageHeader } from '@shared/ui/PageHeader'
 import { PageLayout } from '@shared/ui/PageLayout'
+import { useToast } from '@shared/ui/toast'
 import { ResponseChart } from '../../../widgets/response-chart'
 import styles from './MonitorDetails.module.css'
 
@@ -58,7 +59,6 @@ export function MonitorDetailsPage({
   onDeleted,
   onEdit,
 }: MonitorDetailsPageProps) {
-  const [actionError, setActionError] = useState<string | null>(null)
   const [isBusy, setIsBusy] = useState(false)
   const [isResuming, setIsResuming] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -67,6 +67,7 @@ export function MonitorDetailsPage({
   const [statusDelayDone, setStatusDelayDone] = useState(true)
   const menuRef = useRef<HTMLDivElement>(null)
   const statusDelayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const { showError } = useToast()
 
   useEffect(() => {
     setMonitorStatus(monitor.status)
@@ -131,9 +132,7 @@ export function MonitorDetailsPage({
 
   const isStatusSpinning = monitor.checkState === 'running' || !statusDelayDone
   const isCheckPending = isCheckingNow || (!isBusy && monitor.checkState === 'running')
-  const feedbackMessage =
-    actionError ??
-    translateLocalizedMessage(monitor.lastCheckError)
+  const feedbackMessage = translateLocalizedMessage(monitor.lastCheckError)
   const sortedIncidents = [...incidents]
     .filter((incident) => incident.monitorId === monitor.id)
     .sort((left, right) => right.startTime - left.startTime)
@@ -144,12 +143,11 @@ export function MonitorDetailsPage({
     }
 
     setIsCheckingNow(true)
-    setActionError(null)
 
     try {
       await Promise.all([checkNow(monitor.id), delay(MIN_LOADING_MS)])
     } catch {
-      setActionError(t('monitor_details_error_check_now'))
+      showError(t('monitor_details_error_check_now'))
     } finally {
       setIsCheckingNow(false)
     }
@@ -165,7 +163,6 @@ export function MonitorDetailsPage({
     setMonitorStatus(nextStatus)
     setIsBusy(true)
     setIsResuming(resuming)
-    setActionError(null)
 
     try {
       const ops: Promise<unknown>[] = [toggleMonitor(monitor.id)]
@@ -173,7 +170,7 @@ export function MonitorDetailsPage({
       await Promise.all(ops)
     } catch {
       setMonitorStatus(monitorStatus)
-      setActionError(t('monitor_details_error_toggle'))
+      showError(t('monitor_details_error_toggle'))
     } finally {
       setIsBusy(false)
       setIsResuming(false)
@@ -193,13 +190,12 @@ export function MonitorDetailsPage({
     }
 
     setIsBusy(true)
-    setActionError(null)
 
     try {
       await deleteMonitor(monitor.id)
       onDeleted()
     } catch {
-      setActionError(t('monitor_details_error_delete'))
+      showError(t('monitor_details_error_delete'))
     } finally {
       setIsBusy(false)
     }
@@ -265,9 +261,7 @@ export function MonitorDetailsPage({
             </Button>
           </div>
           {feedbackMessage ? (
-            <div className={[styles.feedback, styles.feedbackError].join(' ')}>
-              {feedbackMessage}
-            </div>
+            <div className={styles.feedback}>{feedbackMessage}</div>
           ) : null}
         </>
       }
