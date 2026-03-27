@@ -6,7 +6,7 @@
     "message": "Uptime Monitor"
   },
   "ext_description": {
-    "message": "Monitor websites, APIs, and hosts with local checks and browser alerts."
+    "message": "Track uptime monitor stats for website, server & network. Get instant downtime alerts and availability reports 24/7."
   },
   "ext_action_title": {
     "message": "Uptime Monitor"
@@ -27,7 +27,7 @@
     "message": "Delete"
   },
   "dashboard_title": {
-    "message": "Monitors"
+    "message": "Server status"
   },
   "dashboard_open_settings_aria": {
     "message": "Open settings"
@@ -36,7 +36,7 @@
     "message": "No monitors yet"
   },
   "dashboard_empty_subtitle": {
-    "message": "Add a monitor to start tracking uptime"
+    "message": "Add a URL to start tracking uptime"
   },
   "dashboard_add_first_monitor": {
     "message": "+ Add your first monitor"

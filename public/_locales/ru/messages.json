@@ -27,7 +27,7 @@
     "message": "Удалить"
   },
   "dashboard_title": {
-    "message": "Мониторы"
+    "message": "Состояние серверов"
   },
   "dashboard_open_settings_aria": {
     "message": "Открыть настройки"
@@ -36,7 +36,7 @@
     "message": "Мониторов пока нет"
   },
   "dashboard_empty_subtitle": {
-    "message": "Добавьте монитор, чтобы начать отслеживание"
+    "message": "Добавьте URL, чтобы начать отслеживание"
   },
   "dashboard_add_first_monitor": {
     "message": "+ Добавить монитор"
