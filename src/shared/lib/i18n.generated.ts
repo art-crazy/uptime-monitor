@@ -146,6 +146,8 @@ export const DEFAULT_MESSAGES = {
   "internet_status_offline": "Offline - no response",
   "internet_status_checking": "Checking...",
   "chart_title": "Response time",
+  "chart_period_label": "Period:",
+  "chart_samples": "Samples: $1",
   "chart_bar_no_samples": "No samples",
   "chart_bar_failures": "Failures: $1",
   "chart_bar_average": "Average: $1",

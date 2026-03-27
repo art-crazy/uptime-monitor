@@ -169,7 +169,9 @@
     "period_24h": "24 ч",
     "bar_failures": "Сбоев: $1",
     "bar_average": "Среднее: $1",
-    "bar_median": "Медиана: $1"
+    "bar_median": "Медиана: $1",
+    "period_label": "Период:",
+    "samples": "Замеры: $1"
   },
   "incident": {
     "label_down": "Сбой",

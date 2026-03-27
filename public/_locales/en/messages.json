@@ -459,6 +459,17 @@
   "chart_title": {
     "message": "Response time"
   },
+  "chart_period_label": {
+    "message": "Period:"
+  },
+  "chart_samples": {
+    "message": "Samples: $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
   "chart_bar_no_samples": {
     "message": "No samples"
   },
