@@ -13,6 +13,7 @@
   flex-shrink: 0;
 }
 
+
 .title {
   flex: 1;
   overflow: hidden;
@@ -20,11 +21,12 @@
   white-space: nowrap;
   font-size: 13px;
   font-weight: 500;
+  line-height: 1.3;
+  transform: translateY(-1px);
 }
 
 .trailing {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  margin-left: auto;
 }
