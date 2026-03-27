@@ -60,6 +60,7 @@ export function MonitorDetailsPage({
 }: MonitorDetailsPageProps) {
   const [actionError, setActionError] = useState<string | null>(null)
   const [isBusy, setIsBusy] = useState(false)
+  const [isResuming, setIsResuming] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isCheckingNow, setIsCheckingNow] = useState(false)
   const [monitorStatus, setMonitorStatus] = useState(monitor.status)
@@ -147,8 +148,10 @@ export function MonitorDetailsPage({
     }
 
     const nextStatus = monitorStatus === 'paused' ? 'online' : 'paused'
+    const resuming = monitorStatus === 'paused'
     setMonitorStatus(nextStatus)
     setIsBusy(true)
+    setIsResuming(resuming)
     setActionError(null)
 
     try {
@@ -158,6 +161,7 @@ export function MonitorDetailsPage({
       setActionError(t('monitor_details_error_toggle'))
     } finally {
       setIsBusy(false)
+      setIsResuming(false)
     }
   }
 
@@ -272,7 +276,7 @@ export function MonitorDetailsPage({
         <Button className={styles.actionButton} loading={isCheckPending} onClick={handleCheckNow}>
           {t('monitor_details_button_check_now')}
         </Button>
-        <Button className={styles.actionButton} loading={isBusy} onClick={handleTogglePause} variant="secondary">
+        <Button className={styles.actionButton} loading={isResuming} onClick={handleTogglePause} variant="secondary">
           {monitorStatus === 'paused'
             ? t('monitor_details_button_resume')
             : t('monitor_details_button_pause')}
