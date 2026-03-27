@@ -1,4 +1,9 @@
-import type { MonitorType } from '../entities/monitor'
+import {
+  DEFAULT_API_MONITOR_CONFIG,
+  normalizeApiMonitorConfig,
+  type ApiMonitorConfig,
+  type MonitorType,
+} from '../entities/monitor'
 import { getMonitorCheckCandidates } from '../entities/monitor'
 import {
   CHECK_TIMEOUT_MS,
@@ -8,6 +13,7 @@ import {
 import { hasHttpProtocol, normalizeNetworkTarget } from '@shared/lib/network'
 
 interface PingResult {
+  errorKey?: string
   ok: boolean
   responseTime: number | null
 }
@@ -24,42 +30,49 @@ function createAbortController(timeoutMs: number) {
 
 async function timedFetch(
   url: string,
-  method: 'GET' | 'HEAD',
+  method: 'GET' | 'HEAD' | 'POST',
   timeoutMs: number,
-): Promise<{ ok: boolean; responseTime: number; status: number }> {
+  headers?: HeadersInit,
+  body?: string,
+): Promise<{ response: Response; responseTime: number }> {
   const timer = createAbortController(timeoutMs)
   const startedAt = performance.now()
 
   try {
     const response = await fetch(url, {
+      body,
       method,
       cache: 'no-store',
+      headers,
       redirect: 'follow',
       signal: timer.controller.signal,
     })
 
     return {
-      ok: response.ok,
+      response,
       responseTime: Math.round(performance.now() - startedAt),
-      status: response.status,
     }
   } finally {
     timer.clear()
   }
 }
 
+function isHtmlContentType(contentType: string | null): boolean {
+  return contentType?.toLowerCase().startsWith('text/html') === true
+}
+
 async function probeUrl(url: string, timeoutMs: number): Promise<PingResult> {
   try {
     const headResult = await timedFetch(url, 'HEAD', timeoutMs)
 
-    if (headResult.ok) {
+    if (headResult.response.ok) {
       return {
         ok: true,
         responseTime: headResult.responseTime,
       }
     }
 
-    if (![405, 501].includes(headResult.status)) {
+    if (![405, 501].includes(headResult.response.status)) {
       return {
         ok: false,
         responseTime: null,
@@ -73,8 +86,152 @@ async function probeUrl(url: string, timeoutMs: number): Promise<PingResult> {
     const getResult = await timedFetch(url, 'GET', timeoutMs)
 
     return {
-      ok: getResult.ok,
-      responseTime: getResult.ok ? getResult.responseTime : null,
+      ok: getResult.response.ok,
+      responseTime: getResult.response.ok ? getResult.responseTime : null,
+    }
+  } catch {
+    return {
+      ok: false,
+      responseTime: null,
+    }
+  }
+}
+
+function buildApiHeaders(config: ApiMonitorConfig): Headers {
+  const headers = new Headers()
+
+  for (const header of config.headers) {
+    headers.set(header.name, header.value)
+  }
+
+  if (!headers.has('Accept')) {
+    headers.set('Accept', 'application/json, text/plain;q=0.9, */*;q=0.8')
+  }
+
+  if (config.authType === 'bearer' && config.authToken) {
+    headers.set('Authorization', `Bearer ${config.authToken}`)
+  }
+
+  if (config.authType === 'basic' && config.authUsername) {
+    headers.set('Authorization', `Basic ${btoa(`${config.authUsername}:${config.authPassword}`)}`)
+  }
+
+  if (config.method === 'POST' && config.body.trim().length > 0 && !headers.has('Content-Type')) {
+    const contentType =
+      config.body.trim().startsWith('{') || config.body.trim().startsWith('[')
+        ? 'application/json'
+        : 'text/plain;charset=UTF-8'
+    headers.set('Content-Type', contentType)
+  }
+
+  return headers
+}
+
+function getJsonPathValue(value: unknown, path: string): unknown {
+  return path
+    .split('.')
+    .map((segment) => segment.trim())
+    .filter(Boolean)
+    .reduce<unknown>((current, segment) => {
+      if (current === null || current === undefined) {
+        return undefined
+      }
+
+      if (Array.isArray(current) && /^\d+$/.test(segment)) {
+        return current[Number(segment)]
+      }
+
+      if (typeof current === 'object') {
+        return (current as Record<string, unknown>)[segment]
+      }
+
+      return undefined
+    }, value)
+}
+
+function matchesExpectedJsonValue(actual: unknown, expected: string): boolean {
+  const trimmedExpected = expected.trim()
+
+  if (!trimmedExpected) {
+    return false
+  }
+
+  try {
+    const parsedExpected = JSON.parse(trimmedExpected)
+    return JSON.stringify(actual) === JSON.stringify(parsedExpected)
+  } catch {
+    return String(actual) === trimmedExpected
+  }
+}
+
+async function probeApiUrl(
+  url: string,
+  timeoutMs: number,
+  config: ApiMonitorConfig,
+): Promise<PingResult> {
+  try {
+    const { response, responseTime } = await timedFetch(
+      url,
+      config.method,
+      timeoutMs,
+      buildApiHeaders(config),
+      config.method === 'POST' ? config.body : undefined,
+    )
+
+    if (!response.ok) {
+      return {
+        ok: false,
+        responseTime: null,
+      }
+    }
+
+    if (isHtmlContentType(response.headers.get('content-type'))) {
+      return {
+        errorKey: 'monitor_error_api_html_response',
+        ok: false,
+        responseTime: null,
+      }
+    }
+
+    if (config.responseMode === 'body_includes') {
+      const responseText = await response.text()
+
+      if (!responseText.includes(config.responseBody)) {
+        return {
+          errorKey: 'monitor_error_api_response_body_mismatch',
+          ok: false,
+          responseTime: null,
+        }
+      }
+    }
+
+    if (config.responseMode === 'json_value') {
+      let responseJson: unknown
+
+      try {
+        responseJson = await response.json()
+      } catch {
+        return {
+          errorKey: 'monitor_error_api_invalid_json',
+          ok: false,
+          responseTime: null,
+        }
+      }
+
+      const actualValue = getJsonPathValue(responseJson, config.responseJsonPath)
+
+      if (!matchesExpectedJsonValue(actualValue, config.responseJsonValue)) {
+        return {
+          errorKey: 'monitor_error_api_response_json_mismatch',
+          ok: false,
+          responseTime: null,
+        }
+      }
+    }
+
+    return {
+      ok: true,
+      responseTime,
     }
   } catch {
     return {
@@ -115,13 +272,22 @@ function getInternetCheckCandidates(pingUrl: string): string[] {
 export async function pingMonitorTarget(
   value: string,
   type: MonitorType,
+  apiConfig?: ApiMonitorConfig,
 ): Promise<PingResult> {
   const candidates = getMonitorCheckCandidates(value, type)
+  const normalizedApiConfig = normalizeApiMonitorConfig(apiConfig ?? DEFAULT_API_MONITOR_CONFIG)
 
   for (const candidate of candidates) {
-    const result = await probeUrl(candidate, CHECK_TIMEOUT_MS)
+    const result =
+      type === 'api'
+        ? await probeApiUrl(candidate, CHECK_TIMEOUT_MS, normalizedApiConfig)
+        : await probeUrl(candidate, CHECK_TIMEOUT_MS)
 
     if (result.ok) {
+      return result
+    }
+
+    if (result.errorKey) {
       return result
     }
   }

@@ -3,8 +3,10 @@ import {
   getIncidents,
 } from '../entities/incident'
 import {
+  areApiMonitorConfigsEqual,
   getMonitorDisplayName,
   getMonitors,
+  normalizeApiMonitorConfig,
   normalizeMonitorTarget,
   type Monitor,
 } from '../entities/monitor'
@@ -45,6 +47,7 @@ async function saveMonitorCommand(
   monitorDraft: SaveMonitorDraftPayload,
 ): Promise<{ monitorId: string }> {
   const normalizedUrl = normalizeMonitorTarget(monitorDraft.url, monitorDraft.type)
+  const normalizedApiConfig = normalizeApiMonitorConfig(monitorDraft.apiConfig)
 
   if (!normalizedUrl) {
     throw new Error('Invalid monitor target')
@@ -57,11 +60,13 @@ async function saveMonitorCommand(
     const targetChanged =
       existingMonitor !== null &&
       (existingMonitor.url !== normalizedUrl ||
-        existingMonitor.type !== monitorDraft.type)
+        existingMonitor.type !== monitorDraft.type ||
+        !areApiMonitorConfigsEqual(existingMonitor.apiConfig, normalizedApiConfig))
 
     const nextMonitor: Monitor =
       existingMonitor === null
         ? {
+            apiConfig: normalizedApiConfig,
             checkState: 'idle',
             checkVersion: 0,
             createdAt: Date.now(),
@@ -80,6 +85,7 @@ async function saveMonitorCommand(
           }
         : {
             ...existingMonitor,
+            apiConfig: normalizedApiConfig,
             interval: monitorDraft.interval,
             name: getMonitorDisplayName(normalizedUrl),
             type: monitorDraft.type,

@@ -93,8 +93,47 @@
   "add_monitor_field_url": {
     "message": "URL"
   },
+  "add_monitor_field_api_method": {
+    "message": "Метод запроса"
+  },
+  "add_monitor_field_api_headers": {
+    "message": "Заголовки"
+  },
+  "add_monitor_field_api_auth": {
+    "message": "Авторизация"
+  },
+  "add_monitor_field_api_auth_token": {
+    "message": "Токен"
+  },
+  "add_monitor_field_api_auth_username": {
+    "message": "Логин"
+  },
+  "add_monitor_field_api_auth_password": {
+    "message": "Пароль"
+  },
+  "add_monitor_field_api_body": {
+    "message": "Тело запроса"
+  },
+  "add_monitor_field_api_response_check": {
+    "message": "Как проверять ответ"
+  },
+  "add_monitor_field_api_response_body": {
+    "message": "Текст в ответе"
+  },
+  "add_monitor_field_api_response_json_path": {
+    "message": "Путь в JSON"
+  },
+  "add_monitor_field_api_response_json_value": {
+    "message": "Ожидаемое значение"
+  },
   "add_monitor_placeholder_host": {
     "message": "example.com или 192.168.0.10"
+  },
+  "add_monitor_placeholder_api": {
+    "message": "https://api.example.com/health"
+  },
+  "add_monitor_placeholder_api_headers": {
+    "message": "X-Environment: production"
   },
   "add_monitor_placeholder_url": {
     "message": "https://example.com"
@@ -102,8 +141,53 @@
   "add_monitor_hint_host": {
     "message": "Проверяет доступность по HTTP/HTTPS"
   },
+  "add_monitor_hint_api": {
+    "message": "Отправляет запрос к API и ожидает успешный ответ 2xx. HTML-страницы считаются ошибкой"
+  },
+  "add_monitor_hint_api_headers": {
+    "message": "Указывайте по одному заголовку на строку: Имя: значение"
+  },
+  "add_monitor_hint_api_body": {
+    "message": "Используется для POST-запросов. Если Content-Type не задан, он будет добавлен автоматически"
+  },
+  "add_monitor_hint_api_response_body": {
+    "message": "Проверяет, что в ответе есть указанный текст"
+  },
+  "add_monitor_hint_api_response_json": {
+    "message": "Укажите путь через точку, например data.status или items.0.id"
+  },
   "add_monitor_hint_url": {
     "message": "Имя будет взято из домена автоматически"
+  },
+  "add_monitor_section_api_request": {
+    "message": "Запрос API"
+  },
+  "add_monitor_section_api_response": {
+    "message": "Проверка ответа"
+  },
+  "add_monitor_api_method_get": {
+    "message": "GET"
+  },
+  "add_monitor_api_method_post": {
+    "message": "POST"
+  },
+  "add_monitor_api_auth_none": {
+    "message": "Нет"
+  },
+  "add_monitor_api_auth_bearer": {
+    "message": "Bearer"
+  },
+  "add_monitor_api_auth_basic": {
+    "message": "Basic"
+  },
+  "add_monitor_api_response_none": {
+    "message": "Нет"
+  },
+  "add_monitor_api_response_body_includes": {
+    "message": "Текст"
+  },
+  "add_monitor_api_response_json_value": {
+    "message": "Поле JSON"
   },
   "add_monitor_field_interval": {
     "message": "Проверять каждые"
@@ -119,6 +203,15 @@
   },
   "add_monitor_error_invalid_url": {
     "message": "Введите корректный URL, начинающийся с http или https"
+  },
+  "add_monitor_error_invalid_api_headers": {
+    "message": "Введите заголовки по одному на строку в формате Имя: значение"
+  },
+  "add_monitor_error_invalid_api_auth": {
+    "message": "Заполните обязательные поля для авторизации"
+  },
+  "add_monitor_error_invalid_api_response": {
+    "message": "Заполните обязательные поля для проверки ответа"
   },
   "add_monitor_error_unable_to_save": {
     "message": "Не удалось сохранить монитор"
@@ -179,6 +272,18 @@
   },
   "monitor_badge_checking": {
     "message": "ПРОВЕРКА"
+  },
+  "monitor_error_api_html_response": {
+    "message": "Сервис вернул HTML-страницу вместо ответа API"
+  },
+  "monitor_error_api_response_body_mismatch": {
+    "message": "В ответе нет ожидаемого текста"
+  },
+  "monitor_error_api_response_json_mismatch": {
+    "message": "Значение в JSON не совпало с ожидаемым"
+  },
+  "monitor_error_api_invalid_json": {
+    "message": "Сервис вернул некорректный JSON"
   },
   "monitor_error_check_failed": {
     "message": "Последняя проверка завершилась с ошибкой"

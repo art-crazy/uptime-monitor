@@ -5,6 +5,7 @@ import {
   type Incident,
 } from '../entities/incident'
 import {
+  areApiMonitorConfigsEqual,
   appendHistoryEntry,
   getMonitors,
   monitorsSchema,
@@ -28,6 +29,7 @@ interface RunMonitorCheckOptions {
 }
 
 interface MonitorSnapshot {
+  apiConfig: Monitor['apiConfig']
   checkVersion: number
   type: Monitor['type']
   url: string
@@ -84,6 +86,7 @@ function matchesMonitorSnapshot(
   monitorSnapshot: MonitorSnapshot,
 ): boolean {
   return (
+    areApiMonitorConfigsEqual(currentMonitor.apiConfig, monitorSnapshot.apiConfig) &&
     currentMonitor.checkVersion === monitorSnapshot.checkVersion &&
     currentMonitor.url === monitorSnapshot.url &&
     currentMonitor.type === monitorSnapshot.type
@@ -221,6 +224,7 @@ async function runMonitorCheckOnce(
   }
 
   const monitorSnapshot: MonitorSnapshot = {
+    apiConfig: monitor.apiConfig,
     checkVersion: monitor.checkVersion,
     type: monitor.type,
     url: monitor.url,
@@ -262,7 +266,11 @@ async function runMonitorCheckOnce(
   let result: Awaited<ReturnType<typeof pingMonitorTarget>>
 
   try {
-    result = await pingMonitorTarget(monitorSnapshot.url, monitorSnapshot.type)
+    result = await pingMonitorTarget(
+      monitorSnapshot.url,
+      monitorSnapshot.type,
+      monitorSnapshot.apiConfig,
+    )
   } catch (error) {
     await enqueueBackgroundTask(async () => {
       const currentMonitors = await getMonitors()
@@ -360,7 +368,7 @@ async function runMonitorCheckOnce(
       ? {
           ...currentMonitor,
           checkState: 'idle',
-          lastCheckError: null,
+          lastCheckError: result.ok ? null : (result.errorKey ?? null),
           status: nextStatus,
           lastChecked: now,
           responseTime: result.ok ? result.responseTime : null,

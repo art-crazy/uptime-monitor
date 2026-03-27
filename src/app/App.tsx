@@ -98,6 +98,7 @@ export function App() {
         monitor={
           selectedMonitor
             ? {
+                apiConfig: selectedMonitor.apiConfig,
                 id: selectedMonitor.id,
                 interval: selectedMonitor.interval,
                 type: selectedMonitor.type,

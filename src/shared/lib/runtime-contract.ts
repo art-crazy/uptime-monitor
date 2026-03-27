@@ -10,8 +10,27 @@ export const checkIntervalValueSchema = z.union([
 ])
 
 export const runtimeMonitorTypeSchema = z.enum(['website', 'api', 'host'])
+export const runtimeApiMonitorConfigSchema = z.object({
+  authPassword: z.string(),
+  authToken: z.string(),
+  authType: z.enum(['none', 'bearer', 'basic']),
+  authUsername: z.string(),
+  body: z.string(),
+  headers: z.array(
+    z.object({
+      name: z.string().min(1),
+      value: z.string(),
+    }),
+  ),
+  method: z.enum(['GET', 'POST']),
+  responseBody: z.string(),
+  responseJsonPath: z.string(),
+  responseJsonValue: z.string(),
+  responseMode: z.enum(['none', 'body_includes', 'json_value']),
+})
 
 export const saveMonitorDraftPayloadSchema = z.object({
+  apiConfig: runtimeApiMonitorConfigSchema,
   id: z.string().min(1).optional(),
   interval: checkIntervalValueSchema,
   type: runtimeMonitorTypeSchema,
