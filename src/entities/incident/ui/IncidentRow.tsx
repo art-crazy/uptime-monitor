@@ -25,7 +25,7 @@ export function IncidentRow({ incident }: IncidentRowProps) {
         {label}
       </span>
       <span className={styles.meta}>
-        {timestamp}{‘ \u00B7 ‘}{duration}
+        {timestamp}{‘ — ‘}{duration}
       </span>
     </div>
   )
