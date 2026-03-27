@@ -1,9 +1,9 @@
 {
   "ext": {
-    "name": "Uptime Monitor",
-    "short_name": "Uptime Monitor",
+    "name": "Мониторинг сервера",
+    "short_name": "Мониторинг сервера",
     "description": "Track uptime for websites, APIs, and hosts with local checks and browser alerts.",
-    "action_title": "Uptime Monitor"
+    "action_title": "Мониторинг сервера"
   },
   "app": {
     "loading_title": "Loading monitors",
@@ -15,6 +15,7 @@
     "delete": "Delete"
   },
   "dashboard": {
+    "title": "Server status",
     "open_settings_aria": "Open settings",
     "empty_title": "No monitors yet",
     "empty_subtitle": "Add a URL to start tracking uptime",

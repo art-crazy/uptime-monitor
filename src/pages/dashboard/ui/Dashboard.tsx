@@ -78,7 +78,7 @@ export function DashboardPage({
   return (
     <div className={styles.page}>
       <PageHeader
-        title={t('ext_name')}
+        title={t('dashboard_title')}
         trailing={
           <IconButton aria-label={t('dashboard_open_settings_aria')} onClick={onOpenSettings}>
             <Settings size={16} strokeWidth={1.75} />

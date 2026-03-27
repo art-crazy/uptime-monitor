@@ -2,15 +2,16 @@
 // Do not edit manually.
 
 export const DEFAULT_MESSAGES = {
-  "ext_name": "Uptime Monitor",
-  "ext_short_name": "Uptime Monitor",
+  "ext_name": "Мониторинг сервера",
+  "ext_short_name": "Мониторинг сервера",
   "ext_description": "Track uptime for websites, APIs, and hosts with local checks and browser alerts.",
-  "ext_action_title": "Uptime Monitor",
+  "ext_action_title": "Мониторинг сервера",
   "app_loading_title": "Loading monitors",
   "app_loading_subtitle": "Syncing local data...",
   "common_go_back_aria": "Go back",
   "common_edit": "Edit",
   "common_delete": "Delete",
+  "dashboard_title": "Server status",
   "dashboard_open_settings_aria": "Open settings",
   "dashboard_empty_title": "No monitors yet",
   "dashboard_empty_subtitle": "Add a URL to start tracking uptime",

@@ -1,15 +1,15 @@
 {
   "ext_name": {
-    "message": "Монитор доступности"
+    "message": "Мониторинг сервера"
   },
   "ext_short_name": {
-    "message": "Монитор доступности"
+    "message": "Мониторинг сервера"
   },
   "ext_description": {
     "message": "Отслеживайте доступность сайтов, API и хостов с локальными проверками и уведомлениями браузера."
   },
   "ext_action_title": {
-    "message": "Монитор доступности"
+    "message": "Мониторинг сервера"
   },
   "app_loading_title": {
     "message": "Загружаем мониторы"
@@ -25,6 +25,9 @@
   },
   "common_delete": {
     "message": "Удалить"
+  },
+  "dashboard_title": {
+    "message": "Состояние серверов"
   },
   "dashboard_open_settings_aria": {
     "message": "Открыть настройки"

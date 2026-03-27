@@ -48,21 +48,40 @@ export function App() {
     })
   }
 
-  const normalizedScreen =
-    (screen.key === 'details' || screen.key === 'add') &&
-    screen.monitorId &&
-    selectedMonitor === null
-      ? { key: 'dashboard' as const }
-      : screen
+  const normalizedScreen = useMemo(
+    () =>
+      (screen.key === 'details' || screen.key === 'add') &&
+      screen.monitorId &&
+      selectedMonitor === null
+        ? { key: 'dashboard' as const }
+        : screen,
+    [screen, selectedMonitor],
+  )
+
+  const screenTitle = useMemo(() => {
+    if (normalizedScreen.key === 'dashboard') {
+      return t('dashboard_title')
+    }
+
+    if (normalizedScreen.key === 'settings') {
+      return t('settings_title')
+    }
+
+    if (normalizedScreen.key === 'add') {
+      return normalizedScreen.monitorId ? t('add_monitor_edit_title') : t('add_monitor_title')
+    }
+
+    return selectedMonitor?.name ?? t('dashboard_title')
+  }, [normalizedScreen, selectedMonitor])
 
   useEffect(() => {
-    document.title = t('ext_name')
-  }, [])
+    document.title = screenTitle
+  }, [screenTitle])
 
   if (!isHydrated) {
     return (
       <div className={styles.page}>
-        <PageHeader title={t('ext_name')} />
+        <PageHeader title={screenTitle} />
         <div className={styles.loadingState}>
           <div className={styles.loadingTitle}>{t('app_loading_title')}</div>
           <div className={styles.loadingSubtitle}>{t('app_loading_subtitle')}</div>
