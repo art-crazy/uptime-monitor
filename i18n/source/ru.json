@@ -17,18 +17,18 @@
   "dashboard": {
     "open_settings_aria": "Открыть настройки",
     "empty_title": "Мониторов пока нет",
-    "empty_subtitle": "Добавьте URL, чтобы начать отслеживание доступности",
-    "add_first_monitor": "+ Добавить первый монитор",
+    "empty_subtitle": "Добавьте URL, чтобы начать отслеживание",
+    "add_first_monitor": "+ Добавить монитор",
     "add_monitor": "+ Добавить монитор",
-    "status_down_relative": "Недоступен - $1",
-    "status_down_waiting": "Недоступен - ждем восстановления",
+    "status_down_relative": "Недоступен — $1",
+    "status_down_waiting": "Недоступен — ждём восстановления",
     "status_paused": "На паузе",
-    "status_pending": "Проверяем первый ответ",
+    "status_pending": "Ожидаем первый ответ",
     "status_uptime": "Доступность $1"
   },
   "add_monitor": {
     "title": "Добавить монитор",
-    "edit_title": "Изменить монитор",
+    "edit_title": "Редактировать монитор",
     "field_type": "Тип",
     "type_website": "Сайт",
     "type_api": "API",
@@ -37,14 +37,14 @@
     "field_url": "URL",
     "placeholder_host": "example.com или 192.168.0.10",
     "placeholder_url": "https://example.com",
-    "hint_host": "Проверяет доступность этого хоста по HTTP/HTTPS",
-    "hint_url": "Имя будет определено по домену автоматически",
+    "hint_host": "Проверяет доступность по HTTP/HTTPS",
+    "hint_url": "Имя будет взято из домена автоматически",
     "field_interval": "Проверять каждые",
     "button_saving": "Сохраняем...",
-    "button_save": "Сохранить монитор",
+    "button_save": "Сохранить",
     "button_save_changes": "Сохранить изменения",
-    "error_invalid_host": "Введите корректный хост, IP или HTTP/HTTPS URL",
-    "error_invalid_url": "Введите корректный URL с http или https",
+    "error_invalid_host": "Введите корректный хост, IP или URL",
+    "error_invalid_url": "Введите корректный URL, начинающийся с http или https",
     "error_unable_to_save": "Не удалось сохранить монитор"
   },
   "settings": {
@@ -53,50 +53,50 @@
     "browser_notifications": "Уведомления браузера",
     "section_default_interval": "Интервал проверки по умолчанию",
     "section_advanced": "Дополнительно",
-    "connectivity_target": "Цель проверки сети",
-    "connectivity_hint": "В Chromium используется HTTP/HTTPS-проверка. Измените значение, если Google DNS заблокирован",
-    "section_danger": "Опасная зона",
+    "connectivity_target": "Адрес для проверки связи",
+    "connectivity_hint": "Используется для определения доступности интернета. Измените, если Google DNS недоступен",
+    "section_danger": "Сброс данных",
     "button_working": "Выполняем...",
-    "button_clear_all": "Очистить все мониторы",
-    "confirm_clear_all": "Очистить все мониторы и инциденты?",
-    "error_invalid_ping_target": "Введите корректный хост, IP или HTTP/HTTPS URL",
-    "error_unable_to_save_ping_target": "Сейчас не удалось сохранить цель проверки",
-    "error_unable_to_clear": "Сейчас не удалось очистить мониторы",
-    "error_unable_to_update_notifications": "Сейчас не удалось обновить уведомления",
-    "error_unable_to_update_interval": "Сейчас не удалось обновить интервал по умолчанию"
+    "button_clear_all": "Удалить все мониторы",
+    "confirm_clear_all": "Удалить все мониторы и историю сбоев?",
+    "error_invalid_ping_target": "Введите корректный хост, IP или URL",
+    "error_unable_to_save_ping_target": "Не удалось сохранить адрес проверки",
+    "error_unable_to_clear": "Не удалось удалить мониторы",
+    "error_unable_to_update_notifications": "Не удалось обновить настройки уведомлений",
+    "error_unable_to_update_interval": "Не удалось обновить интервал проверки"
   },
   "monitor": {
-    "badge_up": "UP",
-    "badge_down": "DOWN",
+    "badge_up": "ОК",
+    "badge_down": "СБОЙ",
     "badge_paused": "ПАУЗА",
     "badge_checking": "ПРОВЕРКА",
-    "error_check_failed": "Не удалось завершить последнюю проверку",
+    "error_check_failed": "Последняя проверка завершилась с ошибкой",
     "error_check_interrupted": "Последняя проверка была прервана"
   },
   "monitor_details": {
     "stat_uptime": "Доступность",
-    "stat_avg_response": "Средний отклик",
-    "stat_incidents": "Инциденты",
-    "section_incidents": "Инциденты",
-    "empty_incidents": "Инцидентов пока нет",
+    "stat_avg_response": "Отклик",
+    "stat_incidents": "Сбоев",
+    "section_incidents": "История сбоев",
+    "empty_incidents": "Сбоев пока не было",
     "button_checking": "Проверяем...",
     "button_check_now": "Проверить сейчас",
-    "button_resume": "Продолжить",
+    "button_resume": "Возобновить",
     "button_pause": "Пауза",
     "more_actions_aria": "Дополнительные действия",
-    "confirm_delete": "Удалить монитор \"$1\"?",
-    "error_check_now": "Сейчас не удалось запустить ручную проверку",
-    "error_toggle": "Сейчас не удалось обновить этот монитор",
-    "error_delete": "Сейчас не удалось удалить этот монитор"
+    "confirm_delete": "Удалить монитор «$1»?",
+    "error_check_now": "Не удалось запустить проверку",
+    "error_toggle": "Не удалось обновить монитор",
+    "error_delete": "Не удалось удалить монитор"
   },
   "internet": {
     "title": "Интернет-соединение",
-    "status_online": "Онлайн - отклик $1",
-    "status_offline": "Офлайн - нет ответа",
+    "status_online": "Онлайн — отклик $1",
+    "status_offline": "Офлайн — нет ответа",
     "status_checking": "Проверяем..."
   },
   "chart": {
-    "title": "Время ответа - последние 24 ч",
+    "title": "Время ответа — последние 24 ч",
     "bar_down": "Недоступен",
     "bar_no_samples": "Нет данных",
     "legend_good": "хорошо",
@@ -106,16 +106,16 @@
   "incident": {
     "label_down": "Сбой",
     "label_up": "Восстановлен",
-    "duration_ongoing": "идет сейчас"
+    "duration_ongoing": "продолжается"
   },
   "notification": {
     "down_title": "$1 недоступен",
     "up_title": "$1 снова доступен",
-    "down_message": "Последняя проверка доступности для $1 завершилась ошибкой.",
-    "up_message": "Последнее время ответа: $1."
+    "down_message": "Проверка доступности $1 завершилась ошибкой.",
+    "up_message": "Время последнего ответа: $1."
   },
   "time": {
-    "today_at": "сегодня $1",
-    "yesterday_at": "вчера $1"
+    "today_at": "сегодня в $1",
+    "yesterday_at": "вчера в $1"
   }
 }
