@@ -436,18 +436,17 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
           </div>
         </section>
 
+        <section className={[styles.section, styles.sectionDanger].join(' ')}>
+          <Button
+            fullWidth
+            loading={isClearBusy}
+            onClick={handleClearAll}
+            variant="danger"
+          >
+            {t('settings_button_clear_all')}
+          </Button>
+        </section>
       </div>
-
-      <section className={[styles.section, styles.sectionDanger].join(' ')}>
-        <Button
-          fullWidth
-          loading={isClearBusy}
-          onClick={handleClearAll}
-          variant="danger"
-        >
-          {t('settings_button_clear_all')}
-        </Button>
-      </section>
 
       {feedback ? (
         <div
