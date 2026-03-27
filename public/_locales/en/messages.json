@@ -42,10 +42,10 @@
     "message": "Add a URL to start tracking uptime"
   },
   "dashboard_add_first_monitor": {
-    "message": "+ Add your first monitor"
+    "message": "+ Add your first Host / IP"
   },
   "dashboard_add_monitor": {
-    "message": "+ Add monitor"
+    "message": "+ Add Host / IP"
   },
   "dashboard_status_down_relative": {
     "message": "Down - $VALUE$",

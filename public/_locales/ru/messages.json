@@ -42,10 +42,10 @@
     "message": "Добавьте URL, чтобы начать отслеживание"
   },
   "dashboard_add_first_monitor": {
-    "message": "+ Добавить монитор"
+    "message": "+ Добавить Host / IP"
   },
   "dashboard_add_monitor": {
-    "message": "+ Добавить монитор"
+    "message": "+ Добавить Host / IP"
   },
   "dashboard_status_down_relative": {
     "message": "Недоступен — $VALUE$",
