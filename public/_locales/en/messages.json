@@ -42,7 +42,12 @@
     "message": "+ Add monitor"
   },
   "dashboard_status_down_relative": {
-    "message": "Down - $1"
+    "message": "Down - $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "dashboard_status_down_waiting": {
     "message": "Down - waiting for recovery"
@@ -54,7 +59,12 @@
     "message": "Checking first response"
   },
   "dashboard_status_uptime": {
-    "message": "$1 uptime"
+    "message": "$VALUE$ uptime",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "add_monitor_title": {
     "message": "Add monitor"
@@ -204,7 +214,12 @@
     "message": "More actions"
   },
   "monitor_details_confirm_delete": {
-    "message": "Delete monitor \"$1\"?"
+    "message": "Delete monitor \"$VALUE$\"?",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "monitor_details_error_check_now": {
     "message": "Unable to run a manual check right now"
@@ -219,7 +234,12 @@
     "message": "Internet connection"
   },
   "internet_status_online": {
-    "message": "Online - $1 response"
+    "message": "Online - $VALUE$ response",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "internet_status_offline": {
     "message": "Offline - no response"
@@ -255,21 +275,51 @@
     "message": "ongoing"
   },
   "notification_down_title": {
-    "message": "$1 is down"
+    "message": "$VALUE$ is down",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "notification_up_title": {
-    "message": "$1 is back up"
+    "message": "$VALUE$ is back up",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "notification_down_message": {
-    "message": "The latest uptime check failed for $1."
+    "message": "The latest uptime check failed for $VALUE$.",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "notification_up_message": {
-    "message": "Latest response time: $1."
+    "message": "Latest response time: $VALUE$.",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "time_today_at": {
-    "message": "today $1"
+    "message": "today $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "time_yesterday_at": {
-    "message": "yesterday $1"
+    "message": "yesterday $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   }
 }

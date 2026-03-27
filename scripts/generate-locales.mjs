@@ -91,7 +91,26 @@ async function writeChromeLocales(locales) {
     [...locales.entries()].map(async ([locale, messages]) => {
       const localeDir = path.join(LOCALES_DIR, locale)
       const chromeMessages = Object.fromEntries(
-        Object.entries(messages).map(([key, message]) => [key, { message }]),
+        Object.entries(messages).map(([key, message]) => {
+          const placeholderNames = [...message.matchAll(/\$(\d+)/g)].map(([, n]) => n)
+
+          if (placeholderNames.length === 0) {
+            return [key, { message }]
+          }
+
+          const PLACEHOLDER_NAMES = ['value', 'value2', 'value3', 'value4', 'value5']
+          let chromeMessage = message
+          const placeholders = {}
+
+          for (const n of placeholderNames) {
+            const index = Number(n)
+            const name = PLACEHOLDER_NAMES[index - 1]
+            chromeMessage = chromeMessage.replaceAll(`$${n}`, `$${name.toUpperCase()}$`)
+            placeholders[name] = { content: `$${n}` }
+          }
+
+          return [key, { message: chromeMessage, placeholders }]
+        }),
       )
 
       await fs.mkdir(localeDir, { recursive: true })

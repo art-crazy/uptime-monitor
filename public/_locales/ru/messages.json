@@ -1,9 +1,9 @@
 {
   "ext_name": {
-    "message": "Мониторинг сервера"
+    "message": "Uptime Monitor"
   },
   "ext_short_name": {
-    "message": "Мониторинг сервера"
+    "message": "Uptime Monitor"
   },
   "ext_description": {
     "message": "Отслеживайте доступность сайтов, API и хостов с локальными проверками и уведомлениями браузера."
@@ -42,7 +42,12 @@
     "message": "+ Добавить монитор"
   },
   "dashboard_status_down_relative": {
-    "message": "Недоступен — $1"
+    "message": "Недоступен — $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "dashboard_status_down_waiting": {
     "message": "Недоступен — ждём восстановления"
@@ -54,7 +59,12 @@
     "message": "Ожидаем первый ответ"
   },
   "dashboard_status_uptime": {
-    "message": "Доступность $1"
+    "message": "Доступность $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "add_monitor_title": {
     "message": "Добавить монитор"
@@ -204,7 +214,12 @@
     "message": "Дополнительные действия"
   },
   "monitor_details_confirm_delete": {
-    "message": "Удалить монитор «$1»?"
+    "message": "Удалить монитор «$VALUE$»?",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "monitor_details_error_check_now": {
     "message": "Не удалось запустить проверку"
@@ -219,7 +234,12 @@
     "message": "Интернет-соединение"
   },
   "internet_status_online": {
-    "message": "Онлайн — отклик $1"
+    "message": "Онлайн — отклик $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "internet_status_offline": {
     "message": "Офлайн — нет ответа"
@@ -255,21 +275,51 @@
     "message": "продолжается"
   },
   "notification_down_title": {
-    "message": "$1 недоступен"
+    "message": "$VALUE$ недоступен",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "notification_up_title": {
-    "message": "$1 снова доступен"
+    "message": "$VALUE$ снова доступен",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "notification_down_message": {
-    "message": "Проверка доступности $1 завершилась ошибкой."
+    "message": "Проверка доступности $VALUE$ завершилась ошибкой.",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "notification_up_message": {
-    "message": "Время последнего ответа: $1."
+    "message": "Время последнего ответа: $VALUE$.",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "time_today_at": {
-    "message": "сегодня в $1"
+    "message": "сегодня в $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   },
   "time_yesterday_at": {
-    "message": "вчера в $1"
+    "message": "вчера в $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
   }
 }
