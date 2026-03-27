@@ -1,9 +1,9 @@
 {
   "ext": {
-    "name": "Мониторинг сервера",
-    "short_name": "Мониторинг сервера",
-    "description": "Track uptime for websites, APIs, and hosts with local checks and browser alerts.",
-    "action_title": "Мониторинг сервера"
+    "name": "Uptime Monitor",
+    "short_name": "Uptime Monitor",
+    "description": "Track uptime monitor stats for website, server & network. Get instant downtime alerts and availability reports 24/7.",
+    "action_title": "Uptime Monitor"
   },
   "app": {
     "loading_title": "Loading monitors",

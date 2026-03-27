@@ -5,8 +5,8 @@
   <circle cx="1070" cy="116" r="46" fill="#E6F1FB"/>
 
   <text x="96" y="128" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="58" font-weight="700">Uptime Monitor</text>
-  <text x="96" y="176" fill="#4D4D4D" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="500">A local-first Chromium extension for uptime checks,</text>
-  <text x="96" y="208" fill="#4D4D4D" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="500">incident tracking, browser alerts, and live health states.</text>
+  <text x="96" y="176" fill="#4D4D4D" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="500">Track uptime monitor stats for website, server &amp; network.</text>
+  <text x="96" y="208" fill="#4D4D4D" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="500">Get instant downtime alerts and availability reports 24/7.</text>
 
   <rect x="96" y="252" width="136" height="34" rx="17" fill="#171717"/>
   <text x="164" y="274" text-anchor="middle" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">Manifest V3</text>
