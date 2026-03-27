@@ -84,14 +84,7 @@ export function ResponseChart({
   return (
     <section className={styles.section}>
       <div className={styles.header}>
-        <div className={styles.heading}>
-          <div className={styles.title}>{t('chart_title')}</div>
-          <div className={styles.periodValue}>
-            {t('chart_period_label')}
-            {' '}
-            {periodLabels[periodIndex]}
-          </div>
-        </div>
+        <div className={styles.title}>{t('chart_title')}</div>
         <div className={styles.tabs} role="tablist">
           {periodLabels.map((label, index) => (
             <button
@@ -125,13 +118,8 @@ export function ResponseChart({
               {formatTimeRange(hoveredBucket.bucket.bucketStart, hoveredBucket.bucket.bucketEnd)}
             </div>
             <div className={styles.tooltipLine}>
-              {t('chart_samples', String(hoveredBucket.bucket.sampleCount))}
+              {t('chart_bar_failures', String(hoveredBucket.bucket.failureCount))}
             </div>
-            {hoveredBucket.bucket.failureCount > 0 ? (
-              <div className={styles.tooltipLine}>
-                {t('chart_bar_failures', String(hoveredBucket.bucket.failureCount))}
-              </div>
-            ) : null}
             <div className={styles.tooltipLine}>
               {hoveredBucket.bucket.averageResponseTime === null
                 ? t('chart_bar_no_samples')
@@ -161,8 +149,7 @@ export function ResponseChart({
               <button
                 aria-label={[
                   formatTimeRange(bucket.bucketStart, bucket.bucketEnd),
-                  t('chart_samples', String(bucket.sampleCount)),
-                  hasFailures ? t('chart_bar_failures', String(bucket.failureCount)) : null,
+                  t('chart_bar_failures', String(bucket.failureCount)),
                   bucket.averageResponseTime === null
                     ? t('chart_bar_no_samples')
                     : t('chart_bar_average', formatResponseTime(bucket.averageResponseTime)),

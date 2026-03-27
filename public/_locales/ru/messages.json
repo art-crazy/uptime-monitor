@@ -498,17 +498,6 @@
       }
     }
   },
-  "chart_period_label": {
-    "message": "Период:"
-  },
-  "chart_samples": {
-    "message": "Замеры: $VALUE$",
-    "placeholders": {
-      "value": {
-        "content": "$1"
-      }
-    }
-  },
   "incident_label_down": {
     "message": "Сбой"
   },

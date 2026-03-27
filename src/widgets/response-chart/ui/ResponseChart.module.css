@@ -13,20 +13,9 @@
   gap: 8px;
 }
 
-.heading {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
 .title {
   color: var(--color-muted);
   font-size: 11px;
-}
-
-.periodValue {
-  color: var(--color-subtle);
-  font-size: 10px;
 }
 
 .tabs {

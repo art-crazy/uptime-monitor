@@ -162,8 +162,6 @@
   },
   "chart": {
     "title": "Response time",
-    "period_label": "Period:",
-    "samples": "Samples: $1",
     "bar_no_samples": "No samples",
     "bar_failures": "Failures: $1",
     "bar_average": "Average: $1",
