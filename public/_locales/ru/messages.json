@@ -1,9 +1,9 @@
 {
   "ext_name": {
-    "message": "Uptime Monitor"
+    "message": "Мониторинг сервера"
   },
   "ext_short_name": {
-    "message": "Uptime Monitor"
+    "message": "Мониторинг сервера"
   },
   "ext_description": {
     "message": "Отслеживайте доступность сайтов, API и хостов с локальными проверками и уведомлениями браузера."
