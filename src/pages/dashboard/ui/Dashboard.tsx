@@ -1,4 +1,4 @@
-import { CircleDashed, Settings2 } from 'lucide-react'
+import { CircleDashed, Settings } from 'lucide-react'
 
 import type { Incident } from '../../../entities/incident'
 import type { InternetStatus } from '../../../entities/internet'
@@ -81,7 +81,7 @@ export function DashboardPage({
         title={t('ext_name')}
         trailing={
           <IconButton aria-label={t('dashboard_open_settings_aria')} onClick={onOpenSettings}>
-            <Settings2 size={16} strokeWidth={2} />
+            <Settings size={16} strokeWidth={1.75} />
           </IconButton>
         }
       />

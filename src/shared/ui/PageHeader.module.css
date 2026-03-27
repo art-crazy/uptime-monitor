@@ -1,25 +1,30 @@
 .header {
-  display: grid;
-  grid-template-columns: minmax(32px, auto) 1fr minmax(32px, auto);
+  display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   padding: 10px 14px;
   border-bottom: 1px solid rgba(24, 22, 19, 0.08);
   background: var(--color-surface-muted);
 }
 
-.leading,
-.trailing {
+.leading {
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-width: 0;
+  flex-shrink: 0;
 }
 
 .title {
+  flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 500;
+}
+
+.trailing {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
 }

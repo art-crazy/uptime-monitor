@@ -1,9 +1,6 @@
 :root {
   color-scheme: light;
-  font-family:
-    "Trebuchet MS",
-    "Segoe UI",
-    sans-serif;
+  font-family: system-ui, sans-serif;
   line-height: 1.4;
   font-weight: 400;
   color: #181613;

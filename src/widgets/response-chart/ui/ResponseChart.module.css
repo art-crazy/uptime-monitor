@@ -25,16 +25,25 @@
 
 .good {
   background: #8fc058;
-  color: var(--color-green);
 }
 
 .slow {
   background: #ebb561;
-  color: var(--color-orange);
 }
 
 .down {
   background: #d96a67;
+}
+
+.legendGood {
+  color: var(--color-green);
+}
+
+.legendSlow {
+  color: var(--color-orange);
+}
+
+.legendDown {
   color: var(--color-red);
 }
 

@@ -47,9 +47,9 @@ export function ResponseChart({ history }: ResponseChartProps) {
         })}
       </div>
       <div className={styles.legend}>
-        <span className={styles.good}>{t('chart_legend_good')}</span>
-        <span className={styles.slow}>{t('chart_legend_slow')}</span>
-        <span className={styles.down}>{t('chart_legend_down')}</span>
+        <span className={styles.legendGood}>{t('chart_legend_good')}</span>
+        <span className={styles.legendSlow}>{t('chart_legend_slow')}</span>
+        <span className={styles.legendDown}>{t('chart_legend_down')}</span>
       </div>
     </section>
   )
