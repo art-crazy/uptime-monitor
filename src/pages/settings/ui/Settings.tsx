@@ -84,10 +84,6 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
 
   const hasConfiguredTelegramChatId = settings.notifications.telegram.chatId.trim().length > 0
   const isTelegramConfigured = telegramEnabled && hasConfiguredTelegramChatId
-  const telegramStatusTone = hasConfiguredTelegramChatId ? 'success' : 'muted'
-  const telegramStatusLabel = hasConfiguredTelegramChatId
-    ? t('settings_telegram_status_connected')
-    : t('settings_telegram_status_not_configured')
 
   const commitPingUrl = async (value: string, input: HTMLInputElement) => {
     if (isPingBusy) {
@@ -366,7 +362,6 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
           chatId={settings.notifications.telegram.chatId}
           chatIdError={telegramChatIdError}
           isBusy={isTelegramBusy}
-          isConfigured={isTelegramConfigured}
           isTestBusy={isTelegramTestBusy}
           onChatIdBlur={(event) => {
             void commitTelegramChatId(event.currentTarget.value, event.currentTarget)
@@ -413,8 +408,6 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
             }
           }}
           sendRecovery={telegramSendRecovery}
-          statusLabel={telegramStatusLabel}
-          statusTone={telegramStatusTone}
           telegramEnabled={telegramEnabled}
         />
     </PageLayout>

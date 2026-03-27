@@ -11,11 +11,8 @@ interface TelegramSettingsSectionProps {
   chatId: string
   chatIdError: string | null
   isBusy: boolean
-  isConfigured: boolean
   isTestBusy: boolean
   sendRecovery: boolean
-  statusLabel: string
-  statusTone: 'muted' | 'success'
   telegramEnabled: boolean
   onChatIdBlur: (event: React.FocusEvent<HTMLInputElement>) => void
   onChatIdChange: () => void
@@ -29,11 +26,8 @@ export function TelegramSettingsSection({
   chatId,
   chatIdError,
   isBusy,
-  isConfigured,
   isTestBusy,
   sendRecovery,
-  statusLabel,
-  statusTone,
   telegramEnabled,
   onChatIdBlur,
   onChatIdChange,
@@ -42,6 +36,13 @@ export function TelegramSettingsSection({
   onSendTest,
   onTelegramToggle,
 }: TelegramSettingsSectionProps) {
+  const hasConfiguredTelegramId = chatId.trim().length > 0
+  const isConfigured = telegramEnabled && hasConfiguredTelegramId
+  const statusTone = hasConfiguredTelegramId ? 'success' : 'muted'
+  const statusLabel = hasConfiguredTelegramId
+    ? t('settings_telegram_status_connected')
+    : t('settings_telegram_status_not_configured')
+
   return (
     <section className={styles.section}>
       <div className={styles.sectionTitle}>{t('settings_telegram_enabled')}</div>
