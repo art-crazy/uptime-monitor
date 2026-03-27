@@ -77,6 +77,8 @@ async function readSourceLocales() {
   return locales
 }
 
+const PLACEHOLDER_NAMES = ['value', 'value2', 'value3', 'value4', 'value5']
+
 async function writeChromeLocales(locales) {
   await fs.mkdir(LOCALES_DIR, { recursive: true })
   const existingLocaleEntries = await fs.readdir(LOCALES_DIR, { withFileTypes: true })
@@ -92,21 +94,19 @@ async function writeChromeLocales(locales) {
       const localeDir = path.join(LOCALES_DIR, locale)
       const chromeMessages = Object.fromEntries(
         Object.entries(messages).map(([key, message]) => {
-          const placeholderNames = [...message.matchAll(/\$(\d+)/g)].map(([, n]) => n)
+          const indices = [...new Set([...message.matchAll(/\$(\d+)/g)].map(([, n]) => Number(n)))]
 
-          if (placeholderNames.length === 0) {
+          if (indices.length === 0) {
             return [key, { message }]
           }
 
-          const PLACEHOLDER_NAMES = ['value', 'value2', 'value3', 'value4', 'value5']
           let chromeMessage = message
           const placeholders = {}
 
-          for (const n of placeholderNames) {
-            const index = Number(n)
+          for (const index of indices) {
             const name = PLACEHOLDER_NAMES[index - 1]
-            chromeMessage = chromeMessage.replaceAll(`$${n}`, `$${name.toUpperCase()}$`)
-            placeholders[name] = { content: `$${n}` }
+            chromeMessage = chromeMessage.replaceAll(`$${index}`, `$${name.toUpperCase()}$`)
+            placeholders[name] = { content: `$${index}` }
           }
 
           return [key, { message: chromeMessage, placeholders }]
