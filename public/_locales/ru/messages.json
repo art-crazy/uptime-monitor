@@ -258,6 +258,24 @@
   "settings_browser_notifications": {
     "message": "Уведомления браузера"
   },
+  "settings_telegram_enabled": {
+    "message": "Уведомления Telegram"
+  },
+  "settings_telegram_chat_id": {
+    "message": "Chat ID"
+  },
+  "settings_telegram_chat_id_hint": {
+    "message": "Напишите боту и введите ваш числовой chat ID"
+  },
+  "settings_telegram_send_recovery": {
+    "message": "Отправлять сообщения о восстановлении"
+  },
+  "settings_telegram_test_button": {
+    "message": "Отправить test-сообщение"
+  },
+  "settings_telegram_test_success": {
+    "message": "Test-сообщение в Telegram успешно отправлено"
+  },
   "settings_section_default_interval": {
     "message": "Интервал проверки по умолчанию"
   },
@@ -282,6 +300,9 @@
   "settings_error_invalid_ping_target": {
     "message": "Введите корректный хост, IP или URL"
   },
+  "settings_error_invalid_telegram_chat_id": {
+    "message": "Укажите Telegram chat ID"
+  },
   "settings_error_unable_to_save_ping_target": {
     "message": "Не удалось сохранить адрес проверки"
   },
@@ -290,6 +311,12 @@
   },
   "settings_error_unable_to_update_notifications": {
     "message": "Не удалось обновить настройки уведомлений"
+  },
+  "settings_error_unable_to_update_telegram": {
+    "message": "Не удалось обновить настройки Telegram"
+  },
+  "settings_error_unable_to_send_telegram_test": {
+    "message": "Не удалось отправить test-сообщение в Telegram"
   },
   "settings_error_unable_to_update_interval": {
     "message": "Не удалось обновить интервал проверки"
@@ -452,6 +479,14 @@
   },
   "notification_up_message": {
     "message": "Время последнего ответа: $VALUE$.",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "notification_telegram_test_message": {
+    "message": "Тестовое сообщение Uptime Monitor\nОтправлено: $VALUE$",
     "placeholders": {
       "value": {
         "content": "$1"

@@ -67,6 +67,25 @@ const setNotificationsEnabledMessageSchema = z.object({
   enabled: z.boolean(),
 })
 
+export const telegramSettingsPatchSchema = z
+  .object({
+    enabled: z.boolean().optional(),
+    chatId: z.string().min(1).optional(),
+    sendRecovery: z.boolean().optional(),
+  })
+  .refine((value) => Object.keys(value).length > 0, {
+    message: 'Telegram settings patch cannot be empty',
+  })
+
+const updateTelegramSettingsMessageSchema = z.object({
+  type: z.literal(MESSAGE_TYPES.updateTelegramSettings),
+  telegram: telegramSettingsPatchSchema,
+})
+
+const sendTelegramTestMessageSchema = z.object({
+  type: z.literal(MESSAGE_TYPES.sendTelegramTestMessage),
+})
+
 const setDefaultCheckIntervalMessageSchema = z.object({
   type: z.literal(MESSAGE_TYPES.setDefaultCheckInterval),
   interval: checkIntervalValueSchema,
@@ -84,6 +103,8 @@ export const runtimeMessageSchema = z.discriminatedUnion('type', [
   deleteMonitorMessageSchema,
   clearAllMonitoringDataMessageSchema,
   setNotificationsEnabledMessageSchema,
+  updateTelegramSettingsMessageSchema,
+  sendTelegramTestMessageSchema,
   setDefaultCheckIntervalMessageSchema,
   setPingUrlMessageSchema,
 ])
@@ -98,6 +119,10 @@ export interface RuntimeCommandPayloadMap {
   [MESSAGE_TYPES.deleteMonitor]: { monitorId: string }
   [MESSAGE_TYPES.clearAllMonitoringData]: Record<string, never>
   [MESSAGE_TYPES.setNotificationsEnabled]: { enabled: boolean }
+  [MESSAGE_TYPES.updateTelegramSettings]: {
+    telegram: z.infer<typeof telegramSettingsPatchSchema>
+  }
+  [MESSAGE_TYPES.sendTelegramTestMessage]: Record<string, never>
   [MESSAGE_TYPES.setDefaultCheckInterval]: {
     interval: z.infer<typeof checkIntervalValueSchema>
   }
@@ -111,6 +136,8 @@ export interface RuntimeCommandResponseMap {
   [MESSAGE_TYPES.deleteMonitor]: void
   [MESSAGE_TYPES.clearAllMonitoringData]: void
   [MESSAGE_TYPES.setNotificationsEnabled]: void
+  [MESSAGE_TYPES.updateTelegramSettings]: void
+  [MESSAGE_TYPES.sendTelegramTestMessage]: void
   [MESSAGE_TYPES.setDefaultCheckInterval]: void
   [MESSAGE_TYPES.setPingUrl]: void
 }

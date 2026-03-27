@@ -65,6 +65,16 @@ export async function requestSetNotificationsEnabled(
   await sendRuntimeCommand(MESSAGE_TYPES.setNotificationsEnabled, { enabled })
 }
 
+export async function requestUpdateTelegramSettings(
+  telegram: RuntimeCommandPayloadMap[typeof MESSAGE_TYPES.updateTelegramSettings]['telegram'],
+): Promise<void> {
+  await sendRuntimeCommand(MESSAGE_TYPES.updateTelegramSettings, { telegram })
+}
+
+export async function requestSendTelegramTestMessage(): Promise<void> {
+  await sendRuntimeCommand(MESSAGE_TYPES.sendTelegramTestMessage, {})
+}
+
 export async function requestSetDefaultCheckInterval(
   interval: RuntimeCommandPayloadMap[typeof MESSAGE_TYPES.setDefaultCheckInterval]['interval'],
 ): Promise<void> {

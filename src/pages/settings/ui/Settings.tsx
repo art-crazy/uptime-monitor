@@ -4,9 +4,13 @@ import { useEffect, useMemo, useState } from 'react'
 import type { Settings } from '../../../entities/settings'
 import { clearAllMonitoringData } from '../../../features/clear-monitoring-data'
 import {
+  sendTelegramTestMessage,
   setDefaultCheckInterval,
   setNotificationsEnabled as saveNotificationsEnabled,
   setPingUrl,
+  setTelegramChatId,
+  setTelegramEnabled as saveTelegramEnabled,
+  setTelegramRecoveryEnabled,
 } from '../../../features/update-settings'
 import { CHECK_INTERVAL_OPTIONS, MIN_LOADING_MS } from '@shared/constants'
 import { delay } from '@shared/lib/async'
@@ -23,14 +27,30 @@ interface SettingsPageProps {
   settings: Settings
 }
 
+interface FeedbackState {
+  message: string
+  type: 'error' | 'success'
+}
+
 export function SettingsPage({ onBack, settings }: SettingsPageProps) {
-  const [actionError, setActionError] = useState<string | null>(null)
+  const [feedback, setFeedback] = useState<FeedbackState | null>(null)
   const [isNotificationsBusy, setIsNotificationsBusy] = useState(false)
+  const [isTelegramBusy, setIsTelegramBusy] = useState(false)
+  const [isTelegramTestBusy, setIsTelegramTestBusy] = useState(false)
   const [isClearBusy, setIsClearBusy] = useState(false)
   const [isPingBusy, setIsPingBusy] = useState(false)
-  const [notificationsEnabled, setNotificationsEnabled] = useState(settings.notificationsEnabled)
+  const [browserNotificationsEnabled, setBrowserNotificationsEnabled] = useState(
+    settings.notifications.browser.enabled,
+  )
+  const [telegramEnabled, setTelegramEnabled] = useState(
+    settings.notifications.telegram.enabled,
+  )
+  const [telegramSendRecovery, setTelegramSendRecovery] = useState(
+    settings.notifications.telegram.sendRecovery,
+  )
   const [defaultInterval, setDefaultInterval] = useState(settings.defaultInterval)
   const [pingError, setPingError] = useState<string | null>(null)
+  const [telegramChatIdError, setTelegramChatIdError] = useState<string | null>(null)
   const intervalOptions = useMemo(
     () =>
       CHECK_INTERVAL_OPTIONS.map((option) => ({
@@ -41,12 +61,24 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
   )
 
   useEffect(() => {
-    setNotificationsEnabled(settings.notificationsEnabled)
-  }, [settings.notificationsEnabled])
+    setBrowserNotificationsEnabled(settings.notifications.browser.enabled)
+  }, [settings.notifications.browser.enabled])
+
+  useEffect(() => {
+    setTelegramEnabled(settings.notifications.telegram.enabled)
+  }, [settings.notifications.telegram.enabled])
+
+  useEffect(() => {
+    setTelegramSendRecovery(settings.notifications.telegram.sendRecovery)
+  }, [settings.notifications.telegram.sendRecovery])
 
   useEffect(() => {
     setDefaultInterval(settings.defaultInterval)
   }, [settings.defaultInterval])
+
+  const clearFeedback = () => {
+    setFeedback(null)
+  }
 
   const commitPingUrl = async (value: string, input: HTMLInputElement) => {
     if (isPingBusy) {
@@ -62,7 +94,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
     }
 
     setIsPingBusy(true)
-    setActionError(null)
+    clearFeedback()
 
     try {
       const result = await setPingUrl(nextPingUrl)
@@ -83,6 +115,91 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
     }
   }
 
+  const handleTextFieldKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+    fallbackValue: string,
+  ) => {
+    if (event.key === 'Escape') {
+      event.preventDefault()
+      event.currentTarget.value = fallbackValue
+      event.currentTarget.blur()
+      return
+    }
+
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      event.currentTarget.blur()
+    }
+  }
+
+  const commitTelegramChatId = async (value: string, input: HTMLInputElement) => {
+    if (isTelegramBusy) {
+      return
+    }
+
+    const currentChatId = settings.notifications.telegram.chatId
+    const nextChatId = value.trim()
+
+    if (!nextChatId) {
+      setTelegramChatIdError(
+        currentChatId ? t('settings_error_invalid_telegram_chat_id') : null,
+      )
+      input.value = currentChatId
+      return
+    }
+
+    if (nextChatId === currentChatId) {
+      setTelegramChatIdError(null)
+      input.value = currentChatId
+      return
+    }
+
+    setIsTelegramBusy(true)
+    clearFeedback()
+
+    try {
+      const result = await setTelegramChatId(nextChatId)
+
+      if (result === 'invalid') {
+        setTelegramChatIdError(t('settings_error_invalid_telegram_chat_id'))
+        input.value = currentChatId
+        return
+      }
+
+      setTelegramChatIdError(null)
+      input.value = nextChatId
+    } catch {
+      setTelegramChatIdError(t('settings_error_unable_to_update_telegram'))
+      input.value = currentChatId
+    } finally {
+      setIsTelegramBusy(false)
+    }
+  }
+
+  const handleSendTelegramTest = async () => {
+    if (isTelegramBusy || isTelegramTestBusy) {
+      return
+    }
+
+    setIsTelegramTestBusy(true)
+    clearFeedback()
+
+    try {
+      await sendTelegramTestMessage()
+      setFeedback({
+        type: 'success',
+        message: t('settings_telegram_test_success'),
+      })
+    } catch {
+      setFeedback({
+        type: 'error',
+        message: t('settings_error_unable_to_send_telegram_test'),
+      })
+    } finally {
+      setIsTelegramTestBusy(false)
+    }
+  }
+
   const handleClearAll = async () => {
     if (isClearBusy) {
       return
@@ -95,12 +212,15 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
     }
 
     setIsClearBusy(true)
-    setActionError(null)
+    clearFeedback()
 
     try {
       await Promise.all([clearAllMonitoringData(), delay(MIN_LOADING_MS)])
     } catch {
-      setActionError(t('settings_error_unable_to_clear'))
+      setFeedback({
+        type: 'error',
+        message: t('settings_error_unable_to_clear'),
+      })
     } finally {
       setIsClearBusy(false)
     }
@@ -119,26 +239,30 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
 
       <div className={styles.body}>
         <section className={styles.section}>
+          <div className={styles.sectionTitle}>{t('settings_section_notifications')}</div>
           <div className={styles.row}>
             <span className={styles.label}>{t('settings_browser_notifications')}</span>
             <button
-              aria-pressed={notificationsEnabled}
+              aria-pressed={browserNotificationsEnabled}
               className={[
                 styles.switch,
-                notificationsEnabled ? styles.switchOn : styles.switchOff,
+                browserNotificationsEnabled ? styles.switchOn : styles.switchOff,
               ].join(' ')}
               disabled={isNotificationsBusy}
               onClick={async () => {
-                const next = !notificationsEnabled
-                setNotificationsEnabled(next)
+                const next = !browserNotificationsEnabled
+                setBrowserNotificationsEnabled(next)
                 setIsNotificationsBusy(true)
-                setActionError(null)
+                clearFeedback()
 
                 try {
                   await saveNotificationsEnabled(next)
                 } catch {
-                  setNotificationsEnabled(!next)
-                  setActionError(t('settings_error_unable_to_update_notifications'))
+                  setBrowserNotificationsEnabled(!next)
+                  setFeedback({
+                    type: 'error',
+                    message: t('settings_error_unable_to_update_notifications'),
+                  })
                 } finally {
                   setIsNotificationsBusy(false)
                 }
@@ -148,6 +272,117 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
               <span className={styles.thumb} />
             </button>
           </div>
+
+          <div className={styles.stack}>
+            <div className={styles.row}>
+              <span className={styles.label}>{t('settings_telegram_enabled')}</span>
+              <button
+                aria-pressed={telegramEnabled}
+                className={[
+                  styles.switch,
+                  telegramEnabled ? styles.switchOn : styles.switchOff,
+                ].join(' ')}
+                disabled={isTelegramBusy}
+                onClick={async () => {
+                  const next = !telegramEnabled
+                  setTelegramEnabled(next)
+                  setIsTelegramBusy(true)
+                  clearFeedback()
+
+                  try {
+                    await saveTelegramEnabled(next)
+                  } catch {
+                    setTelegramEnabled(!next)
+                    setFeedback({
+                      type: 'error',
+                      message: t('settings_error_unable_to_update_telegram'),
+                    })
+                  } finally {
+                    setIsTelegramBusy(false)
+                  }
+                }}
+                type="button"
+              >
+                <span className={styles.thumb} />
+              </button>
+            </div>
+
+            <div>
+              <label className={styles.fieldLabel} htmlFor="telegram-chat-id">
+                {t('settings_telegram_chat_id')}
+              </label>
+              <input
+                aria-invalid={telegramChatIdError !== null}
+                className={styles.input}
+                defaultValue={settings.notifications.telegram.chatId}
+                disabled={isTelegramBusy}
+                id="telegram-chat-id"
+                key={settings.notifications.telegram.chatId}
+                onChange={() => setTelegramChatIdError(null)}
+                onBlur={(event) => {
+                  void commitTelegramChatId(event.currentTarget.value, event.currentTarget)
+                }}
+                onKeyDown={(event) => {
+                  handleTextFieldKeyDown(event, settings.notifications.telegram.chatId)
+                }}
+                placeholder="-1001234567890"
+                spellCheck={false}
+                type="text"
+              />
+              <div
+                className={[
+                  styles.hint,
+                  telegramChatIdError ? styles.hintError : '',
+                ].join(' ')}
+              >
+                {telegramChatIdError ?? t('settings_telegram_chat_id_hint')}
+              </div>
+            </div>
+
+            <div className={styles.row}>
+              <span className={styles.label}>{t('settings_telegram_send_recovery')}</span>
+              <button
+                aria-pressed={telegramSendRecovery}
+                className={[
+                  styles.switch,
+                  telegramSendRecovery ? styles.switchOn : styles.switchOff,
+                ].join(' ')}
+                disabled={isTelegramBusy}
+                onClick={async () => {
+                  const next = !telegramSendRecovery
+                  setTelegramSendRecovery(next)
+                  setIsTelegramBusy(true)
+                  clearFeedback()
+
+                  try {
+                    await setTelegramRecoveryEnabled(next)
+                  } catch {
+                    setTelegramSendRecovery(!next)
+                    setFeedback({
+                      type: 'error',
+                      message: t('settings_error_unable_to_update_telegram'),
+                    })
+                  } finally {
+                    setIsTelegramBusy(false)
+                  }
+                }}
+                type="button"
+              >
+                <span className={styles.thumb} />
+              </button>
+            </div>
+
+            <div className={styles.buttonRow}>
+              <Button
+                loading={isTelegramTestBusy}
+                onClick={handleSendTelegramTest}
+                size="sm"
+                variant="secondary"
+              >
+                {t('settings_telegram_test_button')}
+              </Button>
+            </div>
+          </div>
         </section>
 
         <section className={styles.section}>
@@ -156,13 +391,16 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
             onChange={async (value) => {
               const next = value as Settings['defaultInterval']
               setDefaultInterval(next)
-              setActionError(null)
+              clearFeedback()
 
               try {
                 await setDefaultCheckInterval(next)
               } catch {
                 setDefaultInterval(settings.defaultInterval)
-                setActionError(t('settings_error_unable_to_update_interval'))
+                setFeedback({
+                  type: 'error',
+                  message: t('settings_error_unable_to_update_interval'),
+                })
               }
             }}
             options={intervalOptions}
@@ -187,17 +425,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
               void commitPingUrl(event.currentTarget.value, event.currentTarget)
             }}
             onKeyDown={(event) => {
-              if (event.key === 'Escape') {
-                event.preventDefault()
-                event.currentTarget.value = settings.pingUrl
-                event.currentTarget.blur()
-                return
-              }
-
-              if (event.key === 'Enter') {
-                event.preventDefault()
-                event.currentTarget.blur()
-              }
+              handleTextFieldKeyDown(event, settings.pingUrl)
             }}
             placeholder="8.8.8.8"
             spellCheck={false}
@@ -221,9 +449,14 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
         </Button>
       </section>
 
-      {actionError ? (
-        <div className={[styles.feedback, styles.feedbackError].join(' ')}>
-          {actionError}
+      {feedback ? (
+        <div
+          className={[
+            styles.feedback,
+            feedback.type === 'error' ? styles.feedbackError : styles.feedbackSuccess,
+          ].join(' ')}
+        >
+          {feedback.message}
         </div>
       ) : null}
     </div>

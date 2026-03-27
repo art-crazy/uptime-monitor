@@ -19,6 +19,7 @@ import {
   type SaveMonitorDraftPayload,
 } from '@shared/lib/runtime-contract'
 import { runMonitorCheck } from './checks'
+import { assertTelegramNotificationConfigured, sendTelegramTestMessage } from './notifications'
 import { enqueueBackgroundTask } from './queue'
 import { writeMonitoringData, writeSettings } from './state'
 
@@ -200,9 +201,59 @@ async function setNotificationsEnabledCommand(enabled: boolean): Promise<void> {
 
     await writeSettings({
       ...settings,
-      notificationsEnabled: enabled,
+      notifications: {
+        ...settings.notifications,
+        browser: {
+          ...settings.notifications.browser,
+          enabled,
+        },
+      },
     })
   })
+}
+
+async function updateTelegramSettingsCommand(
+  telegramPatch: Extract<
+    RuntimeCommand,
+    { type: typeof MESSAGE_TYPES.updateTelegramSettings }
+  >['telegram'],
+): Promise<void> {
+  const normalizedTelegramPatch = { ...telegramPatch }
+
+  if (typeof normalizedTelegramPatch.chatId === 'string') {
+    const normalizedChatId = normalizedTelegramPatch.chatId.trim()
+
+    if (!normalizedChatId) {
+      throw new Error('Invalid Telegram chat ID')
+    }
+
+    normalizedTelegramPatch.chatId = normalizedChatId
+  }
+
+  await enqueueBackgroundTask(async () => {
+    const settings = await getSettings()
+    const nextTelegramSettings = {
+      ...settings.notifications.telegram,
+      ...normalizedTelegramPatch,
+    }
+
+    if (nextTelegramSettings.enabled) {
+      assertTelegramNotificationConfigured(nextTelegramSettings)
+    }
+
+    await writeSettings({
+      ...settings,
+      notifications: {
+        ...settings.notifications,
+        telegram: nextTelegramSettings,
+      },
+    })
+  })
+}
+
+async function sendTelegramTestMessageCommand(): Promise<void> {
+  const settings = await getSettings()
+  await sendTelegramTestMessage(settings)
 }
 
 async function setDefaultCheckIntervalCommand(
@@ -266,6 +317,14 @@ export async function handleRuntimeMessage(message: unknown): Promise<unknown> {
 
     case MESSAGE_TYPES.setNotificationsEnabled:
       await setNotificationsEnabledCommand(runtimeMessage.enabled)
+      return undefined
+
+    case MESSAGE_TYPES.updateTelegramSettings:
+      await updateTelegramSettingsCommand(runtimeMessage.telegram)
+      return undefined
+
+    case MESSAGE_TYPES.sendTelegramTestMessage:
+      await sendTelegramTestMessageCommand()
       return undefined
 
     case MESSAGE_TYPES.setDefaultCheckInterval:

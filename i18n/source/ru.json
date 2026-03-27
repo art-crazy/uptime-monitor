@@ -93,6 +93,12 @@
     "title": "Настройки",
     "section_notifications": "Уведомления",
     "browser_notifications": "Уведомления браузера",
+    "telegram_enabled": "Уведомления Telegram",
+    "telegram_chat_id": "Chat ID",
+    "telegram_chat_id_hint": "Напишите боту и введите ваш числовой chat ID",
+    "telegram_send_recovery": "Отправлять сообщения о восстановлении",
+    "telegram_test_button": "Отправить test-сообщение",
+    "telegram_test_success": "Test-сообщение в Telegram успешно отправлено",
     "section_default_interval": "Интервал проверки по умолчанию",
     "section_advanced": "Дополнительно",
     "connectivity_target": "Адрес для проверки связи",
@@ -101,9 +107,12 @@
     "button_clear_all": "Удалить все мониторы",
     "confirm_clear_all": "Удалить все мониторы и историю сбоев?",
     "error_invalid_ping_target": "Введите корректный хост, IP или URL",
+    "error_invalid_telegram_chat_id": "Укажите Telegram chat ID",
     "error_unable_to_save_ping_target": "Не удалось сохранить адрес проверки",
     "error_unable_to_clear": "Не удалось удалить мониторы",
     "error_unable_to_update_notifications": "Не удалось обновить настройки уведомлений",
+    "error_unable_to_update_telegram": "Не удалось обновить настройки Telegram",
+    "error_unable_to_send_telegram_test": "Не удалось отправить test-сообщение в Telegram",
     "error_unable_to_update_interval": "Не удалось обновить интервал проверки"
   },
   "monitor": {
@@ -158,7 +167,8 @@
     "down_title": "$1 недоступен",
     "up_title": "$1 снова доступен",
     "down_message": "Проверка доступности $1 завершилась ошибкой.",
-    "up_message": "Время последнего ответа: $1."
+    "up_message": "Время последнего ответа: $1.",
+    "telegram_test_message": "Тестовое сообщение Uptime Monitor\nОтправлено: $1"
   },
   "time": {
     "today_at": "сегодня в $1",

@@ -93,6 +93,12 @@
     "title": "Settings",
     "section_notifications": "Notifications",
     "browser_notifications": "Browser notifications",
+    "telegram_enabled": "Telegram notifications",
+    "telegram_chat_id": "Chat ID",
+    "telegram_chat_id_hint": "Start a conversation with the bot and enter your numeric chat ID here",
+    "telegram_send_recovery": "Send recovery messages",
+    "telegram_test_button": "Send test message",
+    "telegram_test_success": "Telegram test message sent successfully",
     "section_default_interval": "Default check interval",
     "section_advanced": "Advanced",
     "connectivity_target": "Connectivity target",
@@ -101,9 +107,12 @@
     "button_clear_all": "Clear all monitors",
     "confirm_clear_all": "Clear all monitors and incidents?",
     "error_invalid_ping_target": "Enter a valid host, IP, or HTTP/HTTPS URL",
+    "error_invalid_telegram_chat_id": "Enter a Telegram chat ID",
     "error_unable_to_save_ping_target": "Unable to save ping URL right now",
     "error_unable_to_clear": "Unable to clear monitors right now",
     "error_unable_to_update_notifications": "Unable to update notifications right now",
+    "error_unable_to_update_telegram": "Unable to update Telegram settings right now",
+    "error_unable_to_send_telegram_test": "Unable to send a Telegram test message right now",
     "error_unable_to_update_interval": "Unable to update the default interval right now"
   },
   "monitor": {
@@ -158,7 +167,8 @@
     "down_title": "$1 is down",
     "up_title": "$1 is back up",
     "down_message": "The latest uptime check failed for $1.",
-    "up_message": "Latest response time: $1."
+    "up_message": "Latest response time: $1.",
+    "telegram_test_message": "Uptime Monitor test message\nSent at $1"
   },
   "time": {
     "today_at": "today $1",

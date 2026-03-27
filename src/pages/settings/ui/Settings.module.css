@@ -19,6 +19,8 @@
 
 .sectionDanger {
   margin-top: auto;
+  padding-top: 4px;
+  padding-bottom: 2px;
   border-bottom: none;
 }
 
@@ -26,6 +28,13 @@
   margin-bottom: 8px;
   font-size: 12px;
   font-weight: 500;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
 }
 
 .row {
@@ -106,6 +115,13 @@
   min-height: 14px;
 }
 
+.hintError {
+  color: var(--color-red);
+}
+
+.buttonRow {
+  display: flex;
+}
 
 .feedback {
   padding: 10px 14px 14px;
@@ -114,4 +130,8 @@
 
 .feedbackError {
   color: var(--color-red);
+}
+
+.feedbackSuccess {
+  color: #1d8a67;
 }

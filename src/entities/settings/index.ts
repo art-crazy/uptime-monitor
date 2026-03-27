@@ -1,5 +1,13 @@
 export { DEFAULT_SETTINGS } from './model/defaults'
 export { getSettings } from './model/storage'
 export { useSettings } from './model/hooks'
-export type { Settings } from './model/types'
-export { settingsSchema } from './model/types'
+export type {
+  BrowserNotificationSettings,
+  Settings,
+  TelegramNotificationSettings,
+} from './model/types'
+export {
+  browserNotificationSettingsSchema,
+  settingsSchema,
+  telegramNotificationSettingsSchema,
+} from './model/types'

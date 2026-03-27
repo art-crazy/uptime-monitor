@@ -258,6 +258,24 @@
   "settings_browser_notifications": {
     "message": "Browser notifications"
   },
+  "settings_telegram_enabled": {
+    "message": "Telegram notifications"
+  },
+  "settings_telegram_chat_id": {
+    "message": "Chat ID"
+  },
+  "settings_telegram_chat_id_hint": {
+    "message": "Start a conversation with the bot and enter your numeric chat ID here"
+  },
+  "settings_telegram_send_recovery": {
+    "message": "Send recovery messages"
+  },
+  "settings_telegram_test_button": {
+    "message": "Send test message"
+  },
+  "settings_telegram_test_success": {
+    "message": "Telegram test message sent successfully"
+  },
   "settings_section_default_interval": {
     "message": "Default check interval"
   },
@@ -282,6 +300,9 @@
   "settings_error_invalid_ping_target": {
     "message": "Enter a valid host, IP, or HTTP/HTTPS URL"
   },
+  "settings_error_invalid_telegram_chat_id": {
+    "message": "Enter a Telegram chat ID"
+  },
   "settings_error_unable_to_save_ping_target": {
     "message": "Unable to save ping URL right now"
   },
@@ -290,6 +311,12 @@
   },
   "settings_error_unable_to_update_notifications": {
     "message": "Unable to update notifications right now"
+  },
+  "settings_error_unable_to_update_telegram": {
+    "message": "Unable to update Telegram settings right now"
+  },
+  "settings_error_unable_to_send_telegram_test": {
+    "message": "Unable to send a Telegram test message right now"
   },
   "settings_error_unable_to_update_interval": {
     "message": "Unable to update the default interval right now"
@@ -452,6 +479,14 @@
   },
   "notification_up_message": {
     "message": "Latest response time: $VALUE$.",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "notification_telegram_test_message": {
+    "message": "Uptime Monitor test message\nSent at $VALUE$",
     "placeholders": {
       "value": {
         "content": "$1"
