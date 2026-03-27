@@ -161,12 +161,16 @@
     "status_checking": "Checking..."
   },
   "chart": {
-    "title": "Response time - last 24 hours",
+    "title": "Response time",
     "bar_down": "Down",
     "bar_no_samples": "No samples",
     "legend_good": "good",
     "legend_slow": "slow",
-    "legend_down": "down"
+    "legend_down": "down",
+    "period_5m": "5m",
+    "period_30m": "30m",
+    "period_1h": "1h",
+    "period_24h": "24h"
   },
   "incident": {
     "label_down": "Down",

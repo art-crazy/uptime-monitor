@@ -40,13 +40,12 @@ export function calculateAverageResponseTime(
 export function getChartHistory(
   history: HistoryEntry[],
   bucketCount = 24,
+  bucketMs = 60 * 60 * 1000,
   now = Date.now(),
 ): Array<HistoryEntry | null> {
-  const hourMs = 60 * 60 * 1000
-
   return Array.from({ length: bucketCount }, (_, index) => {
-    const bucketStart = now - (bucketCount - index) * hourMs
-    const bucketEnd = bucketStart + hourMs
+    const bucketStart = now - (bucketCount - index) * bucketMs
+    const bucketEnd = bucketStart + bucketMs
     const bucketEntries = history.filter(
       (entry) => entry.timestamp >= bucketStart && entry.timestamp < bucketEnd,
     )

@@ -457,7 +457,7 @@
     "message": "Checking..."
   },
   "chart_title": {
-    "message": "Response time - last 24 hours"
+    "message": "Response time"
   },
   "chart_bar_down": {
     "message": "Down"
@@ -473,6 +473,18 @@
   },
   "chart_legend_down": {
     "message": "down"
+  },
+  "chart_period_5m": {
+    "message": "5m"
+  },
+  "chart_period_30m": {
+    "message": "30m"
+  },
+  "chart_period_1h": {
+    "message": "1h"
+  },
+  "chart_period_24h": {
+    "message": "24h"
   },
   "incident_label_down": {
     "message": "Down"

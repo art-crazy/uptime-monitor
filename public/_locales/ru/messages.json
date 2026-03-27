@@ -457,7 +457,7 @@
     "message": "Проверяем..."
   },
   "chart_title": {
-    "message": "Время ответа — последние 24 ч"
+    "message": "Время ответа"
   },
   "chart_bar_down": {
     "message": "Недоступен"
@@ -473,6 +473,18 @@
   },
   "chart_legend_down": {
     "message": "недоступно"
+  },
+  "chart_period_5m": {
+    "message": "5 мин"
+  },
+  "chart_period_30m": {
+    "message": "30 мин"
+  },
+  "chart_period_1h": {
+    "message": "1 ч"
+  },
+  "chart_period_24h": {
+    "message": "24 ч"
   },
   "incident_label_down": {
     "message": "Сбой"
