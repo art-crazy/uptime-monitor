@@ -10,19 +10,19 @@ interface Palette {
 
 const PALETTES: Record<IconState, Palette> = {
   gray: {
-    background: '#f2efe7',
-    border: '#c7beb0',
-    stroke: '#958d7f',
+    background: '#f5f5f0',
+    border: '#cccccc',
+    stroke: '#cccccc',
   },
   green: {
-    background: '#e7f1d8',
-    border: '#76a63c',
-    stroke: '#4f8529',
+    background: '#EAF3DE',
+    border: '#639922',
+    stroke: '#639922',
   },
   red: {
-    background: '#f8e1df',
-    border: '#d15e5c',
-    stroke: '#ba3f3e',
+    background: '#FCEBEB',
+    border: '#E24B4A',
+    stroke: '#E24B4A',
   },
 }
 
@@ -31,26 +31,21 @@ function drawRoundedRect(
   size: number,
   palette: Palette,
 ) {
-  const inset = size * 0.1
-  const radius = size * 0.24
-  const dimension = size - inset * 2
+  const stroke = Math.max(1.5, size * 0.07)
+  const half = stroke / 2
+  const w = size - stroke
+  const radius = w * 0.22
 
   context.beginPath()
-  context.moveTo(inset + radius, inset)
-  context.arcTo(inset + dimension, inset, inset + dimension, inset + dimension, radius)
-  context.arcTo(
-    inset + dimension,
-    inset + dimension,
-    inset,
-    inset + dimension,
-    radius,
-  )
-  context.arcTo(inset, inset + dimension, inset, inset, radius)
-  context.arcTo(inset, inset, inset + dimension, inset, radius)
+  context.moveTo(half + radius, half)
+  context.arcTo(half + w, half, half + w, half + w, radius)
+  context.arcTo(half + w, half + w, half, half + w, radius)
+  context.arcTo(half, half + w, half, half, radius)
+  context.arcTo(half, half, half + w, half, radius)
   context.closePath()
   context.fillStyle = palette.background
   context.fill()
-  context.lineWidth = Math.max(1, size * 0.08)
+  context.lineWidth = stroke
   context.strokeStyle = palette.border
   context.stroke()
 }
@@ -68,8 +63,9 @@ function createIcon(size: number, state: IconState): ImageData | null {
   context.clearRect(0, 0, size, size)
   drawRoundedRect(context, size, palette)
   context.beginPath()
-  context.arc(size / 2, size / 2, size * 0.18, 0, Math.PI * 2)
-  context.lineWidth = Math.max(1.5, size * 0.12)
+  const dotStroke = Math.max(1.5, size * 0.07)
+  context.arc(size / 2, size / 2, size * 0.22 - dotStroke / 2, 0, Math.PI * 2)
+  context.lineWidth = dotStroke
   context.strokeStyle = palette.stroke
   context.stroke()
 
@@ -107,12 +103,16 @@ export async function updateExtensionIcon(monitors: Monitor[]): Promise<void> {
   const { downCount, state } = getIconState(monitors)
   const image16 = createIcon(16, state)
   const image32 = createIcon(32, state)
+  const image48 = createIcon(48, state)
+  const image128 = createIcon(128, state)
 
-  if (image16 && image32) {
+  if (image16 && image32 && image48 && image128) {
     await chrome.action.setIcon({
       imageData: {
         16: image16,
         32: image32,
+        48: image48,
+        128: image128,
       },
     })
   }
