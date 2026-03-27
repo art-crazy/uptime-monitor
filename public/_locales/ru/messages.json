@@ -261,11 +261,32 @@
   "settings_telegram_enabled": {
     "message": "Уведомления Telegram"
   },
+  "settings_telegram_setup_title": {
+    "message": "Как подключить Telegram"
+  },
+  "settings_telegram_setup_step_1": {
+    "message": "Откройте бота и отправьте /start в Telegram."
+  },
+  "settings_telegram_setup_step_2": {
+    "message": "Откройте @userinfobot и скопируйте свой числовой Telegram ID пользователя."
+  },
+  "settings_telegram_setup_step_3": {
+    "message": "Вставьте Telegram ID ниже, включите уведомления Telegram и отправьте тестовое сообщение."
+  },
+  "settings_telegram_bot_username_label": {
+    "message": "Логин бота"
+  },
+  "settings_telegram_open_bot": {
+    "message": "Открыть бота"
+  },
+  "settings_telegram_open_chat_id_helper": {
+    "message": "Открыть @userinfobot"
+  },
   "settings_telegram_chat_id": {
-    "message": "ID чата"
+    "message": "Telegram ID"
   },
   "settings_telegram_chat_id_hint": {
-    "message": "Напишите боту и укажите числовой ID чата"
+    "message": "Вставьте числовой Telegram ID пользователя из @userinfobot, например 123456789"
   },
   "settings_telegram_status_connected": {
     "message": "Подключен"
@@ -307,7 +328,7 @@
     "message": "Введите корректный хост, IP или URL"
   },
   "settings_error_invalid_telegram_chat_id": {
-    "message": "Укажите ID чата Telegram"
+    "message": "Укажите Telegram ID"
   },
   "settings_error_unable_to_save_ping_target": {
     "message": "Не удалось сохранить адрес проверки"

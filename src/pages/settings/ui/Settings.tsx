@@ -12,7 +12,13 @@ import {
   setTelegramEnabled as saveTelegramEnabled,
   setTelegramRecoveryEnabled,
 } from '../../../features/update-settings'
-import { CHECK_INTERVAL_OPTIONS, MIN_LOADING_MS } from '@shared/constants'
+import {
+  CHECK_INTERVAL_OPTIONS,
+  TELEGRAM_BOT_USERNAME,
+  MIN_LOADING_MS,
+  TELEGRAM_BOT_URL,
+  TELEGRAM_CHAT_ID_HELPER_URL,
+} from '@shared/constants'
 import { delay } from '@shared/lib/async'
 import { t } from '@shared/lib/i18n'
 import { formatCheckInterval } from '@shared/lib/time'
@@ -357,6 +363,39 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
             </div>
 
             <div className={styles.telegramBody}>
+              <div className={styles.telegramSetup}>
+                <div className={styles.telegramSetupTitle}>
+                  {t('settings_telegram_setup_title')}
+                </div>
+                <div className={styles.telegramSetupSteps}>
+                  <div className={styles.telegramSetupStep}>{t('settings_telegram_setup_step_1')}</div>
+                  <div className={styles.telegramSetupStep}>{t('settings_telegram_setup_step_2')}</div>
+                  <div className={styles.telegramSetupStep}>{t('settings_telegram_setup_step_3')}</div>
+                </div>
+                <div className={styles.telegramBotUsername}>
+                  <span>{t('settings_telegram_bot_username_label')}</span>
+                  <code>@{TELEGRAM_BOT_USERNAME}</code>
+                </div>
+                <div className={styles.telegramLinks}>
+                  <a
+                    className={styles.telegramLink}
+                    href={TELEGRAM_BOT_URL}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    {t('settings_telegram_open_bot')}
+                  </a>
+                  <a
+                    className={styles.telegramLinkSecondary}
+                    href={TELEGRAM_CHAT_ID_HELPER_URL}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    {t('settings_telegram_open_chat_id_helper')}
+                  </a>
+                </div>
+              </div>
+
               <div>
               <label className={styles.fieldLabel} htmlFor="telegram-chat-id">
                 {t('settings_telegram_chat_id')}

@@ -261,11 +261,32 @@
   "settings_telegram_enabled": {
     "message": "Telegram notifications"
   },
+  "settings_telegram_setup_title": {
+    "message": "How to connect Telegram"
+  },
+  "settings_telegram_setup_step_1": {
+    "message": "Open the bot and send /start in Telegram."
+  },
+  "settings_telegram_setup_step_2": {
+    "message": "Open @userinfobot and copy your numeric Telegram user ID."
+  },
+  "settings_telegram_setup_step_3": {
+    "message": "Paste the Telegram ID below, enable Telegram notifications, and send a test message."
+  },
+  "settings_telegram_bot_username_label": {
+    "message": "Bot username"
+  },
+  "settings_telegram_open_bot": {
+    "message": "Open bot"
+  },
+  "settings_telegram_open_chat_id_helper": {
+    "message": "Open @userinfobot"
+  },
   "settings_telegram_chat_id": {
-    "message": "Chat ID"
+    "message": "Telegram ID"
   },
   "settings_telegram_chat_id_hint": {
-    "message": "Start a conversation with the bot and enter your numeric chat ID here"
+    "message": "Paste your numeric Telegram user ID from @userinfobot, for example 123456789"
   },
   "settings_telegram_status_connected": {
     "message": "Connected"
@@ -307,7 +328,7 @@
     "message": "Enter a valid host, IP, or HTTP/HTTPS URL"
   },
   "settings_error_invalid_telegram_chat_id": {
-    "message": "Enter a Telegram chat ID"
+    "message": "Enter a Telegram ID"
   },
   "settings_error_unable_to_save_ping_target": {
     "message": "Unable to save ping URL right now"

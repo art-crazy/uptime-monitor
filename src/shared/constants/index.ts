@@ -19,6 +19,9 @@ export const RESPONSE_THRESHOLDS = {
 
 export const HISTORY_MAX_ENTRIES = 288
 export const DEFAULT_PING_URL = '8.8.8.8'
+export const TELEGRAM_BOT_USERNAME = 'UptimeMonitorAlertsBot'
+export const TELEGRAM_BOT_URL = `https://t.me/${TELEGRAM_BOT_USERNAME}`
+export const TELEGRAM_CHAT_ID_HELPER_URL = 'https://t.me/userinfobot'
 export const INTERNET_ALARM_NAME = 'internet-ping'
 export const MONITOR_ALARM_PREFIX = 'monitor:'
 export const CHECK_TIMEOUT_MS = 10_000

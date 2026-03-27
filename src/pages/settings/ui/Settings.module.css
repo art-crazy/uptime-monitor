@@ -76,6 +76,85 @@
   border-top: 1px solid rgba(36, 161, 222, 0.12);
 }
 
+.telegramSetup {
+  padding: 12px;
+  border: 1px solid rgba(36, 161, 222, 0.14);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.telegramSetupTitle {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.telegramSetupSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.telegramSetupStep {
+  color: var(--color-muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.telegramBotUsername {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  color: var(--color-muted);
+  font-size: 11px;
+}
+
+.telegramBotUsername code {
+  padding: 3px 8px;
+  border: 1px solid rgba(36, 161, 222, 0.16);
+  border-radius: 999px;
+  background: rgba(36, 161, 222, 0.08);
+  color: var(--color-text);
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.telegramLinks {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.telegramLink,
+.telegramLinkSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.telegramLink {
+  background: linear-gradient(135deg, #0088cc, #00a8ff);
+  color: #fff;
+}
+
+.telegramLinkSecondary {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
 .label,
 .fieldLabel {
   font-size: 12px;
