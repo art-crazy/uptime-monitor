@@ -1,73 +1,90 @@
-# React + TypeScript + Vite
+# Uptime Monitor
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<p align="center">
+  <img src="./docs/readme/hero.svg" alt="Uptime Monitor hero banner" width="100%" />
+</p>
 
-Currently, two official plugins are available:
+<p align="center">
+  <img alt="Chrome MV3" src="https://img.shields.io/badge/Chrome-MV3-185FA5?style=flat-square" />
+  <img alt="React 19" src="https://img.shields.io/badge/React-19-171717?style=flat-square" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9-185FA5?style=flat-square" />
+  <img alt="Local First" src="https://img.shields.io/badge/Data-Local%20First-639922?style=flat-square" />
+  <img alt="Internationalization" src="https://img.shields.io/badge/i18n-Chrome%20native-E24B4A?style=flat-square" />
+</p>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Мониторинг сайтов, API и хостов — прямо из браузера. Без сервера, без аккаунта, без компромиссов с платформой.
 
-## React Compiler
+Это полноценное Manifest V3 расширение: popup и service worker разделены как положено, записью в storage управляет только background-слой, проверки идут через `chrome.alarms`, алерты — через `chrome.notifications`, иконка расширения отражает текущее состояние мониторов.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Скриншоты
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+<table>
+  <tr>
+    <td align="center">
+      <img src="./docs/readme/dashboard.svg" alt="Dashboard" width="240" />
+    </td>
+    <td align="center">
+      <img src="./docs/readme/details.svg" alt="Monitor details" width="240" />
+    </td>
+    <td align="center">
+      <img src="./docs/readme/settings.svg" alt="Settings" width="240" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Dashboard</strong><br/>Список мониторов, internet status</td>
+    <td align="center"><strong>Details</strong><br/>24h chart, incidents, действия</td>
+    <td align="center"><strong>Settings</strong><br/>Интервалы, уведомления, network</td>
+  </tr>
+</table>
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Архитектура
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+FSD (Feature-Sliced Design) с чёткими границами между popup и background:
+
+```
+src/
+  app/         точка входа popup, навигация
+  pages/       экраны popup
+  widgets/     составные UI-блоки
+  features/    пользовательские действия, side effects
+  entities/    доменные типы, selectors, hooks
+  shared/      helpers, UI primitives, i18n, constants
+  background/  service worker, runtime команды, проверки
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Поток данных
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+Popup action → typed command → background validates → chrome.storage.local
+                                                              ↓
+                                         storage.onChanged → Popup re-renders
+                                         chrome.alarms     → checks run
+                                         chrome.notifications → alerts fire
+                                         action icon       → reflects health
+```
+
+---
+
+
+## Стек
+
+React 19 · TypeScript 5.9 · Vite 8 · @crxjs/vite-plugin · zod · CSS Modules
+`chrome.storage` · `chrome.alarms` · `chrome.notifications` · `chrome.i18n`
+
+---
+
+## Запуск
+
+```bash
+npm install
+npm run dev    # popup в браузере без extension context
+npm run build  # production → dist/
+```
+
+Загрузка в Chrome: `chrome://extensions` → Developer mode → Load unpacked → `dist/`
+
+Работает в Chrome, Edge, Brave и любом Chromium-браузере.

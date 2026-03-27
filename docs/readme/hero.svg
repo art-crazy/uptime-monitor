@@ -1,0 +1,82 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" fill="#F6F4EE"/>
+  <circle cx="142" cy="118" r="78" fill="#EAF3DE"/>
+  <circle cx="1172" cy="602" r="92" fill="#FCEBEB"/>
+  <circle cx="1070" cy="116" r="46" fill="#E6F1FB"/>
+
+  <text x="96" y="128" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="58" font-weight="700">Uptime Monitor</text>
+  <text x="96" y="176" fill="#4D4D4D" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="500">A local-first Chromium extension for uptime checks,</text>
+  <text x="96" y="208" fill="#4D4D4D" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="500">incident tracking, browser alerts, and live health states.</text>
+
+  <rect x="96" y="252" width="136" height="34" rx="17" fill="#171717"/>
+  <text x="164" y="274" text-anchor="middle" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">Manifest V3</text>
+  <rect x="244" y="252" width="118" height="34" rx="17" fill="#EAF3DE" stroke="#C0DD97"/>
+  <text x="303" y="274" text-anchor="middle" fill="#3B6D11" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">Local-first</text>
+  <rect x="374" y="252" width="180" height="34" rx="17" fill="#E6F1FB" stroke="#B4D1F2"/>
+  <text x="464" y="274" text-anchor="middle" fill="#185FA5" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">Chrome i18n ready</text>
+
+  <rect x="96" y="332" width="420" height="92" rx="18" fill="#FFFFFF" stroke="#D9D4C8"/>
+  <circle cx="132" cy="366" r="10" fill="#6B9F2A"/>
+  <text x="156" y="362" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">Production-minded MV3 architecture</text>
+  <text x="156" y="387" fill="#6E6A60" font-family="Segoe UI, Arial, sans-serif" font-size="14">Popup and service worker are separated cleanly,</text>
+  <text x="156" y="407" fill="#6E6A60" font-family="Segoe UI, Arial, sans-serif" font-size="14">with typed commands and single-writer storage.</text>
+
+  <rect x="96" y="442" width="420" height="92" rx="18" fill="#FFFFFF" stroke="#D9D4C8"/>
+  <circle cx="132" cy="476" r="10" fill="#EF9F27"/>
+  <text x="156" y="472" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">Real behavior, not just static UI</text>
+  <text x="156" y="497" fill="#6E6A60" font-family="Segoe UI, Arial, sans-serif" font-size="14">Checks run on alarms, alerts fire on status changes,</text>
+  <text x="156" y="517" fill="#6E6A60" font-family="Segoe UI, Arial, sans-serif" font-size="14">icon reflects health, incidents tracked locally.</text>
+
+  <rect x="96" y="552" width="420" height="92" rx="18" fill="#FFFFFF" stroke="#D9D4C8"/>
+  <circle cx="132" cy="586" r="10" fill="#E24B4A"/>
+  <text x="156" y="582" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">Designed to scale to 50+ locales</text>
+  <text x="156" y="607" fill="#6E6A60" font-family="Segoe UI, Arial, sans-serif" font-size="14">Build-time locale generation feeds Chrome _locales,</text>
+  <text x="156" y="627" fill="#6E6A60" font-family="Segoe UI, Arial, sans-serif" font-size="14">Intl formats dates, durations, and response times.</text>
+
+  <rect x="660" y="74" width="524" height="486" rx="28" fill="#FFFFFF" stroke="#D9D4C8"/>
+  <rect x="660" y="74" width="524" height="62" rx="28" fill="#F4F1E9"/>
+  <rect x="660" y="108" width="524" height="28" fill="#F4F1E9"/>
+  <text x="704" y="114" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Uptime Monitor</text>
+  <rect x="1112" y="92" width="36" height="28" rx="10" fill="#FFFFFF" stroke="#D9D4C8"/>
+  <circle cx="1130" cy="106" r="4" fill="#7A7A7A"/>
+  <circle cx="707" cy="178" r="8" fill="#6B9F2A"/>
+  <rect x="690" y="152" width="464" height="86" rx="18" fill="#EAF3DE" stroke="#C0DD97"/>
+  <text x="730" y="185" fill="#2E5310" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">Internet connection</text>
+  <text x="730" y="212" fill="#3B6D11" font-family="Segoe UI, Arial, sans-serif" font-size="16">Online - 128 ms response</text>
+
+  <rect x="690" y="266" width="464" height="84" rx="18" fill="#FFFFFF" stroke="#D9D4C8"/>
+  <circle cx="710" cy="308" r="7" fill="#6B9F2A"/>
+  <text x="728" y="302" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">example.com</text>
+  <text x="728" y="327" fill="#7A7A7A" font-family="Segoe UI, Arial, sans-serif" font-size="14">99.9% uptime</text>
+  <text x="1076" y="315" fill="#3B6D11" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">98 ms</text>
+
+  <rect x="690" y="364" width="464" height="84" rx="18" fill="#FCEBEB" stroke="#F2B7B7"/>
+  <circle cx="710" cy="406" r="7" fill="#E24B4A"/>
+  <text x="728" y="400" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">api.example.com</text>
+  <text x="728" y="425" fill="#A64242" font-family="Segoe UI, Arial, sans-serif" font-size="14">Down - 2 min ago</text>
+  <rect x="1028" y="388" width="86" height="28" rx="8" fill="#E24B4A"/>
+  <text x="1071" y="406" text-anchor="middle" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700">DOWN</text>
+
+  <rect x="690" y="462" width="464" height="84" rx="18" fill="#FFFFFF" stroke="#D9D4C8"/>
+  <circle cx="710" cy="504" r="7" fill="#6B9F2A"/>
+  <text x="728" y="498" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">status.example.com</text>
+  <text x="728" y="523" fill="#7A7A7A" font-family="Segoe UI, Arial, sans-serif" font-size="14">100% uptime</text>
+  <text x="1062" y="511" fill="#D08113" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">680 ms</text>
+
+  <rect x="690" y="582" width="148" height="84" rx="18" fill="#FFFFFF" stroke="#D9D4C8"/>
+  <text x="764" y="607" text-anchor="middle" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700">No monitors</text>
+  <rect x="747" y="618" width="34" height="34" rx="10" fill="#F4F1E9" stroke="#CFC9BC"/>
+  <circle cx="764" cy="635" r="9" fill="none" stroke="#BEB7A9" stroke-width="2.5"/>
+
+  <rect x="848" y="582" width="148" height="84" rx="18" fill="#FFFFFF" stroke="#D9D4C8"/>
+  <text x="922" y="607" text-anchor="middle" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700">All online</text>
+  <rect x="905" y="618" width="34" height="34" rx="10" fill="#EAF3DE" stroke="#6B9F2A" stroke-width="2"/>
+  <circle cx="922" cy="635" r="9" fill="none" stroke="#6B9F2A" stroke-width="2.5"/>
+
+  <rect x="1006" y="582" width="148" height="84" rx="18" fill="#FFFFFF" stroke="#D9D4C8"/>
+  <text x="1080" y="607" text-anchor="middle" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700">1 monitor down</text>
+  <rect x="1063" y="618" width="34" height="34" rx="10" fill="#FCEBEB" stroke="#E24B4A" stroke-width="2"/>
+  <circle cx="1080" cy="635" r="9" fill="none" stroke="#E24B4A" stroke-width="2.5"/>
+  <circle cx="1097" cy="620" r="9" fill="#E24B4A"/>
+  <text x="1097" y="624" text-anchor="middle" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700">1</text>
+</svg>

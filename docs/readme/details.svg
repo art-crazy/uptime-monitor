@@ -1,0 +1,59 @@
+<svg width="360" height="720" viewBox="0 0 360 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="360" height="720" fill="#F6F4EE"/>
+  <rect x="30" y="28" width="300" height="664" rx="22" fill="#FFFFFF" stroke="#D9D4C8"/>
+  <rect x="30" y="28" width="300" height="54" rx="22" fill="#F4F1E9"/>
+  <rect x="30" y="58" width="300" height="24" fill="#F4F1E9"/>
+  <text x="52" y="61" fill="#7A7A7A" font-family="Segoe UI, Arial, sans-serif" font-size="16">&#8592;</text>
+  <text x="74" y="61" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">api.example.com</text>
+  <rect x="254" y="44" width="54" height="22" rx="8" fill="#E24B4A"/>
+  <text x="281" y="59" text-anchor="middle" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="700">DOWN</text>
+
+  <rect x="48" y="102" width="78" height="74" rx="14" fill="#F4F1E9"/>
+  <text x="87" y="126" text-anchor="middle" fill="#7A7A7A" font-family="Segoe UI, Arial, sans-serif" font-size="10">Uptime</text>
+  <text x="87" y="154" text-anchor="middle" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">97.2%</text>
+
+  <rect x="141" y="102" width="78" height="74" rx="14" fill="#F4F1E9"/>
+  <text x="180" y="126" text-anchor="middle" fill="#7A7A7A" font-family="Segoe UI, Arial, sans-serif" font-size="10">Avg response</text>
+  <text x="180" y="154" text-anchor="middle" fill="#D08113" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">680 ms</text>
+
+  <rect x="234" y="102" width="78" height="74" rx="14" fill="#F4F1E9"/>
+  <text x="273" y="126" text-anchor="middle" fill="#7A7A7A" font-family="Segoe UI, Arial, sans-serif" font-size="10">Incidents</text>
+  <text x="273" y="154" text-anchor="middle" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">3</text>
+
+  <text x="48" y="208" fill="#7A7A7A" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700">Response time - last 24h</text>
+  <rect x="48" y="220" width="264" height="118" rx="16" fill="#FAF8F4" stroke="#E3DDD2"/>
+  <rect x="62" y="300" width="16" height="22" rx="4" fill="#97C459"/>
+  <rect x="84" y="286" width="16" height="36" rx="4" fill="#97C459"/>
+  <rect x="106" y="274" width="16" height="48" rx="4" fill="#97C459"/>
+  <rect x="128" y="254" width="16" height="68" rx="4" fill="#EF9F27"/>
+  <rect x="150" y="242" width="16" height="80" rx="4" fill="#EF9F27"/>
+  <rect x="172" y="266" width="16" height="56" rx="4" fill="#97C459"/>
+  <rect x="194" y="228" width="16" height="94" rx="4" fill="#E24B4A"/>
+  <rect x="216" y="228" width="16" height="94" rx="4" fill="#E24B4A"/>
+  <rect x="238" y="260" width="16" height="62" rx="4" fill="#97C459"/>
+  <rect x="260" y="278" width="16" height="44" rx="4" fill="#97C459"/>
+  <text x="64" y="330" fill="#3B6D11" font-family="Segoe UI, Arial, sans-serif" font-size="10">good</text>
+  <text x="144" y="330" fill="#D08113" font-family="Segoe UI, Arial, sans-serif" font-size="10">slow</text>
+  <text x="214" y="330" fill="#A64242" font-family="Segoe UI, Arial, sans-serif" font-size="10">down</text>
+
+  <text x="48" y="370" fill="#7A7A7A" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700">Incidents</text>
+  <rect x="48" y="382" width="264" height="116" rx="16" fill="#FFFFFF" stroke="#E3DDD2"/>
+  <text x="64" y="412" fill="#A64242" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700">Down</text>
+  <text x="134" y="412" fill="#7A7A7A" font-family="Segoe UI, Arial, sans-serif" font-size="11">today 14:32 &#183; ongoing</text>
+  <text x="64" y="442" fill="#6B9F2A" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700">Up</text>
+  <text x="134" y="442" fill="#7A7A7A" font-family="Segoe UI, Arial, sans-serif" font-size="11">today 14:41 &#183; 9 min</text>
+  <text x="64" y="472" fill="#A64242" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700">Down</text>
+  <text x="134" y="472" fill="#7A7A7A" font-family="Segoe UI, Arial, sans-serif" font-size="11">yesterday 09:14 &#183; 4m 12s</text>
+
+  <rect x="48" y="530" width="126" height="42" rx="12" fill="#171717"/>
+  <text x="111" y="556" text-anchor="middle" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700">Check now</text>
+  <rect x="184" y="530" width="70" height="42" rx="12" fill="#FFFFFF" stroke="#D9D4C8"/>
+  <text x="219" y="556" text-anchor="middle" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700">Pause</text>
+  <rect x="264" y="530" width="48" height="42" rx="12" fill="#FFFFFF" stroke="#D9D4C8"/>
+  <text x="288" y="556" text-anchor="middle" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="18">&#8942;</text>
+
+  <text x="48" y="618" fill="#171717" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700">Why it feels product-ready</text>
+  <text x="48" y="644" fill="#6E6A60" font-family="Segoe UI, Arial, sans-serif" font-size="12">- Health summary, chart, and incidents</text>
+  <text x="48" y="662" fill="#6E6A60" font-family="Segoe UI, Arial, sans-serif" font-size="12">  fit into a popup without clutter</text>
+  <text x="48" y="682" fill="#6E6A60" font-family="Segoe UI, Arial, sans-serif" font-size="12">- Manual actions next to operational context</text>
+</svg>
