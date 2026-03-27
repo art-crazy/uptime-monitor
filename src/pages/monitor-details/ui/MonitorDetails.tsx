@@ -155,7 +155,9 @@ export function MonitorDetailsPage({
     setActionError(null)
 
     try {
-      await Promise.all([toggleMonitor(monitor.id), delay(MIN_LOADING_MS)])
+      const ops: Promise<unknown>[] = [toggleMonitor(monitor.id)]
+      if (resuming) ops.push(delay(MIN_LOADING_MS))
+      await Promise.all(ops)
     } catch {
       setMonitorStatus(monitorStatus)
       setActionError(t('monitor_details_error_toggle'))
