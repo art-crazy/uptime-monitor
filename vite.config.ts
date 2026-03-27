@@ -1,6 +1,7 @@
 import { crx, defineManifest } from '@crxjs/vite-plugin'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'node:path'
+import type { MinifyOptions } from 'terser'
 import { defineConfig } from 'vite'
 
 const manifest = defineManifest({
@@ -35,7 +36,26 @@ const manifest = defineManifest({
   },
 })
 
+const terserOptions: MinifyOptions = {
+  compress: {
+    drop_console: true,
+    drop_debugger: true,
+    passes: 2,
+  },
+  format: {
+    comments: false,
+  },
+  mangle: {
+    safari10: true,
+  },
+}
+
 export default defineConfig({
+  build: {
+    minify: 'terser',
+    sourcemap: false,
+    terserOptions,
+  },
   resolve: {
     alias: {
       '@shared': resolve(__dirname, 'src/shared'),
