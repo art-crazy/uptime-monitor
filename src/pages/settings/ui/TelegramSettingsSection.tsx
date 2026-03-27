@@ -1,4 +1,4 @@
-import type React from 'react'
+import { useEffect, useState, type ChangeEvent, type FocusEvent, type KeyboardEvent } from 'react'
 
 import { TELEGRAM_BOT_USERNAME, TELEGRAM_BOT_URL, TELEGRAM_CHAT_ID_HELPER_URL } from '@shared/constants'
 import { t } from '@shared/lib/i18n'
@@ -10,13 +10,15 @@ import styles from './Settings.module.css'
 interface TelegramSettingsSectionProps {
   chatId: string
   chatIdError: string | null
-  isBusy: boolean
+  isChatIdBusy: boolean
+  isRecoveryBusy: boolean
+  isTelegramToggleBusy: boolean
   isTestBusy: boolean
   sendRecovery: boolean
   telegramEnabled: boolean
-  onChatIdBlur: (event: React.FocusEvent<HTMLInputElement>) => void
-  onChatIdChange: () => void
-  onChatIdKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void
+  onChatIdBlur: (event: FocusEvent<HTMLInputElement>) => void
+  onChatIdChange: (event: ChangeEvent<HTMLInputElement>) => void
+  onChatIdKeyDown: (event: KeyboardEvent<HTMLInputElement>) => void
   onSendRecoveryToggle: () => void
   onSendTest: () => void
   onTelegramToggle: () => void
@@ -25,7 +27,9 @@ interface TelegramSettingsSectionProps {
 export function TelegramSettingsSection({
   chatId,
   chatIdError,
-  isBusy,
+  isChatIdBusy,
+  isRecoveryBusy,
+  isTelegramToggleBusy,
   isTestBusy,
   sendRecovery,
   telegramEnabled,
@@ -42,6 +46,11 @@ export function TelegramSettingsSection({
   const statusLabel = hasConfiguredTelegramId
     ? t('settings_telegram_status_connected')
     : t('settings_telegram_status_not_configured')
+  const [chatIdDraft, setChatIdDraft] = useState(chatId)
+
+  useEffect(() => {
+    setChatIdDraft(chatId)
+  }, [chatId])
 
   return (
     <section className={styles.section}>
@@ -65,7 +74,7 @@ export function TelegramSettingsSection({
               styles.switch,
               telegramEnabled ? styles.switchOn : styles.switchOff,
             ].join(' ')}
-            disabled={isBusy}
+            disabled={isTelegramToggleBusy}
             onClick={onTelegramToggle}
             type="button"
           >
@@ -114,16 +123,18 @@ export function TelegramSettingsSection({
             <input
               aria-invalid={chatIdError !== null}
               className={styles.input}
-              defaultValue={chatId}
-              disabled={isBusy}
+              disabled={isChatIdBusy}
               id="telegram-chat-id"
-              key={chatId}
               onBlur={onChatIdBlur}
-              onChange={onChatIdChange}
+              onChange={(event) => {
+                setChatIdDraft(event.currentTarget.value)
+                onChatIdChange(event)
+              }}
               onKeyDown={onChatIdKeyDown}
               placeholder="-1001234567890"
               spellCheck={false}
               type="text"
+              value={chatIdDraft}
             />
             <div
               className={[
@@ -143,7 +154,7 @@ export function TelegramSettingsSection({
                 styles.switch,
                 sendRecovery ? styles.switchOn : styles.switchOff,
               ].join(' ')}
-              disabled={isBusy}
+              disabled={isRecoveryBusy}
               onClick={onSendRecoveryToggle}
               type="button"
             >

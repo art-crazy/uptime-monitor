@@ -32,7 +32,9 @@ interface SettingsPageProps {
 
 export function SettingsPage({ onBack, settings }: SettingsPageProps) {
   const [isNotificationsBusy, setIsNotificationsBusy] = useState(false)
-  const [isTelegramBusy, setIsTelegramBusy] = useState(false)
+  const [isTelegramChatIdBusy, setIsTelegramChatIdBusy] = useState(false)
+  const [isTelegramToggleBusy, setIsTelegramToggleBusy] = useState(false)
+  const [isTelegramRecoveryBusy, setIsTelegramRecoveryBusy] = useState(false)
   const [isTelegramTestBusy, setIsTelegramTestBusy] = useState(false)
   const [isClearBusy, setIsClearBusy] = useState(false)
   const [isPingBusy, setIsPingBusy] = useState(false)
@@ -129,7 +131,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
   }
 
   const commitTelegramChatId = async (value: string, input: HTMLInputElement) => {
-    if (isTelegramBusy) {
+    if (isTelegramChatIdBusy) {
       return
     }
 
@@ -150,7 +152,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
       return
     }
 
-    setIsTelegramBusy(true)
+    setIsTelegramChatIdBusy(true)
 
     try {
       const result = await setTelegramChatId(nextChatId)
@@ -167,12 +169,12 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
       setTelegramChatIdError(t('settings_error_unable_to_update_telegram'))
       input.value = currentChatId
     } finally {
-      setIsTelegramBusy(false)
+      setIsTelegramChatIdBusy(false)
     }
   }
 
   const handleSendTelegramTest = async () => {
-    if (isTelegramBusy || isTelegramTestBusy) {
+    if (isTelegramChatIdBusy || isTelegramToggleBusy || isTelegramRecoveryBusy || isTelegramTestBusy) {
       return
     }
 
@@ -321,7 +323,9 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
         <TelegramSettingsSection
           chatId={settings.notifications.telegram.chatId}
           chatIdError={telegramChatIdError}
-          isBusy={isTelegramBusy}
+          isChatIdBusy={isTelegramChatIdBusy}
+          isRecoveryBusy={isTelegramRecoveryBusy}
+          isTelegramToggleBusy={isTelegramToggleBusy}
           isTestBusy={isTelegramTestBusy}
           onChatIdBlur={(event) => {
             void commitTelegramChatId(event.currentTarget.value, event.currentTarget)
@@ -333,7 +337,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
           onSendRecoveryToggle={async () => {
             const next = !telegramSendRecovery
             setTelegramSendRecovery(next)
-            setIsTelegramBusy(true)
+            setIsTelegramRecoveryBusy(true)
 
             try {
               await setTelegramRecoveryEnabled(next)
@@ -341,14 +345,14 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
               setTelegramSendRecovery(!next)
               showError(t('settings_error_unable_to_update_telegram'))
             } finally {
-              setIsTelegramBusy(false)
+              setIsTelegramRecoveryBusy(false)
             }
           }}
           onSendTest={handleSendTelegramTest}
           onTelegramToggle={async () => {
             const next = !telegramEnabled
             setTelegramEnabled(next)
-            setIsTelegramBusy(true)
+            setIsTelegramToggleBusy(true)
 
             try {
               await saveTelegramEnabled(next)
@@ -356,7 +360,7 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
               setTelegramEnabled(!next)
               showError(t('settings_error_unable_to_update_telegram'))
             } finally {
-              setIsTelegramBusy(false)
+              setIsTelegramToggleBusy(false)
             }
           }}
           sendRecovery={telegramSendRecovery}
