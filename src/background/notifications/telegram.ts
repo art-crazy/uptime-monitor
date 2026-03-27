@@ -1,5 +1,4 @@
 import type { TelegramNotificationSettings } from '../../entities/settings'
-import { TELEGRAM_BOT_TOKEN } from '@shared/constants'
 import { t } from '@shared/lib/i18n'
 import { UserFacingError } from '@shared/lib/user-facing-error'
 
@@ -17,6 +16,8 @@ interface TelegramApiResponse {
   ok?: boolean
 }
 
+const telegramBotToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN
+
 export function assertTelegramNotificationConfigured(
   settings: TelegramNotificationSettings,
 ): void {
@@ -28,8 +29,12 @@ export function assertTelegramNotificationConfigured(
 async function postToTelegramBotApi(
   payload: TelegramSendMessagePayload,
 ): Promise<void> {
+  if (!telegramBotToken) {
+    throw new Error('Telegram bot token is not configured')
+  }
+
   const response = await fetch(
-    `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+    `https://api.telegram.org/bot${telegramBotToken}/sendMessage`,
     {
       method: 'POST',
       headers: {

@@ -19,7 +19,6 @@ export const RESPONSE_THRESHOLDS = {
 
 export const HISTORY_MAX_ENTRIES = 288
 export const DEFAULT_PING_URL = '8.8.8.8'
-export const TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE'
 export const INTERNET_ALARM_NAME = 'internet-ping'
 export const MONITOR_ALARM_PREFIX = 'monitor:'
 export const CHECK_TIMEOUT_MS = 10_000
