@@ -95,13 +95,15 @@ export function DashboardPage({
           </div>
           <div className={styles.emptyTitle}>{t('dashboard_empty_title')}</div>
           <div className={styles.emptySubtitle}>{t('dashboard_empty_subtitle')}</div>
-          <Button fullWidth onClick={onAddMonitor}>
-            {t('dashboard_add_first_monitor')}
-          </Button>
         </div>
       ) : (
-        <MonitorList items={items} onAdd={onAddMonitor} onSelect={onOpenMonitor} />
+        <MonitorList items={items} onSelect={onOpenMonitor} />
       )}
+      <div className={styles.footer}>
+        <Button fullWidth onClick={onAddMonitor} variant={monitors.length === 0 ? 'primary' : 'dashed'}>
+          {monitors.length === 0 ? t('dashboard_add_first_monitor') : t('dashboard_add_monitor')}
+        </Button>
+      </div>
     </div>
   )
 }
