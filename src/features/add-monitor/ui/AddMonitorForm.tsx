@@ -13,6 +13,12 @@ import { formatCheckInterval } from '@shared/lib/time'
 import { Toggle } from '@shared/ui/Toggle'
 import styles from './AddMonitorForm.module.css'
 import { getInitialMonitorFormState } from '../model/defaults'
+import {
+  getApiImportErrorMessage,
+  getApiImportSuccessMessage,
+} from '../model/import-api-feedback'
+import { parseApiImport } from '../model/import-api-request'
+import { API_IMPORT_METHODS } from '../model/types'
 import type { MonitorFormDraft } from '../model/types'
 import {
   translateFieldMessages,
@@ -20,6 +26,8 @@ import {
   validateMonitorInput,
   type ApiMonitorValidationField,
 } from '../model/validation'
+import { ApiRequestImport } from './ApiRequestImport'
+import { applyApiImportState } from './applyApiImportState'
 
 interface AddMonitorFormProps {
   defaultInterval: CheckInterval
@@ -60,6 +68,10 @@ export function AddMonitorForm({
   const [apiResponseBody, setApiResponseBody] = useState(initialState.responseBody)
   const [apiResponseJsonPath, setApiResponseJsonPath] = useState(initialState.responseJsonPath)
   const [apiResponseJsonValue, setApiResponseJsonValue] = useState(initialState.responseJsonValue)
+  const [apiImportValue, setApiImportValue] = useState('')
+  const [isApiImportOpen, setIsApiImportOpen] = useState(false)
+  const [apiImportMessage, setApiImportMessage] = useState('')
+  const [apiImportError, setApiImportError] = useState('')
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldErrorKey, string>>>({})
   const [isSaving, setIsSaving] = useState(false)
   const typeOptions = useMemo(
@@ -82,8 +94,8 @@ export function AddMonitorForm({
   const apiMethodOptions = useMemo(
     () =>
       [
-        { label: t('add_monitor_api_method_get'), value: 'GET' },
-        { label: t('add_monitor_api_method_post'), value: 'POST' },
+        { label: t('add_monitor_api_method_get'), value: API_IMPORT_METHODS.get },
+        { label: t('add_monitor_api_method_post'), value: API_IMPORT_METHODS.post },
       ] as const,
     [],
   )
@@ -153,6 +165,62 @@ export function AddMonitorForm({
       return next
     })
   }
+
+  const resetApiImportState = () => {
+    setApiImportError('')
+    setApiImportMessage('')
+  }
+
+  const applyImportedApiRequest = (value: string) => {
+    const imported = parseApiImport(value)
+
+    if (!imported.ok) {
+      setApiImportMessage('')
+      setApiImportError(getApiImportErrorMessage(imported.error.reason))
+      return
+    }
+
+    clearErrors()
+    applyApiImportState(imported.value.state, {
+      setApiAuthPassword,
+      setApiAuthToken,
+      setApiAuthType,
+      setApiAuthUsername,
+      setApiBody,
+      setApiExpectedStatus,
+      setApiHeadersText,
+      setApiMethod,
+      setApiResponseBody,
+      setApiResponseJsonPath,
+      setApiResponseJsonValue,
+      setApiResponseMode,
+      setUrl,
+    })
+    setApiImportError('')
+    setApiImportMessage(getApiImportSuccessMessage(imported.value.warnings))
+    setIsApiImportOpen(false)
+    setApiImportValue('')
+  }
+
+  const handlePasteFromClipboard = async () => {
+    resetApiImportState()
+
+    try {
+      const text = await navigator.clipboard.readText()
+      setApiImportValue(text)
+    } catch {
+      setApiImportError(t('add_monitor_import_api_clipboard_error'))
+    }
+  }
+
+  useEffect(() => {
+    if (!isApiType) {
+      setIsApiImportOpen(false)
+      setApiImportValue('')
+      setApiImportMessage('')
+      setApiImportError('')
+    }
+  }, [isApiType])
 
   const handleSave = async () => {
     if (isSaving) {
@@ -260,6 +328,7 @@ export function AddMonitorForm({
           id="monitor-url"
           onChange={(event) => {
             clearErrors('url', 'save')
+            resetApiImportState()
             setUrl(event.target.value)
           }}
           onKeyDown={(event) => {
@@ -275,6 +344,36 @@ export function AddMonitorForm({
         />
         <div className={getHintClassName('url')}>{getFieldHint('url', hint)}</div>
       </div>
+
+      {isApiType ? (
+        <ApiRequestImport
+          disabled={isSaving}
+          error={apiImportError}
+          isOpen={isApiImportOpen}
+          message={apiImportMessage}
+          onApply={() => {
+            applyImportedApiRequest(apiImportValue)
+          }}
+          onCancel={() => {
+            setIsApiImportOpen(false)
+            setApiImportValue('')
+            resetApiImportState()
+          }}
+          onPasteFromClipboard={() => {
+            void handlePasteFromClipboard()
+          }}
+          onToggle={() => {
+            resetApiImportState()
+            setIsApiImportOpen((current) => !current)
+          }}
+          onValueChange={(value) => {
+            setApiImportError('')
+            setApiImportMessage('')
+            setApiImportValue(value)
+          }}
+          value={apiImportValue}
+        />
+      ) : null}
 
       <div className={styles.field}>
         <div className={styles.label}>{t('add_monitor_field_interval')}</div>

@@ -28,3 +28,50 @@ export interface ApiMonitorFormFields {
   responseJsonValue: string
   responseMode: ApiMonitorResponseMode
 }
+
+export type ApiImportFormState = ApiMonitorFormFields & {
+  url: string
+}
+
+export type ApiImportWarning =
+  | 'invalid_header'
+  | 'unsupported_authorization'
+
+export type ApiImportErrorReason =
+  | 'empty'
+  | 'invalid'
+
+export type ApiImportSource = 'url' | 'curl' | 'json'
+
+export const API_IMPORT_SOURCES = {
+  curl: 'curl',
+  json: 'json',
+  url: 'url',
+} as const
+
+export const API_IMPORT_AUTH_TYPES = {
+  basic: 'basic',
+  bearer: 'bearer',
+  none: 'none',
+} as const
+
+export const API_IMPORT_METHODS = {
+  get: 'GET',
+  post: 'POST',
+} as const
+
+export const API_IMPORT_RESPONSE_MODES = {
+  bodyIncludes: 'body_includes',
+  jsonValue: 'json_value',
+  none: 'none',
+} as const
+
+export const API_IMPORT_ERROR_REASONS = {
+  empty: 'empty',
+  invalid: 'invalid',
+} as const
+
+export const API_IMPORT_WARNINGS = {
+  invalidHeader: 'invalid_header',
+  unsupportedAuthorization: 'unsupported_authorization',
+} as const
