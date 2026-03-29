@@ -452,10 +452,46 @@ function parseUrlImport(input: string): ApiImportResult {
   }
 }
 
+function extractRawUrlHost(input: string): string | null {
+  let candidate = input.trim()
+
+  if (!candidate) {
+    return null
+  }
+
+  if (HTTP_PROTOCOLS.some((protocol) => candidate.startsWith(protocol))) {
+    candidate = candidate.replace(/^https?:\/\//i, '')
+  }
+
+  const pathIndex = candidate.search(/[/?#]/)
+
+  if (pathIndex >= 0) {
+    candidate = candidate.slice(0, pathIndex)
+  }
+
+  const authSeparatorIndex = candidate.lastIndexOf('@')
+
+  if (authSeparatorIndex >= 0) {
+    candidate = candidate.slice(authSeparatorIndex + 1)
+  }
+
+  if (!candidate || candidate.startsWith('[')) {
+    return null
+  }
+
+  return candidate.replace(/:\d+$/, '')
+}
+
 function isValidUrlImportInput(input: string): boolean {
   const trimmed = input.trim()
 
   if (!trimmed || WHITESPACE_PATTERN.test(trimmed)) {
+    return false
+  }
+
+  const rawHost = extractRawUrlHost(trimmed)
+
+  if (!rawHost || !isValidNetworkHost(rawHost)) {
     return false
   }
 
@@ -466,7 +502,7 @@ function isValidUrlImportInput(input: string): boolean {
       return false
     }
 
-    return isValidNetworkHost(parsed.hostname)
+    return true
   } catch {
     return false
   }
