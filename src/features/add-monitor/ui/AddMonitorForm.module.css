@@ -30,6 +30,10 @@
   flex-direction: column;
   gap: 6px;
   align-items: flex-end;
+  margin-top: 4px;
+  margin-bottom: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-border);
 }
 
 .importTrigger {
@@ -62,6 +66,10 @@
   margin-top: 2px;
   width: min(100%, 360px);
   margin-left: auto;
+  padding: 10px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
 }
 
 .importEditorActions {
