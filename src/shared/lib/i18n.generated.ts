@@ -101,7 +101,7 @@ export const DEFAULT_MESSAGES = {
   "settings_title": "Settings",
   "settings_section_notifications": "Notifications",
   "settings_browser_notifications": "Browser notifications",
-  "settings_browser_notifications_hint": "Chrome sends a desktop alert when a monitor goes down or comes back up. Requires the browser to be running. You'll be asked to allow notifications the first time.",
+  "settings_browser_notifications_hint": "Chrome sends a desktop alert when a monitor goes down or comes back up. Requires the browser to be running.",
   "settings_telegram_enabled": "Telegram notifications",
   "settings_telegram_setup_title": "How to connect Telegram",
   "settings_telegram_setup_step_1": "Open the bot and send /start in Telegram.",

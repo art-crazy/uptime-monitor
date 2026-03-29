@@ -109,7 +109,7 @@
     "title": "Settings",
     "section_notifications": "Notifications",
     "browser_notifications": "Browser notifications",
-    "browser_notifications_hint": "Chrome sends a desktop alert when a monitor goes down or comes back up. Requires the browser to be running. You'll be asked to allow notifications the first time.",
+    "browser_notifications_hint": "Chrome sends a desktop alert when a monitor goes down or comes back up. Requires the browser to be running.",
     "telegram_enabled": "Telegram notifications",
     "telegram_setup_title": "How to connect Telegram",
     "telegram_setup_step_1": "Open the bot and send /start in Telegram.",

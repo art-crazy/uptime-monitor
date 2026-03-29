@@ -307,7 +307,7 @@
     "message": "Browser notifications"
   },
   "settings_browser_notifications_hint": {
-    "message": "Chrome sends a desktop alert when a monitor goes down or comes back up. Requires the browser to be running. You'll be asked to allow notifications the first time."
+    "message": "Chrome sends a desktop alert when a monitor goes down or comes back up. Requires the browser to be running."
   },
   "settings_telegram_enabled": {
     "message": "Telegram notifications"
