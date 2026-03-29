@@ -18,34 +18,76 @@
   gap: 6px;
 }
 
-.importPanel {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 10px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-}
-
-.importHeader {
+.labelRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
 }
 
-.importCard {
+.importSection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+}
+
+.importTrigger {
+  flex-shrink: 0;
+  min-height: 24px;
+  padding: 4px 6px;
+}
+
+.importTriggerRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.importTriggerActive {
+  border-color: var(--color-blue-border) !important;
+  background: var(--color-blue-bg) !important;
+  color: var(--color-blue) !important;
+}
+
+.importTriggerActive:hover:not(:disabled) {
+  border-color: var(--color-blue-border) !important;
+  background: var(--color-blue-bg) !important;
+  color: var(--color-blue) !important;
+}
+
+.importEditor {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding-top: 2px;
+  margin-top: 2px;
+  width: min(100%, 360px);
+  margin-left: auto;
 }
 
-.importActions {
+.importEditorActions {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
   gap: 8px;
+}
+
+.importTextAction {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.importTextAction:hover:not(:disabled) {
+  color: var(--color-text);
+}
+
+.importTextAction:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .label {

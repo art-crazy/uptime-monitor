@@ -2,43 +2,64 @@ import { Button } from '@shared/ui/Button'
 import { t } from '@shared/lib/i18n'
 import styles from './AddMonitorForm.module.css'
 
-interface ApiRequestImportProps {
+interface ApiRequestImportTriggerProps {
+  disabled: boolean
+  isOpen: boolean
+  onToggle: () => void
+}
+
+interface ApiRequestImportPanelProps {
   disabled: boolean
   error: string
   isOpen: boolean
   message: string
-  value: string
   onApply: () => void
-  onCancel: () => void
   onPasteFromClipboard: () => void
-  onToggle: () => void
   onValueChange: (value: string) => void
+  value: string
 }
 
-export function ApiRequestImport({
+export function ApiRequestImportTrigger({
+  disabled,
+  isOpen,
+  onToggle,
+}: ApiRequestImportTriggerProps) {
+  const triggerClassName = [
+    styles.importTrigger,
+    isOpen ? styles.importTriggerActive : '',
+  ].filter(Boolean).join(' ')
+
+  return (
+    <Button
+      className={triggerClassName}
+      disabled={disabled}
+      onClick={onToggle}
+      size="sm"
+      variant="ghost"
+    >
+      {t('add_monitor_import_api_trigger')}
+    </Button>
+  )
+}
+
+export function ApiRequestImportPanel({
   disabled,
   error,
   isOpen,
   message,
-  value,
   onApply,
-  onCancel,
   onPasteFromClipboard,
-  onToggle,
   onValueChange,
-}: ApiRequestImportProps) {
-  return (
-    <div className={styles.importPanel}>
-      <div className={styles.importHeader}>
-        <div className={styles.label}>{t('add_monitor_import_api_label')}</div>
-        <Button disabled={disabled} onClick={onToggle} size="sm" variant="secondary">
-          {t('add_monitor_import_api_trigger')}
-        </Button>
-      </div>
-      <div className={styles.hint}>{t('add_monitor_import_api_hint')}</div>
+  value,
+}: ApiRequestImportPanelProps) {
+  if (!isOpen && !error && !message) {
+    return null
+  }
 
+  return (
+    <div className={styles.importSection}>
       {isOpen ? (
-        <div className={styles.importCard}>
+        <div className={styles.importEditor}>
           <textarea
             className={styles.textarea}
             disabled={disabled}
@@ -50,10 +71,15 @@ export function ApiRequestImport({
             value={value}
           />
 
-          <div className={styles.importActions}>
-            <Button disabled={disabled} onClick={onPasteFromClipboard} size="sm" variant="ghost">
+          <div className={styles.importEditorActions}>
+            <button
+              className={styles.importTextAction}
+              disabled={disabled}
+              onClick={onPasteFromClipboard}
+              type="button"
+            >
               {t('add_monitor_import_api_paste')}
-            </Button>
+            </button>
             <Button
               disabled={disabled || value.trim().length === 0}
               onClick={onApply}
@@ -61,9 +87,6 @@ export function ApiRequestImport({
               variant="primary"
             >
               {t('add_monitor_import_api_apply')}
-            </Button>
-            <Button disabled={disabled} onClick={onCancel} size="sm" variant="ghost">
-              {t('add_monitor_import_api_cancel')}
             </Button>
           </div>
         </div>

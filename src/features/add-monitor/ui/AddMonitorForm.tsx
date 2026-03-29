@@ -13,21 +13,24 @@ import { formatCheckInterval } from '@shared/lib/time'
 import { Toggle } from '@shared/ui/Toggle'
 import styles from './AddMonitorForm.module.css'
 import { getInitialMonitorFormState } from '../model/defaults'
-import {
-  getApiImportErrorMessage,
-  getApiImportSuccessMessage,
-} from '../model/import-api-feedback'
-import { parseApiImport } from '../model/import-api-request'
-import { API_IMPORT_METHODS } from '../model/types'
-import type { MonitorFormDraft } from '../model/types'
+import { createApiImportPatch } from '../model/createApiImportPatch'
+import type {
+  ApiImportFormState,
+  ApiMonitorFormFields,
+  MonitorFormDraft,
+} from '../model/types'
 import {
   translateFieldMessages,
   validateApiMonitorInput,
   validateMonitorInput,
   type ApiMonitorValidationField,
 } from '../model/validation'
-import { ApiRequestImport } from './ApiRequestImport'
-import { applyApiImportState } from './applyApiImportState'
+import {
+  ApiRequestImportPanel,
+  ApiRequestImportTrigger,
+} from './ApiRequestImport'
+import { ApiMonitorFields } from './ApiMonitorFields'
+import { useApiRequestImport } from './useApiRequestImport'
 
 interface AddMonitorFormProps {
   defaultInterval: CheckInterval
@@ -56,22 +59,20 @@ export function AddMonitorForm({
   const [type, setType] = useState(initialState.type)
   const [url, setUrl] = useState(initialState.url)
   const [interval, setInterval] = useState(initialState.interval)
-  const [apiMethod, setApiMethod] = useState(initialState.method)
-  const [apiHeadersText, setApiHeadersText] = useState(initialState.headersText)
-  const [apiAuthType, setApiAuthType] = useState(initialState.authType)
-  const [apiAuthToken, setApiAuthToken] = useState(initialState.authToken)
-  const [apiAuthUsername, setApiAuthUsername] = useState(initialState.authUsername)
-  const [apiAuthPassword, setApiAuthPassword] = useState(initialState.authPassword)
-  const [apiBody, setApiBody] = useState(initialState.body)
-  const [apiExpectedStatus, setApiExpectedStatus] = useState(initialState.expectedStatus)
-  const [apiResponseMode, setApiResponseMode] = useState(initialState.responseMode)
-  const [apiResponseBody, setApiResponseBody] = useState(initialState.responseBody)
-  const [apiResponseJsonPath, setApiResponseJsonPath] = useState(initialState.responseJsonPath)
-  const [apiResponseJsonValue, setApiResponseJsonValue] = useState(initialState.responseJsonValue)
-  const [apiImportValue, setApiImportValue] = useState('')
-  const [isApiImportOpen, setIsApiImportOpen] = useState(false)
-  const [apiImportMessage, setApiImportMessage] = useState('')
-  const [apiImportError, setApiImportError] = useState('')
+  const [apiFields, setApiFields] = useState<ApiMonitorFormFields>({
+    authPassword: initialState.authPassword,
+    authToken: initialState.authToken,
+    authType: initialState.authType,
+    authUsername: initialState.authUsername,
+    body: initialState.body,
+    expectedStatus: initialState.expectedStatus,
+    headersText: initialState.headersText,
+    method: initialState.method,
+    responseBody: initialState.responseBody,
+    responseJsonPath: initialState.responseJsonPath,
+    responseJsonValue: initialState.responseJsonValue,
+    responseMode: initialState.responseMode,
+  })
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldErrorKey, string>>>({})
   const [isSaving, setIsSaving] = useState(false)
   const typeOptions = useMemo(
@@ -91,32 +92,6 @@ export function AddMonitorForm({
       })),
     [],
   )
-  const apiMethodOptions = useMemo(
-    () =>
-      [
-        { label: t('add_monitor_api_method_get'), value: API_IMPORT_METHODS.get },
-        { label: t('add_monitor_api_method_post'), value: API_IMPORT_METHODS.post },
-      ] as const,
-    [],
-  )
-  const apiAuthOptions = useMemo(
-    () =>
-      [
-        { label: t('add_monitor_api_auth_none'), value: 'none' },
-        { label: t('add_monitor_api_auth_bearer'), value: 'bearer' },
-        { label: t('add_monitor_api_auth_basic'), value: 'basic' },
-      ] as const,
-    [],
-  )
-  const apiResponseOptions = useMemo(
-    () =>
-      [
-        { label: t('add_monitor_api_response_none'), value: 'none' },
-        { label: t('add_monitor_api_response_body_includes'), value: 'body_includes' },
-        { label: t('add_monitor_api_response_json_value'), value: 'json_value' },
-      ] as const,
-    [],
-  )
   const isUrlEmpty = url.trim().length === 0
   const isApiType = type === 'api'
 
@@ -124,11 +99,6 @@ export function AddMonitorForm({
     onStateChange({ isDisabled: isUrlEmpty, isSaving })
   }, [isSaving, isUrlEmpty, onStateChange])
 
-  const isApiPostMethod = isApiType && apiMethod === 'POST'
-  const isBearerAuth = isApiType && apiAuthType === 'bearer'
-  const isBasicAuth = isApiType && apiAuthType === 'basic'
-  const isBodyResponseCheck = isApiType && apiResponseMode === 'body_includes'
-  const isJsonResponseCheck = isApiType && apiResponseMode === 'json_value'
   const fieldLabel =
     type === 'host' ? t('add_monitor_field_host') : t('add_monitor_field_url')
   const placeholder =
@@ -149,6 +119,12 @@ export function AddMonitorForm({
     [styles.hint, fieldErrors[field] ? styles.hintError : ''].filter(Boolean).join(' ')
   const getInputClassName = (field: FieldErrorKey, baseClassName = styles.input) =>
     [baseClassName, fieldErrors[field] ? styles.inputError : ''].filter(Boolean).join(' ')
+  const updateApiFields = (patch: Partial<ApiMonitorFormFields>) => {
+    setApiFields((current) => ({
+      ...current,
+      ...patch,
+    }))
+  }
   const clearErrors = (...fields: FieldErrorKey[]) => {
     if (fields.length === 0) {
       setFieldErrors({})
@@ -166,61 +142,14 @@ export function AddMonitorForm({
     })
   }
 
-  const resetApiImportState = () => {
-    setApiImportError('')
-    setApiImportMessage('')
-  }
-
-  const applyImportedApiRequest = (value: string) => {
-    const imported = parseApiImport(value)
-
-    if (!imported.ok) {
-      setApiImportMessage('')
-      setApiImportError(getApiImportErrorMessage(imported.error.reason))
-      return
-    }
-
+  const handleImportedApiState = (state: ApiImportFormState) => {
     clearErrors()
-    applyApiImportState(imported.value.state, {
-      setApiAuthPassword,
-      setApiAuthToken,
-      setApiAuthType,
-      setApiAuthUsername,
-      setApiBody,
-      setApiExpectedStatus,
-      setApiHeadersText,
-      setApiMethod,
-      setApiResponseBody,
-      setApiResponseJsonPath,
-      setApiResponseJsonValue,
-      setApiResponseMode,
-      setUrl,
-    })
-    setApiImportError('')
-    setApiImportMessage(getApiImportSuccessMessage(imported.value.warnings))
-    setIsApiImportOpen(false)
-    setApiImportValue('')
+    const imported = createApiImportPatch(state)
+
+    setUrl(imported.url)
+    setApiFields(imported.apiFields)
   }
-
-  const handlePasteFromClipboard = async () => {
-    resetApiImportState()
-
-    try {
-      const text = await navigator.clipboard.readText()
-      setApiImportValue(text)
-    } catch {
-      setApiImportError(t('add_monitor_import_api_clipboard_error'))
-    }
-  }
-
-  useEffect(() => {
-    if (!isApiType) {
-      setIsApiImportOpen(false)
-      setApiImportValue('')
-      setApiImportMessage('')
-      setApiImportError('')
-    }
-  }, [isApiType])
+  const apiImport = useApiRequestImport({ onImported: handleImportedApiState })
 
   const handleSave = async () => {
     if (isSaving) {
@@ -244,15 +173,15 @@ export function AddMonitorForm({
 
     if (isApiType) {
       const apiValidation = validateApiMonitorInput({
-        authToken: apiAuthToken,
-        authType: apiAuthType,
-        authUsername: apiAuthUsername,
-        expectedStatus: apiExpectedStatus,
-        headersText: apiHeadersText,
-        responseBody: apiResponseBody,
-        responseJsonPath: apiResponseJsonPath,
-        responseJsonValue: apiResponseJsonValue,
-        responseMode: apiResponseMode,
+        authToken: apiFields.authToken,
+        authType: apiFields.authType,
+        authUsername: apiFields.authUsername,
+        expectedStatus: apiFields.expectedStatus,
+        headersText: apiFields.headersText,
+        responseBody: apiFields.responseBody,
+        responseJsonPath: apiFields.responseJsonPath,
+        responseJsonValue: apiFields.responseJsonValue,
+        responseMode: apiFields.responseMode,
       })
       parsedHeaders = apiValidation.parsedHeaders
       expectedStatus = apiValidation.expectedStatus
@@ -269,18 +198,18 @@ export function AddMonitorForm({
       const normalizedUrl = result.normalized
       const apiConfig = isApiType
         ? normalizeApiMonitorConfig({
-            authPassword: apiAuthPassword,
-            authToken: apiAuthToken,
-            authType: apiAuthType,
-            authUsername: apiAuthUsername,
-            body: apiBody,
+            authPassword: apiFields.authPassword,
+            authToken: apiFields.authToken,
+            authType: apiFields.authType,
+            authUsername: apiFields.authUsername,
+            body: apiFields.body,
             expectedStatus,
             headers: parsedHeaders,
-            method: apiMethod,
-            responseBody: apiResponseBody,
-            responseJsonPath: apiResponseJsonPath,
-            responseJsonValue: apiResponseJsonValue,
-            responseMode: apiResponseMode,
+            method: apiFields.method,
+            responseBody: apiFields.responseBody,
+            responseJsonPath: apiFields.responseJsonPath,
+            responseJsonValue: apiFields.responseJsonValue,
+            responseMode: apiFields.responseMode,
           })
         : DEFAULT_API_MONITOR_CONFIG
 
@@ -317,9 +246,32 @@ export function AddMonitorForm({
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label} htmlFor="monitor-url">
-          {fieldLabel}
-        </label>
+        <div className={styles.labelRow}>
+          <label className={styles.label} htmlFor="monitor-url">
+            {fieldLabel}
+          </label>
+          {isApiType ? (
+            <ApiRequestImportTrigger
+              disabled={isSaving}
+              isOpen={apiImport.isOpen}
+              onToggle={apiImport.handleToggle}
+            />
+          ) : null}
+        </div>
+        {isApiType ? (
+          <ApiRequestImportPanel
+            disabled={isSaving}
+            error={apiImport.error}
+            isOpen={apiImport.isOpen}
+            message={apiImport.message}
+            onApply={apiImport.handleApply}
+            onPasteFromClipboard={() => {
+              void apiImport.handlePasteFromClipboard()
+            }}
+            onValueChange={apiImport.handleValueChange}
+            value={apiImport.value}
+          />
+        ) : null}
         <input
           aria-invalid={fieldErrors.url ? 'true' : 'false'}
           autoFocus
@@ -328,7 +280,6 @@ export function AddMonitorForm({
           id="monitor-url"
           onChange={(event) => {
             clearErrors('url', 'save')
-            resetApiImportState()
             setUrl(event.target.value)
           }}
           onKeyDown={(event) => {
@@ -345,36 +296,6 @@ export function AddMonitorForm({
         <div className={getHintClassName('url')}>{getFieldHint('url', hint)}</div>
       </div>
 
-      {isApiType ? (
-        <ApiRequestImport
-          disabled={isSaving}
-          error={apiImportError}
-          isOpen={isApiImportOpen}
-          message={apiImportMessage}
-          onApply={() => {
-            applyImportedApiRequest(apiImportValue)
-          }}
-          onCancel={() => {
-            setIsApiImportOpen(false)
-            setApiImportValue('')
-            resetApiImportState()
-          }}
-          onPasteFromClipboard={() => {
-            void handlePasteFromClipboard()
-          }}
-          onToggle={() => {
-            resetApiImportState()
-            setIsApiImportOpen((current) => !current)
-          }}
-          onValueChange={(value) => {
-            setApiImportError('')
-            setApiImportMessage('')
-            setApiImportValue(value)
-          }}
-          value={apiImportValue}
-        />
-      ) : null}
-
       <div className={styles.field}>
         <div className={styles.label}>{t('add_monitor_field_interval')}</div>
         <Toggle
@@ -389,262 +310,15 @@ export function AddMonitorForm({
       </div>
 
       {isApiType ? (
-        <>
-          <div className={styles.sectionTitle}>{t('add_monitor_section_api_request')}</div>
-
-          <div className={styles.field}>
-            <div className={styles.label}>{t('add_monitor_field_api_method')}</div>
-            <Toggle
-              disabled={isSaving}
-              onChange={(value) => {
-                clearErrors('save')
-                setApiMethod(value)
-              }}
-              options={apiMethodOptions}
-              value={apiMethod}
-            />
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="api-headers">
-              {t('add_monitor_field_api_headers')}
-            </label>
-            <textarea
-              aria-invalid={fieldErrors.headers ? 'true' : 'false'}
-              className={getInputClassName('headers', styles.textarea)}
-              disabled={isSaving}
-              id="api-headers"
-              onChange={(event) => {
-                clearErrors('headers', 'save')
-                setApiHeadersText(event.target.value)
-              }}
-              placeholder={t('add_monitor_placeholder_api_headers')}
-              spellCheck={false}
-              value={apiHeadersText}
-            />
-            <div className={getHintClassName('headers')}>
-              {getFieldHint('headers', t('add_monitor_hint_api_headers'))}
-            </div>
-          </div>
-
-          <div className={styles.field}>
-            <div className={styles.label}>{t('add_monitor_field_api_auth')}</div>
-            <Toggle
-              disabled={isSaving}
-              onChange={(value) => {
-                clearErrors('headers', 'authToken', 'authUsername', 'save')
-                setApiAuthType(value)
-              }}
-              options={apiAuthOptions}
-              value={apiAuthType}
-            />
-          </div>
-
-          {isBearerAuth ? (
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="api-auth-token">
-                {t('add_monitor_field_api_auth_token')}
-              </label>
-              <input
-                aria-invalid={fieldErrors.authToken ? 'true' : 'false'}
-                className={getInputClassName('authToken')}
-                disabled={isSaving}
-                id="api-auth-token"
-                onChange={(event) => {
-                  clearErrors('authToken', 'headers', 'save')
-                  setApiAuthToken(event.target.value)
-                }}
-                spellCheck={false}
-                type="password"
-                value={apiAuthToken}
-              />
-              <div className={getHintClassName('authToken')}>
-                {getFieldHint('authToken', t('add_monitor_hint_api_auth_token'))}
-              </div>
-            </div>
-          ) : null}
-
-          {isBasicAuth ? (
-            <>
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="api-auth-username">
-                  {t('add_monitor_field_api_auth_username')}
-                </label>
-                <input
-                  aria-invalid={fieldErrors.authUsername ? 'true' : 'false'}
-                  className={getInputClassName('authUsername')}
-                  disabled={isSaving}
-                  id="api-auth-username"
-                  onChange={(event) => {
-                    clearErrors('authUsername', 'headers', 'save')
-                    setApiAuthUsername(event.target.value)
-                  }}
-                  spellCheck={false}
-                  type="text"
-                  value={apiAuthUsername}
-                />
-                <div className={getHintClassName('authUsername')}>
-                  {getFieldHint('authUsername', t('add_monitor_hint_api_auth_username'))}
-                </div>
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="api-auth-password">
-                  {t('add_monitor_field_api_auth_password')}
-                </label>
-                <input
-                  aria-invalid="false"
-                  className={styles.input}
-                  disabled={isSaving}
-                  id="api-auth-password"
-                  onChange={(event) => {
-                    clearErrors('save')
-                    setApiAuthPassword(event.target.value)
-                  }}
-                  spellCheck={false}
-                  type="password"
-                  value={apiAuthPassword}
-                />
-                <div className={styles.hint}>{t('add_monitor_hint_api_auth_password')}</div>
-              </div>
-            </>
-          ) : null}
-
-          {isApiPostMethod ? (
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="api-body">
-                {t('add_monitor_field_api_body')}
-              </label>
-              <textarea
-                className={styles.textarea}
-                disabled={isSaving}
-                id="api-body"
-                onChange={(event) => {
-                  clearErrors('save')
-                  setApiBody(event.target.value)
-                }}
-                placeholder='{"status":"ok"}'
-                spellCheck={false}
-                value={apiBody}
-              />
-              <div className={styles.hint}>{t('add_monitor_hint_api_body')}</div>
-            </div>
-          ) : null}
-
-          <div className={styles.sectionTitle}>{t('add_monitor_section_api_response')}</div>
-
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="api-expected-status">
-              {t('add_monitor_field_api_expected_status')}
-            </label>
-            <input
-              aria-invalid={fieldErrors.expectedStatus ? 'true' : 'false'}
-              className={getInputClassName('expectedStatus')}
-              disabled={isSaving}
-              id="api-expected-status"
-              inputMode="numeric"
-              maxLength={3}
-              onChange={(event) => {
-                clearErrors('expectedStatus', 'save')
-                setApiExpectedStatus(event.target.value.replace(/[^\d]/g, ''))
-              }}
-              placeholder={t('add_monitor_placeholder_api_expected_status')}
-              spellCheck={false}
-              type="text"
-              value={apiExpectedStatus}
-            />
-            <div className={getHintClassName('expectedStatus')}>
-              {getFieldHint('expectedStatus', t('add_monitor_hint_api_expected_status'))}
-            </div>
-          </div>
-
-          <div className={styles.field}>
-            <div className={styles.label}>{t('add_monitor_field_api_response_check')}</div>
-            <Toggle
-              disabled={isSaving}
-              onChange={(value) => {
-                clearErrors('responseBody', 'responseJsonPath', 'responseJsonValue', 'save')
-                setApiResponseMode(value)
-              }}
-              options={apiResponseOptions}
-              value={apiResponseMode}
-            />
-          </div>
-
-          {isBodyResponseCheck ? (
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="api-response-body">
-                {t('add_monitor_field_api_response_body')}
-              </label>
-              <input
-                aria-invalid={fieldErrors.responseBody ? 'true' : 'false'}
-                className={getInputClassName('responseBody')}
-                disabled={isSaving}
-                id="api-response-body"
-                onChange={(event) => {
-                  clearErrors('responseBody', 'save')
-                  setApiResponseBody(event.target.value)
-                }}
-                spellCheck={false}
-                type="text"
-                value={apiResponseBody}
-              />
-              <div className={getHintClassName('responseBody')}>
-                {getFieldHint('responseBody', t('add_monitor_hint_api_response_body'))}
-              </div>
-            </div>
-          ) : null}
-
-          {isJsonResponseCheck ? (
-            <>
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="api-response-json-path">
-                  {t('add_monitor_field_api_response_json_path')}
-                </label>
-                <input
-                  aria-invalid={fieldErrors.responseJsonPath ? 'true' : 'false'}
-                  className={getInputClassName('responseJsonPath')}
-                  disabled={isSaving}
-                  id="api-response-json-path"
-                  onChange={(event) => {
-                    clearErrors('responseJsonPath', 'save')
-                    setApiResponseJsonPath(event.target.value)
-                  }}
-                  placeholder="data.status"
-                  spellCheck={false}
-                  type="text"
-                  value={apiResponseJsonPath}
-                />
-                <div className={getHintClassName('responseJsonPath')}>
-                  {getFieldHint('responseJsonPath', '')}
-                </div>
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="api-response-json-value">
-                  {t('add_monitor_field_api_response_json_value')}
-                </label>
-                <input
-                  aria-invalid={fieldErrors.responseJsonValue ? 'true' : 'false'}
-                  className={getInputClassName('responseJsonValue')}
-                  disabled={isSaving}
-                  id="api-response-json-value"
-                  onChange={(event) => {
-                    clearErrors('responseJsonValue', 'save')
-                    setApiResponseJsonValue(event.target.value)
-                  }}
-                  placeholder="ok"
-                  spellCheck={false}
-                  type="text"
-                  value={apiResponseJsonValue}
-                />
-                <div className={getHintClassName('responseJsonValue')}>
-                  {getFieldHint('responseJsonValue', t('add_monitor_hint_api_response_json'))}
-                </div>
-              </div>
-            </>
-          ) : null}
-        </>
+        <ApiMonitorFields
+          apiFields={apiFields}
+          fieldErrors={fieldErrors}
+          isSaving={isSaving}
+          onClearErrors={(...fields) => {
+            clearErrors(...fields, 'save')
+          }}
+          onUpdateApiFields={updateApiFields}
+        />
       ) : null}
 
       {fieldErrors.save ? (
