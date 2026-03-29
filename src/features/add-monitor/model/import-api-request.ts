@@ -4,6 +4,7 @@ import {
   type ApiMonitorConfig,
   type ApiMonitorHeader,
 } from '../../../entities/monitor'
+import { ensureHttpUrl, isValidNetworkHost } from '@shared/lib/network'
 import {
   type ApiImportErrorReason,
   type ApiImportFormState,
@@ -75,6 +76,7 @@ const CURL_HEADER_FLAGS = new Set(['--header', '-H'])
 const CURL_METHOD_FLAGS = new Set(['--request', '-X'])
 const CURL_URL_FLAGS = new Set(['--url'])
 const CURL_BASIC_AUTH_FLAGS = new Set(['--user', '-u'])
+const WHITESPACE_PATTERN = /\s/
 
 function createEmptyImportState(): ApiImportFormState {
   return {
@@ -450,6 +452,26 @@ function parseUrlImport(input: string): ApiImportResult {
   }
 }
 
+function isValidUrlImportInput(input: string): boolean {
+  const trimmed = input.trim()
+
+  if (!trimmed || WHITESPACE_PATTERN.test(trimmed)) {
+    return false
+  }
+
+  try {
+    const parsed = new URL(ensureHttpUrl(trimmed))
+
+    if (!['http:', 'https:'].includes(parsed.protocol)) {
+      return false
+    }
+
+    return isValidNetworkHost(parsed.hostname)
+  } catch {
+    return false
+  }
+}
+
 export function parseApiImport(input: string): ParseApiImportResult {
   const trimmed = input.trim()
 
@@ -466,8 +488,10 @@ export function parseApiImport(input: string): ParseApiImportResult {
     result = parseJsonImport(trimmed)
   } else if (CURL_INPUT_PATTERN.test(trimmed)) {
     result = parseCurlImport(trimmed)
-  } else {
+  } else if (isValidUrlImportInput(trimmed)) {
     result = parseUrlImport(trimmed)
+  } else {
+    result = null
   }
 
   if (!result) {

@@ -10,9 +10,7 @@ interface ApiRequestImportTriggerProps {
 
 interface ApiRequestImportPanelProps {
   disabled: boolean
-  error: string
   isOpen: boolean
-  message: string
   onApply: () => void
   onPasteFromClipboard: () => void
   onValueChange: (value: string) => void
@@ -44,15 +42,13 @@ export function ApiRequestImportTrigger({
 
 export function ApiRequestImportPanel({
   disabled,
-  error,
   isOpen,
-  message,
   onApply,
   onPasteFromClipboard,
   onValueChange,
   value,
 }: ApiRequestImportPanelProps) {
-  if (!isOpen && !error && !message) {
+  if (!isOpen) {
     return null
   }
 
@@ -90,13 +86,6 @@ export function ApiRequestImportPanel({
             </Button>
           </div>
         </div>
-      ) : null}
-
-      {error ? (
-        <div className={[styles.hint, styles.hintError].join(' ')}>{error}</div>
-      ) : null}
-      {!error && message ? (
-        <div className={styles.hintSuccess}>{message}</div>
       ) : null}
     </div>
   )

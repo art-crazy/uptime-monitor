@@ -15,28 +15,24 @@ interface UseApiRequestImportParams {
 export function useApiRequestImport({
   onImported,
 }: UseApiRequestImportParams) {
-  const { showError } = useToast()
+  const { showError, showSuccess } = useToast()
   const state = useApiRequestImportState()
 
   const handleApply = () => {
     const imported = parseApiImport(state.value)
 
     if (!imported.ok) {
-      state.setMessage('')
-      state.setError(getApiImportErrorMessage(imported.error.reason))
+      showError(getApiImportErrorMessage(imported.error.reason))
       return
     }
 
     onImported(imported.value.state)
-    state.setError('')
-    state.setMessage(getApiImportSuccessMessage(imported.value.warnings))
+    showSuccess(getApiImportSuccessMessage(imported.value.warnings))
     state.setValue('')
     state.setIsOpen(false)
   }
 
   const handlePasteFromClipboard = async () => {
-    state.resetInlineFeedback()
-
     try {
       const text = await navigator.clipboard.readText()
       state.setValue(text)
@@ -46,13 +42,11 @@ export function useApiRequestImport({
   }
 
   return {
-    error: state.error,
     handleApply,
     handlePasteFromClipboard,
     handleToggle: state.handleToggle,
     handleValueChange: state.handleValueChange,
     isOpen: state.isOpen,
-    message: state.message,
     value: state.value,
   }
 }

@@ -261,9 +261,7 @@ export function AddMonitorForm({
         {isApiType ? (
           <ApiRequestImportPanel
             disabled={isSaving}
-            error={apiImport.error}
             isOpen={apiImport.isOpen}
-            message={apiImport.message}
             onApply={apiImport.handleApply}
             onPasteFromClipboard={() => {
               void apiImport.handlePasteFromClipboard()
