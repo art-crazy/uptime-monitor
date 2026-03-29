@@ -10,6 +10,7 @@ export interface MonitorFormDraft {
   apiConfig: ApiMonitorConfig
   id?: string
   interval: CheckInterval
+  name?: string
   type: MonitorType
   url: string
 }

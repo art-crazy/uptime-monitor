@@ -2,6 +2,7 @@ export {
   getMonitorCheckCandidates,
   getMonitorDisplayName,
   normalizeMonitorTarget,
+  resolveUniqueMonitorName,
 } from './model/target'
 export {
   appendHistoryEntry,

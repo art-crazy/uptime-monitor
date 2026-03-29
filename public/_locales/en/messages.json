@@ -132,6 +132,15 @@
   "add_monitor_field_api_response_json_value": {
     "message": "Expected value"
   },
+  "add_monitor_field_name": {
+    "message": "Name"
+  },
+  "add_monitor_placeholder_name": {
+    "message": "Leave blank to use domain name"
+  },
+  "add_monitor_hint_name": {
+    "message": "Optional. Leave blank to use the domain name automatically"
+  },
   "add_monitor_import_api_label": {
     "message": "Import request"
   },

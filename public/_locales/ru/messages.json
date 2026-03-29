@@ -132,6 +132,15 @@
   "add_monitor_field_api_response_json_value": {
     "message": "Ожидаемое значение"
   },
+  "add_monitor_field_name": {
+    "message": "Название"
+  },
+  "add_monitor_placeholder_name": {
+    "message": "Оставьте пустым, чтобы использовать домен"
+  },
+  "add_monitor_hint_name": {
+    "message": "Необязательно. Оставьте пустым — название возьмётся из домена"
+  },
   "add_monitor_import_api_label": {
     "message": "Импорт запроса"
   },

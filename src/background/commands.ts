@@ -8,6 +8,7 @@ import {
   getMonitors,
   normalizeApiMonitorConfig,
   normalizeMonitorTarget,
+  resolveUniqueMonitorName,
   type Monitor,
 } from '../entities/monitor'
 import { getSettings } from '../entities/settings'
@@ -67,6 +68,13 @@ async function saveMonitorCommand(
         existingMonitor.type !== monitorDraft.type ||
         !areApiMonitorConfigsEqual(existingMonitor.apiConfig, normalizedApiConfig))
 
+    const baseName = monitorDraft.name || getMonitorDisplayName(normalizedUrl)
+    const takenNames = new Set(
+      monitors
+        .filter((m) => m.id !== existingMonitor?.id)
+        .map((m) => m.name),
+    )
+
     const nextMonitor: Monitor =
       existingMonitor === null
         ? {
@@ -80,7 +88,7 @@ async function saveMonitorCommand(
             interval: monitorDraft.interval,
             lastCheckError: null,
             lastChecked: null,
-            name: getMonitorDisplayName(normalizedUrl),
+            name: resolveUniqueMonitorName(baseName, takenNames),
             responseTime: null,
             status: 'pending',
             type: monitorDraft.type,
@@ -91,7 +99,7 @@ async function saveMonitorCommand(
             ...existingMonitor,
             apiConfig: normalizedApiConfig,
             interval: monitorDraft.interval,
-            name: getMonitorDisplayName(normalizedUrl),
+            name: resolveUniqueMonitorName(baseName, takenNames),
             type: monitorDraft.type,
             url: normalizedUrl,
             checkState: targetChanged ? 'idle' : existingMonitor.checkState,

@@ -44,3 +44,20 @@ export function getMonitorCheckCandidates(
 export function getMonitorDisplayName(value: string): string {
   return getDisplayHost(value)
 }
+
+export function resolveUniqueMonitorName(
+  baseName: string,
+  takenNames: ReadonlySet<string>,
+): string {
+  if (!takenNames.has(baseName)) {
+    return baseName
+  }
+
+  let counter = 2
+
+  while (takenNames.has(`${baseName} (${counter})`)) {
+    counter += 1
+  }
+
+  return `${baseName} (${counter})`
+}

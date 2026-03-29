@@ -34,6 +34,7 @@ export const saveMonitorDraftPayloadSchema = z.object({
   apiConfig: runtimeApiMonitorConfigSchema,
   id: z.string().min(1).optional(),
   interval: checkIntervalValueSchema,
+  name: z.string().min(1).optional(),
   type: runtimeMonitorTypeSchema,
   url: z.string().min(1),
 })

@@ -110,6 +110,7 @@ export function App() {
                 apiConfig: selectedMonitor.apiConfig,
                 id: selectedMonitor.id,
                 interval: selectedMonitor.interval,
+                name: selectedMonitor.name,
                 type: selectedMonitor.type,
                 url: selectedMonitor.url,
               }

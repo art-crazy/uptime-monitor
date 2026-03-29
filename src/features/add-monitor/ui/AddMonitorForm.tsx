@@ -58,6 +58,7 @@ export function AddMonitorForm({
   )
   const [type, setType] = useState(initialState.type)
   const [url, setUrl] = useState(initialState.url)
+  const [name, setName] = useState(initialState.name)
   const [interval, setInterval] = useState(initialState.interval)
   const [apiFields, setApiFields] = useState<ApiMonitorFormFields>({
     authPassword: initialState.authPassword,
@@ -214,7 +215,7 @@ export function AddMonitorForm({
         : DEFAULT_API_MONITOR_CONFIG
 
       const [response] = await Promise.all([
-        saveMonitorDraft({ apiConfig, id: monitor?.id, interval, type, url: normalizedUrl }),
+        saveMonitorDraft({ apiConfig, id: monitor?.id, interval, name: name.trim() || undefined, type, url: normalizedUrl }),
         delay(MIN_LOADING_MS),
       ])
 
@@ -292,6 +293,26 @@ export function AddMonitorForm({
           value={url}
         />
         <div className={getHintClassName('url')}>{getFieldHint('url', hint)}</div>
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.label} htmlFor="monitor-name">
+          {t('add_monitor_field_name')}
+        </label>
+        <input
+          className={styles.input}
+          disabled={isSaving}
+          id="monitor-name"
+          onChange={(event) => {
+            clearErrors('save')
+            setName(event.target.value)
+          }}
+          placeholder={t('add_monitor_placeholder_name')}
+          spellCheck={false}
+          type="text"
+          value={name}
+        />
+        <div className={styles.hint}>{t('add_monitor_hint_name')}</div>
       </div>
 
       <div className={styles.field}>

@@ -8,6 +8,7 @@ import type { ApiMonitorFormFields, MonitorFormDraft } from './types'
 
 export interface MonitorFormState extends ApiMonitorFormFields {
   interval: CheckInterval
+  name: string
   type: MonitorFormDraft['type']
   url: string
 }
@@ -26,6 +27,7 @@ export function getInitialMonitorFormState(
     body: apiConfig.body,
     expectedStatus: apiConfig.expectedStatus === null ? '' : String(apiConfig.expectedStatus),
     headersText: formatApiHeaders(apiConfig.headers),
+    name: monitor?.name ?? '',
     type: monitor?.type ?? 'website',
     url: monitor?.url ?? '',
     interval: monitor?.interval ?? defaultInterval,

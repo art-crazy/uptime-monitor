@@ -56,6 +56,7 @@ const CURL_INPUT_PATTERN = /^curl\b/i
 const JSON_INPUT_START = '{'
 const HTTP_PROTOCOLS = ['http://', 'https://'] as const
 const AUTHORIZATION_HEADER = 'authorization'
+const COOKIE_HEADER = 'Cookie'
 const AUTH_SCHEME_BEARER_PATTERN = /^Bearer\s+(.+)$/i
 const AUTH_SCHEME_BASIC_PATTERN = /^Basic\s+(.+)$/i
 const RESPONSE_MODE_NONE: ApiMonitorConfig['responseMode'] = API_IMPORT_RESPONSE_MODES.none
@@ -76,8 +77,11 @@ const CURL_HEADER_FLAGS = new Set(['--header', '-H'])
 const CURL_METHOD_FLAGS = new Set(['--request', '-X'])
 const CURL_URL_FLAGS = new Set(['--url'])
 const CURL_BASIC_AUTH_FLAGS = new Set(['--user', '-u'])
+const CURL_COOKIE_FLAGS = new Set(['--cookie', '-b'])
 const WHITESPACE_PATTERN = /\s/
 const MISSING_PROTOCOL_COLON_PATTERN = /^(https?)\/\//i
+const CMD_CURL_PATTERN = /^curl\b[^\n]*\^["^%\\]/
+const CMD_ESCAPABLE_CHARS = new Set(['"', '^', '%', '\\'])
 
 function createEmptyImportState(): ApiImportFormState {
   return {
@@ -238,6 +242,44 @@ function applyHeaders(
   state.headersText = formatApiHeaders(filteredHeaders)
 }
 
+function normalizeCmdCurl(input: string): string {
+  if (!CMD_CURL_PATTERN.test(input)) {
+    return input
+  }
+
+  let result = ''
+  let index = 0
+
+  while (index < input.length) {
+    const char = input[index]
+
+    if (char === '^') {
+      const next = input[index + 1]
+
+      if (CMD_ESCAPABLE_CHARS.has(next)) {
+        result += next
+        index += 2
+        continue
+      }
+
+      if (next === '\r' || next === '\n') {
+        index += next === '\r' && input[index + 2] === '\n' ? 3 : 2
+        continue
+      }
+
+      // Unknown ^X — keep as-is
+      result += char
+      index += 1
+      continue
+    }
+
+    result += char
+    index += 1
+  }
+
+  return result
+}
+
 function tokenizeCurl(input: string): string[] {
   const tokens: string[] = []
   let current = ''
@@ -302,7 +344,7 @@ function parseCurlImport(input: string): ApiImportResult | null {
   const state = createEmptyImportState()
   const warnings: ApiImportWarning[] = []
   const headers: ApiMonitorHeader[] = []
-  const tokens = tokenizeCurl(input)
+  const tokens = tokenizeCurl(normalizeCmdCurl(input))
   let hasExplicitMethod = false
 
   for (let index = 0; index < tokens.length; index += 1) {
@@ -359,6 +401,17 @@ function parseCurlImport(input: string): ApiImportResult | null {
       state.authType = API_IMPORT_AUTH_TYPES.basic
       state.authUsername = separatorIndex >= 0 ? credentials.slice(0, separatorIndex) : credentials
       state.authPassword = separatorIndex >= 0 ? credentials.slice(separatorIndex + 1) : ''
+      index += 1
+      continue
+    }
+
+    if (CURL_COOKIE_FLAGS.has(token)) {
+      const cookieValue = tokens[index + 1] ?? ''
+
+      if (cookieValue) {
+        headers.push({ name: COOKIE_HEADER, value: cookieValue })
+      }
+
       index += 1
       continue
     }
