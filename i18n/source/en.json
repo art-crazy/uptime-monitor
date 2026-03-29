@@ -54,7 +54,7 @@
     "import_api_hint": "cURL, URL, JSON",
     "import_api_placeholder": "Paste cURL, URL, or JSON...",
     "import_api_paste": "Paste from Clipboard",
-    "import_api_apply": "Import",
+    "import_api_apply": "Apply",
     "import_api_cancel": "Cancel",
     "import_api_success": "The request was imported successfully. Review the fields and save the monitor.",
     "import_api_partial": "Supported fields were imported. Review the configuration before saving.",

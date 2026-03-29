@@ -148,7 +148,7 @@
     "message": "Вставить из буфера обмена"
   },
   "add_monitor_import_api_apply": {
-    "message": "Import"
+    "message": "Применить"
   },
   "add_monitor_import_api_cancel": {
     "message": "Отмена"

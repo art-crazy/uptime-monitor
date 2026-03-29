@@ -54,7 +54,7 @@
     "import_api_hint": "cURL, URL, JSON",
     "import_api_placeholder": "Вставьте cURL, URL или JSON...",
     "import_api_paste": "Вставить из буфера обмена",
-    "import_api_apply": "Import",
+    "import_api_apply": "Применить",
     "import_api_cancel": "Отмена",
     "import_api_success": "Запрос успешно импортирован. Проверьте параметры и сохраните монитор.",
     "import_api_partial": "Импортированы только поддерживаемые параметры. Перед сохранением проверьте конфигурацию.",

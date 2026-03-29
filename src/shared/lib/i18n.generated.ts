@@ -48,7 +48,7 @@ export const DEFAULT_MESSAGES = {
   "add_monitor_import_api_hint": "cURL, URL, JSON",
   "add_monitor_import_api_placeholder": "Paste cURL, URL, or JSON...",
   "add_monitor_import_api_paste": "Paste from Clipboard",
-  "add_monitor_import_api_apply": "Import",
+  "add_monitor_import_api_apply": "Apply",
   "add_monitor_import_api_cancel": "Cancel",
   "add_monitor_import_api_success": "The request was imported successfully. Review the fields and save the monitor.",
   "add_monitor_import_api_partial": "Supported fields were imported. Review the configuration before saving.",
