@@ -26,7 +26,7 @@ const manifest = defineManifest({
     service_worker: 'src/background/service-worker.ts',
     type: 'module',
   },
-  permissions: ['storage', 'alarms', 'notifications'],
+  permissions: ['storage', 'alarms', 'notifications', 'clipboardRead'],
   host_permissions: ['<all_urls>'],
   icons: {
     '16': 'icons/icon16.png',
