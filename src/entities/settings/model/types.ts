@@ -1,9 +1,5 @@
 import { z } from 'zod'
 
-export const browserNotificationSettingsSchema = z.object({
-  enabled: z.boolean(),
-})
-
 export const telegramNotificationSettingsSchema = z.object({
   enabled: z.boolean(),
   chatId: z.string(),
@@ -11,7 +7,6 @@ export const telegramNotificationSettingsSchema = z.object({
 })
 
 export const notificationSettingsSchema = z.object({
-  browser: browserNotificationSettingsSchema,
   telegram: telegramNotificationSettingsSchema,
 })
 
@@ -27,5 +22,4 @@ export const settingsSchema = z.object({
 })
 
 export type Settings = z.infer<typeof settingsSchema>
-export type BrowserNotificationSettings = z.infer<typeof browserNotificationSettingsSchema>
 export type TelegramNotificationSettings = z.infer<typeof telegramNotificationSettingsSchema>

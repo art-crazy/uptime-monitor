@@ -300,15 +300,6 @@
   "settings_title": {
     "message": "Настройки"
   },
-  "settings_section_notifications": {
-    "message": "Уведомления"
-  },
-  "settings_browser_notifications": {
-    "message": "Уведомления браузера"
-  },
-  "settings_browser_notifications_hint": {
-    "message": "Chrome показывает уведомление, когда сайт падает или восстанавливается. Браузер должен быть открыт."
-  },
   "settings_telegram_enabled": {
     "message": "Уведомления Telegram"
   },
@@ -386,9 +377,6 @@
   },
   "settings_error_unable_to_clear": {
     "message": "Не удалось удалить мониторы"
-  },
-  "settings_error_unable_to_update_notifications": {
-    "message": "Не удалось обновить настройки уведомлений"
   },
   "settings_error_unable_to_update_telegram": {
     "message": "Не удалось обновить настройки Telegram"

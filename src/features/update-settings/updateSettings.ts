@@ -4,7 +4,6 @@ import { normalizeNetworkTarget } from '@shared/lib/network'
 import {
   requestSendTelegramTestMessage,
   requestSetDefaultCheckInterval,
-  requestSetNotificationsEnabled,
   requestSetPingUrl,
   requestUpdateTelegramSettings,
 } from '@shared/lib/runtime'
@@ -14,10 +13,6 @@ type FieldUpdateResult = 'success' | 'invalid'
 
 type TelegramSettingsPatch =
   RuntimeCommandPayloadMap[typeof MESSAGE_TYPES.updateTelegramSettings]['telegram']
-
-export async function setNotificationsEnabled(enabled: boolean): Promise<void> {
-  await requestSetNotificationsEnabled(enabled)
-}
 
 async function updateTelegramSettings(
   telegram: TelegramSettingsPatch,

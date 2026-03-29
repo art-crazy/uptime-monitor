@@ -107,9 +107,6 @@
   },
   "settings": {
     "title": "Settings",
-    "section_notifications": "Notifications",
-    "browser_notifications": "Browser notifications",
-    "browser_notifications_hint": "Chrome sends a desktop alert when a monitor goes down or comes back up. Requires the browser to be running.",
     "telegram_enabled": "Telegram notifications",
     "telegram_setup_title": "How to connect Telegram",
     "telegram_setup_step_1": "Open the bot and send /start in Telegram.",
@@ -136,7 +133,6 @@
     "error_invalid_telegram_chat_id": "Enter a Telegram ID",
     "error_unable_to_save_ping_target": "Unable to save ping URL right now",
     "error_unable_to_clear": "Unable to clear monitors right now",
-    "error_unable_to_update_notifications": "Unable to update notifications right now",
     "error_unable_to_update_telegram": "Unable to update Telegram settings right now",
     "error_unable_to_send_telegram_test": "Unable to send a Telegram test message right now",
     "error_unable_to_update_interval": "Unable to update the default interval right now"

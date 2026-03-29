@@ -107,9 +107,6 @@
   },
   "settings": {
     "title": "Настройки",
-    "section_notifications": "Уведомления",
-    "browser_notifications": "Уведомления браузера",
-    "browser_notifications_hint": "Chrome \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442 \u0443\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u0435, \u043a\u043e\u0433\u0434\u0430 \u0441\u0430\u0439\u0442 \u043f\u0430\u0434\u0430\u0435\u0442 \u0438\u043b\u0438 \u0432\u043e\u0441\u0441\u0442\u0430\u043d\u0430\u0432\u043b\u0438\u0432\u0430\u0435\u0442\u0441\u044f. \u0411\u0440\u0430\u0443\u0437\u0435\u0440 \u0434\u043e\u043b\u0436\u0435\u043d \u0431\u044b\u0442\u044c \u043e\u0442\u043a\u0440\u044b\u0442.",
     "telegram_enabled": "Уведомления Telegram",
     "telegram_setup_title": "Как подключить Telegram",
     "telegram_setup_step_1": "Откройте бота и отправьте /start в Telegram.",
@@ -136,7 +133,6 @@
     "error_invalid_telegram_chat_id": "Укажите Telegram ID",
     "error_unable_to_save_ping_target": "Не удалось сохранить адрес проверки",
     "error_unable_to_clear": "Не удалось удалить мониторы",
-    "error_unable_to_update_notifications": "Не удалось обновить настройки уведомлений",
     "error_unable_to_update_telegram": "Не удалось обновить настройки Telegram",
     "error_unable_to_send_telegram_test": "Не удалось отправить тестовое сообщение в Telegram",
     "error_unable_to_update_interval": "Не удалось обновить интервал проверки"

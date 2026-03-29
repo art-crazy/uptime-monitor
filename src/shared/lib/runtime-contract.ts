@@ -63,11 +63,6 @@ const clearAllMonitoringDataMessageSchema = z.object({
   type: z.literal(MESSAGE_TYPES.clearAllMonitoringData),
 })
 
-const setNotificationsEnabledMessageSchema = z.object({
-  type: z.literal(MESSAGE_TYPES.setNotificationsEnabled),
-  enabled: z.boolean(),
-})
-
 export const telegramSettingsPatchSchema = z
   .object({
     enabled: z.boolean().optional(),
@@ -103,7 +98,6 @@ export const runtimeMessageSchema = z.discriminatedUnion('type', [
   toggleMonitorMessageSchema,
   deleteMonitorMessageSchema,
   clearAllMonitoringDataMessageSchema,
-  setNotificationsEnabledMessageSchema,
   updateTelegramSettingsMessageSchema,
   sendTelegramTestMessageSchema,
   setDefaultCheckIntervalMessageSchema,
@@ -119,7 +113,6 @@ export interface RuntimeCommandPayloadMap {
   [MESSAGE_TYPES.toggleMonitor]: { monitorId: string }
   [MESSAGE_TYPES.deleteMonitor]: { monitorId: string }
   [MESSAGE_TYPES.clearAllMonitoringData]: Record<string, never>
-  [MESSAGE_TYPES.setNotificationsEnabled]: { enabled: boolean }
   [MESSAGE_TYPES.updateTelegramSettings]: {
     telegram: z.infer<typeof telegramSettingsPatchSchema>
   }
@@ -136,7 +129,6 @@ export interface RuntimeCommandResponseMap {
   [MESSAGE_TYPES.toggleMonitor]: void
   [MESSAGE_TYPES.deleteMonitor]: void
   [MESSAGE_TYPES.clearAllMonitoringData]: void
-  [MESSAGE_TYPES.setNotificationsEnabled]: void
   [MESSAGE_TYPES.updateTelegramSettings]: void
   [MESSAGE_TYPES.sendTelegramTestMessage]: void
   [MESSAGE_TYPES.setDefaultCheckInterval]: void

@@ -59,11 +59,6 @@ export async function requestClearAllMonitoringData(): Promise<void> {
   await sendRuntimeCommand(MESSAGE_TYPES.clearAllMonitoringData, {})
 }
 
-export async function requestSetNotificationsEnabled(
-  enabled: boolean,
-): Promise<void> {
-  await sendRuntimeCommand(MESSAGE_TYPES.setNotificationsEnabled, { enabled })
-}
 
 export async function requestUpdateTelegramSettings(
   telegram: RuntimeCommandPayloadMap[typeof MESSAGE_TYPES.updateTelegramSettings]['telegram'],

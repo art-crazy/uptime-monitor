@@ -6,7 +6,6 @@ import { clearAllMonitoringData } from '../../../features/clear-monitoring-data'
 import {
   sendTelegramTestMessage,
   setDefaultCheckInterval,
-  setNotificationsEnabled as saveNotificationsEnabled,
   setPingUrl,
   setTelegramChatId,
   setTelegramEnabled as saveTelegramEnabled,
@@ -20,7 +19,6 @@ import { Button } from '@shared/ui/Button'
 import { IconButton } from '@shared/ui/IconButton'
 import { PageHeader } from '@shared/ui/PageHeader'
 import { PageLayout } from '@shared/ui/PageLayout'
-import { HintTooltip } from '@shared/ui/HintTooltip'
 import { Toggle } from '@shared/ui/Toggle'
 import { useToast } from '@shared/ui/toast'
 import styles from './Settings.module.css'
@@ -32,16 +30,12 @@ interface SettingsPageProps {
 }
 
 export function SettingsPage({ onBack, settings }: SettingsPageProps) {
-  const [isNotificationsBusy, setIsNotificationsBusy] = useState(false)
   const [isTelegramChatIdBusy, setIsTelegramChatIdBusy] = useState(false)
   const [isTelegramToggleBusy, setIsTelegramToggleBusy] = useState(false)
   const [isTelegramRecoveryBusy, setIsTelegramRecoveryBusy] = useState(false)
   const [isTelegramTestBusy, setIsTelegramTestBusy] = useState(false)
   const [isClearBusy, setIsClearBusy] = useState(false)
   const [isPingBusy, setIsPingBusy] = useState(false)
-  const [browserNotificationsEnabled, setBrowserNotificationsEnabled] = useState(
-    settings.notifications.browser.enabled,
-  )
   const [telegramEnabled, setTelegramEnabled] = useState(
     settings.notifications.telegram.enabled,
   )
@@ -60,10 +54,6 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
       })),
     [],
   )
-
-  useEffect(() => {
-    setBrowserNotificationsEnabled(settings.notifications.browser.enabled)
-  }, [settings.notifications.browser.enabled])
 
   useEffect(() => {
     setTelegramEnabled(settings.notifications.telegram.enabled)
@@ -244,40 +234,6 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
       }
     >
       <section className={styles.section}>
-          <div className={styles.row}>
-            <span className={styles.labelWithHint}>
-              {t('settings_browser_notifications')}
-              <HintTooltip text={t('settings_browser_notifications_hint')} />
-            </span>
-            <button
-              aria-pressed={browserNotificationsEnabled}
-              className={[
-                styles.switch,
-                browserNotificationsEnabled ? styles.switchOn : styles.switchOff,
-              ].join(' ')}
-              disabled={isNotificationsBusy}
-              onClick={async () => {
-                const next = !browserNotificationsEnabled
-                setBrowserNotificationsEnabled(next)
-                setIsNotificationsBusy(true)
-
-                try {
-                  await saveNotificationsEnabled(next)
-                } catch {
-                  setBrowserNotificationsEnabled(!next)
-                  showError(t('settings_error_unable_to_update_notifications'))
-                } finally {
-                  setIsNotificationsBusy(false)
-                }
-              }}
-              type="button"
-            >
-              <span className={styles.thumb} />
-            </button>
-          </div>
-        </section>
-
-        <section className={styles.section}>
           <div className={styles.sectionTitle}>{t('settings_section_default_interval')}</div>
           <Toggle
             onChange={async (value) => {

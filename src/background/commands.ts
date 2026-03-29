@@ -206,23 +206,6 @@ async function clearAllMonitoringDataCommand(): Promise<void> {
   })
 }
 
-async function setNotificationsEnabledCommand(enabled: boolean): Promise<void> {
-  await enqueueBackgroundTask(async () => {
-    const settings = await getSettings()
-
-    await writeSettings({
-      ...settings,
-      notifications: {
-        ...settings.notifications,
-        browser: {
-          ...settings.notifications.browser,
-          enabled,
-        },
-      },
-    })
-  })
-}
-
 async function updateTelegramSettingsCommand(
   telegramPatch: Extract<
     RuntimeCommand,
@@ -324,10 +307,6 @@ export async function handleRuntimeMessage(message: unknown): Promise<unknown> {
 
     case MESSAGE_TYPES.clearAllMonitoringData:
       await clearAllMonitoringDataCommand()
-      return undefined
-
-    case MESSAGE_TYPES.setNotificationsEnabled:
-      await setNotificationsEnabledCommand(runtimeMessage.enabled)
       return undefined
 
     case MESSAGE_TYPES.updateTelegramSettings:

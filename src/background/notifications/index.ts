@@ -3,7 +3,6 @@ import type { Settings } from '../../entities/settings'
 import { translateLocalizedMessage } from '@shared/lib/i18n'
 import { isIgnorableExtensionError } from '@shared/lib/user-facing-error'
 
-import { sendBrowserStatusChangeNotification } from './browser'
 import {
   assertTelegramNotificationConfigured,
   sendTelegramStatusChangeNotification,
@@ -46,10 +45,6 @@ export async function notifyMonitorStatusChange(
   }
 
   const channels = [
-    {
-      name: 'browser',
-      send: () => sendBrowserStatusChangeNotification(event, settings.notifications.browser),
-    },
     {
       name: 'telegram',
       send: () => sendTelegramStatusChangeNotification(event, settings.notifications.telegram),

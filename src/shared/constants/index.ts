@@ -35,7 +35,6 @@ export const MESSAGE_TYPES = {
   toggleMonitor: 'TOGGLE_MONITOR',
   deleteMonitor: 'DELETE_MONITOR',
   clearAllMonitoringData: 'CLEAR_ALL_MONITORING_DATA',
-  setNotificationsEnabled: 'SET_NOTIFICATIONS_ENABLED',
   updateTelegramSettings: 'UPDATE_TELEGRAM_SETTINGS',
   sendTelegramTestMessage: 'SEND_TELEGRAM_TEST_MESSAGE',
   setDefaultCheckInterval: 'SET_DEFAULT_CHECK_INTERVAL',
