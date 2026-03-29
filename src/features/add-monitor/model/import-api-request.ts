@@ -77,6 +77,7 @@ const CURL_METHOD_FLAGS = new Set(['--request', '-X'])
 const CURL_URL_FLAGS = new Set(['--url'])
 const CURL_BASIC_AUTH_FLAGS = new Set(['--user', '-u'])
 const WHITESPACE_PATTERN = /\s/
+const MISSING_PROTOCOL_COLON_PATTERN = /^(https?)\/\//i
 
 function createEmptyImportState(): ApiImportFormState {
   return {
@@ -312,7 +313,7 @@ function parseCurlImport(input: string): ApiImportResult | null {
     }
 
     if (CURL_URL_FLAGS.has(token)) {
-      state.url = tokens[index + 1] ?? state.url
+      state.url = sanitizeImportedUrl(tokens[index + 1] ?? state.url)
       index += 1
       continue
     }
@@ -363,7 +364,7 @@ function parseCurlImport(input: string): ApiImportResult | null {
     }
 
     if (HTTP_PROTOCOLS.some((protocol) => token.startsWith(protocol))) {
-      state.url = token
+      state.url = sanitizeImportedUrl(token)
     }
   }
 
@@ -395,7 +396,7 @@ function parseJsonImport(input: string): ApiImportResult | null {
 
   const state = createEmptyImportState()
   const warnings: ApiImportWarning[] = []
-  state.url = toStringValue(parsed.url).trim()
+  state.url = sanitizeImportedUrl(toStringValue(parsed.url))
   state.method = normalizeMethod(parsed.method)
   state.body = toStringValue(parsed.body)
   state.expectedStatus = toExpectedStatusValue(parsed.expectedStatus)
@@ -443,7 +444,7 @@ function parseJsonImport(input: string): ApiImportResult | null {
 
 function parseUrlImport(input: string): ApiImportResult {
   const state = createEmptyImportState()
-  state.url = input.trim()
+  state.url = sanitizeImportedUrl(input)
 
   return {
     source: API_IMPORT_SOURCES.url,
@@ -452,8 +453,34 @@ function parseUrlImport(input: string): ApiImportResult {
   }
 }
 
+function sanitizeImportedUrl(input: string): string {
+  const trimmed = input.trim()
+
+  if (!trimmed) {
+    return ''
+  }
+
+  const outerProtocolMatch = /^(https?):\/\//i.exec(trimmed)
+
+  if (outerProtocolMatch) {
+    const outerProtocol = outerProtocolMatch[1]
+    const remainder = trimmed.slice(outerProtocolMatch[0].length)
+    const nestedProtocolMatch = /^(https?)(?::\/\/|\/\/)/i.exec(remainder)
+
+    if (nestedProtocolMatch) {
+      return `${outerProtocol}://${remainder.slice(nestedProtocolMatch[0].length)}`
+    }
+  }
+
+  if (MISSING_PROTOCOL_COLON_PATTERN.test(trimmed)) {
+    return trimmed.replace(MISSING_PROTOCOL_COLON_PATTERN, '$1://')
+  }
+
+  return trimmed
+}
+
 function extractRawUrlHost(input: string): string | null {
-  let candidate = input.trim()
+  let candidate = sanitizeImportedUrl(input)
 
   if (!candidate) {
     return null
