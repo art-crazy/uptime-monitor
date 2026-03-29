@@ -160,6 +160,13 @@
   font-size: 12px;
 }
 
+.labelWithHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+}
+
 .switch {
   position: relative;
   width: 34px;

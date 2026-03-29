@@ -109,6 +109,7 @@
     "title": "Настройки",
     "section_notifications": "Уведомления",
     "browser_notifications": "Уведомления браузера",
+    "browser_notifications_hint": "Chrome показывает уведомление на рабочем столе, когда монитор переходит в статус \u00abnедоступен\u00bb или восстанавливается. Уведомления приходят только пока браузер запущен. При первом включении браузер запросит разрешение.",
     "telegram_enabled": "Уведомления Telegram",
     "telegram_setup_title": "Как подключить Telegram",
     "telegram_setup_step_1": "Откройте бота и отправьте /start в Telegram.",

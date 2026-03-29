@@ -20,6 +20,7 @@ import { Button } from '@shared/ui/Button'
 import { IconButton } from '@shared/ui/IconButton'
 import { PageHeader } from '@shared/ui/PageHeader'
 import { PageLayout } from '@shared/ui/PageLayout'
+import { HintTooltip } from '@shared/ui/HintTooltip'
 import { Toggle } from '@shared/ui/Toggle'
 import { useToast } from '@shared/ui/toast'
 import styles from './Settings.module.css'
@@ -244,7 +245,10 @@ export function SettingsPage({ onBack, settings }: SettingsPageProps) {
     >
       <section className={styles.section}>
           <div className={styles.row}>
-            <span className={styles.label}>{t('settings_browser_notifications')}</span>
+            <span className={styles.labelWithHint}>
+              {t('settings_browser_notifications')}
+              <HintTooltip text={t('settings_browser_notifications_hint')} />
+            </span>
             <button
               aria-pressed={browserNotificationsEnabled}
               className={[

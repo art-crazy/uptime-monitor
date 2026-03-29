@@ -306,6 +306,9 @@
   "settings_browser_notifications": {
     "message": "Browser notifications"
   },
+  "settings_browser_notifications_hint": {
+    "message": "Chrome sends a desktop notification when a monitor goes down or recovers. Notifications are shown only while the browser is running. You must allow notifications for this extension when prompted."
+  },
   "settings_telegram_enabled": {
     "message": "Telegram notifications"
   },
