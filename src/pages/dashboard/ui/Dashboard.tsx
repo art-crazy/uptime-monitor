@@ -50,7 +50,7 @@ function sortMonitors(monitors: Monitor[]): Monitor[] {
       return statusDiff
     }
 
-    return left.name.localeCompare(right.name)
+    return left.name.localeCompare(right.name, undefined, { numeric: true })
   })
 }
 
