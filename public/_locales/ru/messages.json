@@ -297,6 +297,9 @@
   "add_monitor_error_unable_to_save": {
     "message": "Не удалось сохранить монитор"
   },
+  "add_monitor_draft_restored": {
+    "message": "Черновик восстановлен. Незаконченный ввод был сохранён."
+  },
   "settings_title": {
     "message": "Настройки"
   },

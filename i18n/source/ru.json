@@ -103,7 +103,8 @@
     "error_invalid_api_response_body": "Укажите текст, который должен быть в ответе",
     "error_invalid_api_response_json_path": "Укажите путь в JSON",
     "error_invalid_api_response_json_value": "Укажите ожидаемое значение JSON",
-    "error_unable_to_save": "Не удалось сохранить монитор"
+    "error_unable_to_save": "Не удалось сохранить монитор",
+    "draft_restored": "Черновик восстановлен. Незаконченный ввод был сохранён."
   },
   "settings": {
     "title": "Настройки",

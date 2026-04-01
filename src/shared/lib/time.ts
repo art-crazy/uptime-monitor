@@ -60,8 +60,8 @@ function getLocaleFormatters(): LocaleFormatters {
       style: 'percent',
     }),
     relative: new Intl.RelativeTimeFormat(locale, {
-      numeric: 'auto',
-      style: 'narrow',
+      numeric: 'always',
+      style: 'long',
     }),
     second: new Intl.NumberFormat(locale, {
       maximumFractionDigits: 0,

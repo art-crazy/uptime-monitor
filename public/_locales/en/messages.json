@@ -297,6 +297,9 @@
   "add_monitor_error_unable_to_save": {
     "message": "Unable to save monitor"
   },
+  "add_monitor_draft_restored": {
+    "message": "Draft restored. Your previous input was recovered."
+  },
   "settings_title": {
     "message": "Settings"
   },

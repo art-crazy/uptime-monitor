@@ -98,6 +98,7 @@ export const DEFAULT_MESSAGES = {
   "add_monitor_error_invalid_api_response_json_path": "Enter a JSON path",
   "add_monitor_error_invalid_api_response_json_value": "Enter an expected JSON value",
   "add_monitor_error_unable_to_save": "Unable to save monitor",
+  "add_monitor_draft_restored": "Draft restored. Your previous input was recovered.",
   "settings_title": "Settings",
   "settings_telegram_enabled": "Telegram notifications",
   "settings_telegram_setup_title": "How to connect Telegram",

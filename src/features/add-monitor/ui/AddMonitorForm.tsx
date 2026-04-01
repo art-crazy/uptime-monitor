@@ -31,6 +31,7 @@ import {
 } from './ApiRequestImport'
 import { ApiMonitorFields } from './ApiMonitorFields'
 import { useApiRequestImport } from './useApiRequestImport'
+import { useMonitorFormDraft } from './useMonitorFormDraft'
 
 interface AddMonitorFormProps {
   defaultInterval: CheckInterval
@@ -52,10 +53,11 @@ export function AddMonitorForm({
   onSaved,
   onStateChange,
 }: AddMonitorFormProps) {
-  const initialState = useMemo(
-    () => getInitialMonitorFormState(defaultInterval, monitor),
-    [defaultInterval, monitor],
-  )
+  const { draftState, onDraftApplied, saveDraft, clearDraft } = useMonitorFormDraft(monitor)
+
+  // useState with a function initializer runs exactly once at mount.
+  const [initialState] = useState(() => getInitialMonitorFormState(defaultInterval, monitor))
+
   const [type, setType] = useState(initialState.type)
   const [url, setUrl] = useState(initialState.url)
   const [name, setName] = useState(initialState.name)
@@ -76,6 +78,37 @@ export function AddMonitorForm({
   })
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldErrorKey, string>>>({})
   const [isSaving, setIsSaving] = useState(false)
+
+  // Apply restored draft to form fields exactly once, then transition state to 'empty'
+  // via onDraftApplied so this effect never re-runs with stale draft data.
+  useEffect(() => {
+    if (draftState.status !== 'ready') {
+      return
+    }
+
+    const { draft } = draftState
+
+    setType(draft.type)
+    setUrl(draft.url)
+    setName(draft.name)
+    setInterval(draft.interval)
+    setApiFields({
+      authPassword: draft.authPassword,
+      authToken: draft.authToken,
+      authType: draft.authType,
+      authUsername: draft.authUsername,
+      body: draft.body,
+      expectedStatus: draft.expectedStatus,
+      headersText: draft.headersText,
+      method: draft.method,
+      responseBody: draft.responseBody,
+      responseJsonPath: draft.responseJsonPath,
+      responseJsonValue: draft.responseJsonValue,
+      responseMode: draft.responseMode,
+    })
+    onDraftApplied()
+  }, [draftState, onDraftApplied])
+
   const typeOptions = useMemo(
     () =>
       [
@@ -99,6 +132,11 @@ export function AddMonitorForm({
   useEffect(() => {
     onStateChange({ isDisabled: isUrlEmpty, isSaving })
   }, [isSaving, isUrlEmpty, onStateChange])
+
+  // Persist draft on every field change
+  useEffect(() => {
+    saveDraft({ ...apiFields, interval, name, type, url })
+  }, [saveDraft, type, url, name, interval, apiFields])
 
   const fieldLabel =
     type === 'host' ? t('add_monitor_field_host') : t('add_monitor_field_url')
@@ -219,6 +257,7 @@ export function AddMonitorForm({
         delay(MIN_LOADING_MS),
       ])
 
+      clearDraft()
       onSaved(response.monitorId)
     } catch {
       setFieldErrors(translateFieldMessages({ save: 'add_monitor_error_unable_to_save' }))

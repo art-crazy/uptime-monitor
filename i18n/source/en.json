@@ -103,7 +103,8 @@
     "error_invalid_api_response_body": "Enter the text that must appear in the response",
     "error_invalid_api_response_json_path": "Enter a JSON path",
     "error_invalid_api_response_json_value": "Enter an expected JSON value",
-    "error_unable_to_save": "Unable to save monitor"
+    "error_unable_to_save": "Unable to save monitor",
+    "draft_restored": "Draft restored. Your previous input was recovered."
   },
   "settings": {
     "title": "Settings",

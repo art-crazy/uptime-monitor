@@ -1,4 +1,4 @@
-import { startTransition, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { startTransition, useEffect, useMemo, type ReactNode } from 'react'
 
 import { useIncidents } from '../entities/incident'
 import { useInternetStatus } from '../entities/internet'
@@ -12,15 +12,10 @@ import { t } from '@shared/lib/i18n'
 import { PageHeader } from '@shared/ui/PageHeader'
 import { ToastProvider } from '@shared/ui/toast'
 import styles from './App.module.css'
-
-type Screen =
-  | { key: 'dashboard' }
-  | { key: 'settings' }
-  | { key: 'details'; monitorId: string }
-  | { key: 'add'; monitorId?: string }
+import { usePersistedScreen } from './usePersistedScreen'
 
 export function App() {
-  const [screen, setScreen] = useState<Screen>({ key: 'dashboard' })
+  const [screen, setScreen] = usePersistedScreen()
   const { incidents, isLoaded: areIncidentsLoaded } = useIncidents()
   const { internetStatus, isLoaded: isInternetStatusLoaded } = useInternetStatus()
   const { isLoaded: areMonitorsLoaded, monitors } = useMonitors()
@@ -43,7 +38,7 @@ export function App() {
     return monitors.find((monitor) => monitor.id === screen.monitorId) ?? null
   }, [screen, monitors])
 
-  const navigate = (nextScreen: Screen) => {
+  const navigate = (nextScreen: Parameters<typeof setScreen>[0]) => {
     startTransition(() => {
       setScreen(nextScreen)
     })
