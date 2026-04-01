@@ -302,7 +302,7 @@ export function ApiMonitorFields({
               value={apiFields.responseJsonPath}
             />
             <div className={getHintClassName('responseJsonPath')}>
-              {getFieldHint('responseJsonPath', '')}
+              {getFieldHint('responseJsonPath', t('add_monitor_hint_api_response_json'))}
             </div>
           </div>
 
@@ -325,7 +325,7 @@ export function ApiMonitorFields({
               value={apiFields.responseJsonValue}
             />
             <div className={getHintClassName('responseJsonValue')}>
-              {getFieldHint('responseJsonValue', t('add_monitor_hint_api_response_json'))}
+              {getFieldHint('responseJsonValue', '')}
             </div>
           </div>
         </>
